@@ -1,23 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cycrix.view.MenuMainLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/layoutMenu"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="#ffff00" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#ffff00"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Menu"
-            android:textSize="20sp" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/txtMenu"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="Menu"
+                android:textSize="20sp" />
 
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/imgMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0"
+                android:src="@drawable/arrow" />
+        </FrameLayout>
+
+        <com.cycrix.view.RatioLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:contentDescription="ratio:1"
+            android:orientation="vertical"
+            android:weightSum="3" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+
+                <Button
+                    android:id="@+id/imgNewLook"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="New Look"
+                    android:textSize="24sp"
+                    android:background="#00000000" />
+
+                <Button
+                    android:id="@+id/imgMore"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="More"
+                    android:textSize="24sp"
+                    android:background="#00000000" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+            
+            <LinearLayout
+                android:id="@+id/layoutCamera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/layoutMore1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+            </LinearLayout>
+            
+            </FrameLayout>
+            
+            <LinearLayout
+                android:id="@+id/layoutMore2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow" />
+            </LinearLayout>
+        </com.cycrix.view.RatioLinearLayout>
+    </LinearLayout>
+
+</com.cycrix.view.MenuMainLayout>
