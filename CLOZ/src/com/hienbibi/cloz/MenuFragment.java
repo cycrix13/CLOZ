@@ -69,7 +69,7 @@ public class MenuFragment extends Fragment {
 		}
 	}
 	
-	@Click(id = R.id.imgNewLook)
+	@Click(id = R.id.layoutNewLook)
 	void onNewLookClick(View v) {
 		
 		mLayoutCamera.setVisibility(View.VISIBLE);
@@ -81,7 +81,7 @@ public class MenuFragment extends Fragment {
 		animator1.start();
 	}
 	
-	@Click(id = R.id.imgMore)
+	@Click(id = R.id.layoutMore)
 	void onMoreClick(View v) {
 		mLayoutCamera.setVisibility(View.INVISIBLE);
 		mLayoutMore1.setVisibility(View.VISIBLE);

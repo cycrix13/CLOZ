@@ -1,20 +1,20 @@
-package com.cycrix.view;
+package com.cycrix.util;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
-public class RatioLinearLayout extends LinearLayout {
+public class RatioFrameLayout extends FrameLayout {
 
-	public RatioLinearLayout(Context context) {
+	public RatioFrameLayout(Context context) {
 		super(context);
 	}
 	
-	public RatioLinearLayout(Context context, AttributeSet attrs) {
+	public RatioFrameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
-	public RatioLinearLayout(Context context, AttributeSet attrs, int defStyle) {
+	public RatioFrameLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
 	

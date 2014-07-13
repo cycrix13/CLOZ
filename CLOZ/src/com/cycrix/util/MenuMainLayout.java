@@ -1,4 +1,4 @@
-package com.cycrix.view;
+package com.cycrix.util;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -26,6 +26,4 @@ public class MenuMainLayout extends FrameLayout {
 		int screenWidth = getResources().getDisplayMetrics().widthPixels;
 		v.setTranslationY(screenWidth);
 	}
-	
-	
 }

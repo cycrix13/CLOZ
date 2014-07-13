@@ -4,5 +4,49 @@
     <string name="app_name">CLOZ</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    
+    <!-- ************************************************** -->
+    <!-- Fonts -->
+
+    <string name="font1">font:font1.ttf</string>
+    <string name="font2">font:font1.ttc</string>
+    
+    <!-- ************************************************** -->
+    <!-- Main menu -->
+
+    <string name="mainmenu_menu">Menu</string>
+    <string name="mainmenu_search">Search</string>
+    <string name="mainmenu_newlook">New Look</string>
+    <string name="mainmenu_more">More</string>
+    <string name="mainmenu_camera">Camera</string>
+    <string name="mainmenu_gallery">Gallery</string>
+    <string name="mainmenu_icloud">iCloud</string>
+    <string name="mainmenu_inapp">inApp</string>
+    <string name="mainmenu_rate">Rate</string>
+    <string name="mainmenu_suggest">Suggest</string>
+    <string name="mainmenu_useinfo">Use info</string>
+    <string name="mainmenu_help">Help</string>
+    <string name="title_activity_flash">FlashActivity</string>
+    
+    <!-- ************************************************** -->
+    <!-- Main menu -->
+
+	<string name="help_text1_1">Welcome!</string>
+	<string name="help_text1_2">Cloz is made to help you</string>
+	<string name="help_text1_3">remember your Looks.</string>
+	<string name="help_text1_4">It will tell you what you wore,</string>
+	<string name="help_text1_5">when you wore it and with who.</string>
+	
+	<string name="help_text2_1">Amazing:</string>
+	<string name="help_text2_2">To check whether you are</string>
+	<string name="help_text2_3">repeating a Look.</string>
+	<string name="help_text2_4">To get inspiration.</string>
+	
+	<string name="help_text3_1">How do i start?</string>
+	<string name="help_text3_2">Start by saving your first Look by clicking:</string>
+	<string name="help_text3_3"></string>
+	<string name="help_text3_4">1) Menu</string>
+	<string name="help_text3_5">2) New look</string>
+	<string name="help_text3_6">3) Follow guided steps</string>
 
 </resources>

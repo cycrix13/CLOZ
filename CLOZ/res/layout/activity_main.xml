@@ -4,8 +4,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
+    <FrameLayout
+        android:id="@+id/layoutHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+    </FrameLayout>
+
     <fragment
-        android:id="@+id/fragment1"
+        android:id="@+id/fragMenu"
         android:name="com.hienbibi.cloz.MenuFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

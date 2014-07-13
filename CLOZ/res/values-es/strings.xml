@@ -1,0 +1,19 @@
+<resources>
+
+    <string name="help_text1_1">¡Bienvenido!</string>
+    <string name="help_text1_2">CLOZ te va a a ayudar</string>
+    <string name="help_text1_3">a recordar todos tus Looks.</string>
+    <string name="help_text1_4">Te puede decir qué te pusiste,</string>
+    <string name="help_text1_5">cuándo y con quién.</string>
+    <string name="help_text2_1">Es genial para:</string>
+    <string name="help_text2_2">Comprobar lo que te has puesto</string>
+    <string name="help_text2_3">con alguien anteriormente.</string>
+    <string name="help_text2_4">Inspirarte.</string>
+    <string name="help_text3_1">¿Cómo comienzo?</string>
+    <string name="help_text3_2">Comienza guardando tu primer Look pulsando:</string>
+    <string name="help_text3_3"></string>
+    <string name="help_text3_4">1) Menú</string>
+    <string name="help_text3_5">2) Nuevo Look</string>
+    <string name="help_text3_6">3) Sigue los pasos guiados.</string>
+
+</resources>
