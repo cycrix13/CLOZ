@@ -25,6 +25,12 @@ public class MenuFragment extends Fragment {
 	@ViewById(id = R.id.layoutMore1)	private View mLayoutMore1;
 	@ViewById(id = R.id.layoutMore2)	private View mLayoutMore2;
 	
+	private Listener mListener;
+	
+	public void setListerner(Listener listener) {
+		mListener = listener;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.menu_frag, null);
@@ -91,4 +97,18 @@ public class MenuFragment extends Fragment {
 		animator1.start();
 	}
 	
+	@Click(id = R.id.layoutCamera)
+	void onCameraClick(View v) {
+		if (mListener != null) mListener.onCameraClick();
+	}
+	
+	@Click(id = R.id.layoutGallery)
+	void onGalleryClick(View v) {
+		if (mListener != null) mListener.onGalleryClick();
+	}
+
+	public interface Listener {
+		void onCameraClick();
+		void onGalleryClick();
+	}
 }

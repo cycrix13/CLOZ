@@ -122,6 +122,7 @@
                     android:visibility="invisible" >
 
                     <LinearLayout
+                        android:id="@+id/layoutCamera"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -148,6 +149,7 @@
                         android:scaleType="center" />
 
                     <LinearLayout
+                        android:id="@+id/layoutGallery"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

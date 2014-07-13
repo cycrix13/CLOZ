@@ -2,7 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/help3"
     tools:context=".MainActivity" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="#70FFFFFF" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="All my Looks"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8" />
+
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/layoutHolder"
@@ -11,10 +32,11 @@
 
     </FrameLayout>
 
+    
     <fragment
         android:id="@+id/fragMenu"
         android:name="com.hienbibi.cloz.MenuFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+	
 </RelativeLayout>

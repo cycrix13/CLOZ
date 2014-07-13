@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.cycrix.util.FontsCollection;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements MenuFragment.Listener {
 
 	private MenuFragment mMenuFragment;
 	private HelpFragment mHelpFragment;
@@ -44,5 +44,19 @@ public class MainActivity extends FragmentActivity {
 				mMenuFragment.getView().setVisibility(View.VISIBLE);
 			}
 		});
+		
+		mMenuFragment.setListerner(this);
+	}
+
+	@Override
+	public void onCameraClick() {
+		CameraActivity.newInstance(this, new CameraActivity.Listener() {
+		}, CameraActivity.MODE_CAMERA);
+	}
+
+	@Override
+	public void onGalleryClick() {
+		CameraActivity.newInstance(this, new CameraActivity.Listener() {
+		}, CameraActivity.MODE_FILE);
 	}
 }
