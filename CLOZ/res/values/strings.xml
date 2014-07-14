@@ -29,7 +29,7 @@
     <string name="title_activity_flash">FlashActivity</string>
 
     <!-- ************************************************** -->
-    <!-- Main menu -->
+    <!-- Help -->
 
     <string name="help_text1_1">Welcome!</string>
     <string name="help_text1_2">Cloz is made to help you</string>
@@ -47,5 +47,14 @@
     <string name="help_text3_5">2) New look</string>
     <string name="help_text3_6">3) Follow guided steps</string>
     <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_contact_list">ContactListActivity</string>
+    
+    <!-- ************************************************** -->
+    <!-- Contact -->
+    
+    <string name="contact_text1">With whom are you wearing the Look?</string>
+    <string name="contact_text2">Search</string>
+    <string name="contact_text3">Back</string>
+    <string name="contact_text4">Continue</string>
 
 </resources>

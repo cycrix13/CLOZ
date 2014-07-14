@@ -1,5 +1,8 @@
 <resources>
 
+    <!-- ************************************************** -->
+    <!-- Help -->
+    
     <string name="help_text1_1">¡Bienvenido!</string>
     <string name="help_text1_2">CLOZ te va a a ayudar</string>
     <string name="help_text1_3">a recordar todos tus Looks.</string>
@@ -15,5 +18,13 @@
     <string name="help_text3_4">1) Menú</string>
     <string name="help_text3_5">2) Nuevo Look</string>
     <string name="help_text3_6">3) Sigue los pasos guiados.</string>
+    
+    <!-- ************************************************** -->
+    <!-- Contact -->
+    
+    <string name="contact_text1">¿Quién te verá con este Look?</string>
+    <string name="contact_text2">Buscar</string>
+    <string name="contact_text3">Atrás</string>
+    <string name="contact_text4">Continuar</string>
 
 </resources>

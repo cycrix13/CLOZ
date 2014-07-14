@@ -20,6 +20,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -223,6 +224,11 @@ public class CameraActivity extends Activity {
 	@Click(id = R.id.btnCancel)
 	void onCancelClick(View v) {
 		finish();
+	}
+	
+	@Click(id = R.id.btnSave)
+	void onSaveClick(View v) {
+		ContactListActivity.newInstance(this);
 	}
 	
 	private static Bitmap RotateBitmap(Bitmap source, int orientation) {
