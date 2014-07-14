@@ -48,6 +48,20 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
+        <activity
+            android:name="com.hienbibi.cloz.DateActivity"
+            android:label="@string/title_activity_date"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+        </activity>
+        <activity
+            android:name="com.hienbibi.cloz.TagActivity"
+            android:label="@string/title_activity_tag"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysVisible" >
+        </activity>
     </application>
 
 </manifest>

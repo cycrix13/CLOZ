@@ -1,4 +1,23 @@
 <resources>
+    
+    <string name="text_ok">Ok</string>
+    <string name="text_cancel">Cancel</string>
+    
+    <!-- ************************************************** -->
+    <!-- Main menu -->
+
+    <string name="mainmenu_menu">Menú</string>
+    <string name="mainmenu_search">Buscar</string>
+    <string name="mainmenu_newlook">Nuevo Look</string>
+    <string name="mainmenu_more">Más</string>
+    <string name="mainmenu_camera">Cámera</string>
+    <string name="mainmenu_gallery">Galería</string>
+    <string name="mainmenu_icloud">iCloud</string>
+    <string name="mainmenu_inapp">inApp</string>
+    <string name="mainmenu_rate">Valorar</string>
+    <string name="mainmenu_suggest">Sugerir</string>
+    <string name="mainmenu_useinfo">Use info</string>
+    <string name="mainmenu_help">Ayuda</string>
 
     <!-- ************************************************** -->
     <!-- Help -->
@@ -26,5 +45,18 @@
     <string name="contact_text2">Buscar</string>
     <string name="contact_text3">Atrás</string>
     <string name="contact_text4">Continuar</string>
+    
+    <string name="contact_noselect">Por favor, seleccione uno o más contactos.</string>
+    
+    <!-- ************************************************** -->
+    <!-- Date -->
+    
+    <string name="date_text1">Selecciona la fecha del Look.</string>
+    
+    <!-- ************************************************** -->
+    <!-- Tag -->
+    
+    <string name="tag_text1">Escribe etiquetas extra (evento, lugar, …)</string>
+    <string name="tag_text2">¡Terminar! :)</string>
 
 </resources>

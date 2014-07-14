@@ -47,6 +47,14 @@ public class MenuFragment extends Fragment {
 		}
 	}
 	
+	public void close() {
+		
+		int screenWidth = getResources().getDisplayMetrics().widthPixels;
+		mLayoutMenu.setTranslationY(screenWidth);
+		mTxtMenu.setAlpha(1);
+		mImgMenu.setAlpha(0);
+	}
+	
 	@Click(id = R.id.txtMenu)
 	void onMenuClick(View v) {
 		int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -106,9 +114,15 @@ public class MenuFragment extends Fragment {
 	void onGalleryClick(View v) {
 		if (mListener != null) mListener.onGalleryClick();
 	}
+	
+	@Click(id = R.id.layoutHelp)
+	void onHelpClick(View v) {
+		if (mListener != null) mListener.onHelpClick();
+	}
 
 	public interface Listener {
 		void onCameraClick();
 		void onGalleryClick();
+		void onHelpClick();
 	}
 }

@@ -4,6 +4,14 @@
     <string name="app_name">CLOZ</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_date">DateActivity</string>
+    <string name="title_activity_tag">TagActivity</string>
+    <string name="title_activity_flash">FlashActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_contact_list">ContactListActivity</string>
+    
+    <string name="text_ok">Ok</string>
+    <string name="text_cancel">Cancel</string>
 
     <!-- ************************************************** -->
     <!-- Fonts -->
@@ -26,7 +34,6 @@
     <string name="mainmenu_suggest">Suggest</string>
     <string name="mainmenu_useinfo">Use info</string>
     <string name="mainmenu_help">Help</string>
-    <string name="title_activity_flash">FlashActivity</string>
 
     <!-- ************************************************** -->
     <!-- Help -->
@@ -46,15 +53,25 @@
     <string name="help_text3_4">1) Menu</string>
     <string name="help_text3_5">2) New look</string>
     <string name="help_text3_6">3) Follow guided steps</string>
-    <string name="title_activity_camera">CameraActivity</string>
-    <string name="title_activity_contact_list">ContactListActivity</string>
-    
+
     <!-- ************************************************** -->
     <!-- Contact -->
-    
+
     <string name="contact_text1">With whom are you wearing the Look?</string>
     <string name="contact_text2">Search</string>
     <string name="contact_text3">Back</string>
     <string name="contact_text4">Continue</string>
+    <string name="contact_noselect">Please select one or more contacts.</string>
+    
+    <!-- ************************************************** -->
+    <!-- Date -->
+    
+    <string name="date_text1">Select the date of the Look.</string>
+    
+    <!-- ************************************************** -->
+    <!-- Tag -->
+    
+    <string name="tag_text1">Write extra tags (event, place…)</string>
+    <string name="tag_text2">Finish! :)</string>
 
 </resources>

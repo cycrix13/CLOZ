@@ -5,6 +5,12 @@
     android:background="@drawable/help3"
     tools:context=".MainActivity" >
 
+    <ListView
+        android:id="@+id/lstLook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="32dp"
@@ -38,5 +44,6 @@
         android:name="com.hienbibi.cloz.MenuFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+         
 	
 </RelativeLayout>

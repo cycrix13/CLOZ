@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +21,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -228,7 +228,14 @@ public class CameraActivity extends Activity {
 	
 	@Click(id = R.id.btnSave)
 	void onSaveClick(View v) {
-		ContactListActivity.newInstance(this);
+		ContactListActivity.newInstance(this, new ContactListActivity.Listener() {
+			@Override
+			public void onComplete(HashMap<String, Object> result) {
+				result.put("images", mItemList);
+				mListener.onComplete(result);
+				finish();
+			}
+		}, false);
 	}
 	
 	private static Bitmap RotateBitmap(Bitmap source, int orientation) {
@@ -304,7 +311,7 @@ public class CameraActivity extends Activity {
         return mediaFile;
     }
     
-    private static class ImageItem {
+    public static class ImageItem {
     	public String path;
     	public Bitmap bitmap;
     }
@@ -380,6 +387,6 @@ public class CameraActivity extends Activity {
     }
 
 	public interface Listener {
-
+		public void onComplete(HashMap<String, Object> result);
 	}	
 }
