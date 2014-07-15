@@ -25,11 +25,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ViewFlipper;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
@@ -44,7 +48,14 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 	private HelpFragment mHelpFragment;
 	private DatabaseHelper mHelper;
 	
-	@ViewById(id = R.id.lstLook)	private ListView mLstLook;
+//	@ViewById(id = R.id.lstLook)	private ListView mLstLook;
+	@ViewById(id = R.id.fliper)		private ViewFlipper mFlipper;
+	
+	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
+	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
+	private ImageView[] mImgArr = new ImageView[2];
+	private int mSelecting = 0;
+	List<Looks> lookList;
 
 	private LookAdapter mAdapter;
 	
@@ -52,12 +63,12 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//      Locale locale = new Locale("es", "ES");
-		//	    Locale.setDefault(locale);
-		//	    Configuration config = new Configuration();
-		//	    config.locale = locale;
-		//	    getBaseContext().getResources().updateConfiguration(config,
-		//	    getBaseContext().getResources().getDisplayMetrics());
+//      Locale locale = new Locale("es", "ES");
+//	    Locale.setDefault(locale);
+//	    Configuration config = new Configuration();
+//	    config.locale = locale;
+//	    getBaseContext().getResources().updateConfiguration(config,
+//	    getBaseContext().getResources().getDisplayMetrics());
 
 		Settings.init(this);
 		FontsCollection.init(this);
@@ -72,6 +83,9 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			finish();
 			return;
 		}
+		
+		mImgArr[0] = mImg1;
+		mImgArr[1] = mImg2;
 
 		FlashActivity.newInstance(this);
 
@@ -86,15 +100,79 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 
 		mMenuFragment.setListerner(this);
 		
-		List<Looks> lookList = null;
 		try {
 			lookList = mHelper.getDao().queryForAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			finish();
 		}
-		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
-		mLstLook.setOnScrollListener(this);
+		
+		if (lookList.size() > 0) {
+			mSelecting = 0;
+			loadImage();
+		}
+		
+		
+		final GestureDetector detector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+			
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+			
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+				
+				int nextIndex;
+				if (velocityY > 0) {
+					nextIndex = Math.max(mSelecting - 1, 0);
+				} else {
+					nextIndex = Math.min(mSelecting + 1, lookList.size() - 1);
+				}
+				
+				if (nextIndex == mSelecting)
+					return true;
+				
+				if (velocityY > 0) {
+					
+				} else {
+					
+				}
+				
+				mSelecting = nextIndex;
+				loadImage();
+				
+				return true;
+			}
+		});
+		
+		mFlipper.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				return detector.onTouchEvent(arg1);
+			}
+		});
+		
+//		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
+//		mLstLook.setOnScrollListener(this);
+	}
+	
+	private void loadImage() {
+		
+		String fileNames = lookList.get(mSelecting).fileName;
+		Bitmap bm = null;
+		try {
+			JSONArray jArr = new JSONArray(fileNames);
+			String path = getFilesDir().getAbsolutePath() + "/" + jArr.getString(0);
+			bm = loadImageOptimize(path);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		int i = 1 - mFlipper.getDisplayedChild();
+		ImageView img = (ImageView) mFlipper.getChildAt(i);
+		img.setImageBitmap(bm);
+		mFlipper.setDisplayedChild(i);
 	}
 
 	@Override
@@ -178,7 +256,7 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			e.printStackTrace();
 			finish();
 		}
-		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
+//		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
 	}
 	
 	public void copy(File src, File dst) throws IOException {
@@ -289,41 +367,43 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			return convertView;
 		}
 		
-		private Bitmap loadImageOptimize(String fileName) {
-			
-			// calculate optimize scale
-			BitmapFactory.Options bmOpt = new BitmapFactory.Options();
-			bmOpt.inJustDecodeBounds = true;
+		
+	}
+	
+	private Bitmap loadImageOptimize(String fileName) {
+		
+		// calculate optimize scale
+		BitmapFactory.Options bmOpt = new BitmapFactory.Options();
+		bmOpt.inJustDecodeBounds = true;
 
-			BitmapFactory.decodeFile(fileName, bmOpt);
-			
-			ExifInterface exif = null;
-			try {
-				exif = new ExifInterface(fileName);
-			} catch (IOException e1) {
-				return null;
-			}
-			
-			int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-			int photoW = bmOpt.outWidth;
-			int photoH = bmOpt.outHeight;
-
-			Display display = getWindowManager().getDefaultDisplay();
-			int targetW = display.getWidth();
-			int targetH = display.getHeight();
-			
-			int scale = 1;
-			if ((targetW > 0) || (targetH > 0))
-				scale = (int) Math.pow(2, Math.max(Math.min(photoW / targetW, photoH / targetH), 1));
-			
-			bmOpt = new BitmapFactory.Options();
-			bmOpt.inJustDecodeBounds = false;
-			bmOpt.inSampleSize = scale;
-			bmOpt.inPurgeable = true;
-			
-			Bitmap bitmap = BitmapFactory.decodeFile(fileName, bmOpt);
-			return bitmap;
+		BitmapFactory.decodeFile(fileName, bmOpt);
+		
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(fileName);
+		} catch (IOException e1) {
+			return null;
 		}
+		
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+		int photoW = bmOpt.outWidth;
+		int photoH = bmOpt.outHeight;
+
+		Display display = getWindowManager().getDefaultDisplay();
+		int targetW = display.getWidth();
+		int targetH = display.getHeight();
+		
+		int scale = 1;
+		if ((targetW > 0) || (targetH > 0))
+			scale = (int) Math.pow(2, Math.max(Math.min(photoW / targetW, photoH / targetH), 1));
+		
+		bmOpt = new BitmapFactory.Options();
+		bmOpt.inJustDecodeBounds = false;
+		bmOpt.inSampleSize = scale;
+		bmOpt.inPurgeable = true;
+		
+		Bitmap bitmap = BitmapFactory.decodeFile(fileName, bmOpt);
+		return bitmap;
 	}
 }

@@ -51,8 +51,8 @@ public class MenuFragment extends Fragment {
 		
 		int screenWidth = getResources().getDisplayMetrics().widthPixels;
 		mLayoutMenu.setTranslationY(screenWidth);
-		mTxtMenu.setAlpha(1);
-		mImgMenu.setAlpha(0);
+//		mTxtMenu.setAlpha(1);
+//		mImgMenu.setAlpha(0);
 	}
 	
 	@Click(id = R.id.txtMenu)
