@@ -134,9 +134,11 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 					return true;
 				
 				if (velocityY > 0) {
-					
+					mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_down);
+					mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_down);
 				} else {
-					
+					mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_up);
+					mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_up);
 				}
 				
 				mSelecting = nextIndex;
