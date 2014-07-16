@@ -8,7 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -24,22 +26,27 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils.TruncateAt;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.ViewById;
+import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
+import com.cycrix.util.InlineLayout;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 
 public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, OnScrollListener {
@@ -50,6 +57,13 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 	
 //	@ViewById(id = R.id.lstLook)	private ListView mLstLook;
 	@ViewById(id = R.id.fliper)		private ViewFlipper mFlipper;
+	
+	@ViewById(id = R.id.txtDate1)	private TextView mTxtData1;
+	@ViewById(id = R.id.txtDate2)	private TextView mTxtData2;
+	@ViewById(id = R.id.txtDate3)	private TextView mTxtData3;
+	@ViewById(id = R.id.txtShare)	private TextView mTxtShare;
+	
+	@ViewById(id = R.id.layoutTag)	private InlineLayout mLayoutTag;
 	
 	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
 	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
@@ -110,6 +124,9 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		if (lookList.size() > 0) {
 			mSelecting = 0;
 			loadImage();
+		} else {
+			mSelecting = -1;
+			loadImage();
 		}
 		
 		
@@ -122,6 +139,9 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			
 			@Override
 			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+				
+				if (lookList.size() == 0)
+					return true;
 				
 				int nextIndex;
 				if (velocityY > 0) {
@@ -161,20 +181,93 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 	
 	private void loadImage() {
 		
-		String fileNames = lookList.get(mSelecting).fileName;
-		Bitmap bm = null;
-		try {
-			JSONArray jArr = new JSONArray(fileNames);
-			String path = getFilesDir().getAbsolutePath() + "/" + jArr.getString(0);
-			bm = loadImageOptimize(path);
-		} catch (JSONException e) {
-			e.printStackTrace();
+		int visibility = mSelecting >= 0 ? View.VISIBLE : View.INVISIBLE;
+		mFlipper.setVisibility(visibility);
+		if (mSelecting >= 0) {
+			String fileNames = lookList.get(mSelecting).fileName;
+
+			Bitmap bm = null;
+			try {
+				JSONArray jArr = new JSONArray(fileNames);
+				String path = getFilesDir().getAbsolutePath() + "/" + jArr.getString(0);
+				bm = loadImageOptimize(path);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			int i = 1 - mFlipper.getDisplayedChild();
+			ImageView img = (ImageView) mFlipper.getChildAt(i);
+			img.setImageBitmap(bm);
+			mFlipper.setDisplayedChild(i);
+
 		}
 		
-		int i = 1 - mFlipper.getDisplayedChild();
-		ImageView img = (ImageView) mFlipper.getChildAt(i);
-		img.setImageBitmap(bm);
-		mFlipper.setDisplayedChild(i);
+		// d
+		// LLL
+		// yyyy
+		
+		
+		mTxtData1.setVisibility(visibility);
+		mTxtData2.setVisibility(visibility);
+		mTxtData3.setVisibility(visibility);
+		mTxtShare.setVisibility(visibility);
+		if (mSelecting >= 0) {
+			String dateJson = lookList.get(mSelecting).date;
+			try {
+				JSONArray jDate = new JSONArray(dateJson);
+				Date date = new Date(jDate.getInt(2), jDate.getInt(1) - 1, jDate.getInt(0));
+				mTxtData1.setText("" + jDate.getInt(0));
+				mTxtData2.setText(new SimpleDateFormat("LLL").format(date));
+				mTxtData3.setText("" + jDate.getInt(2));
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+		
+		mLayoutTag.removeAllViewsInLayout();
+		mLayoutTag.setVisibility(visibility);
+		if (mSelecting >= 0) {
+			
+			String tagJson = lookList.get(mSelecting).tags;
+			if (tagJson.length() > 0) {
+				TextView txt = new TextView(this);
+				LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				int padding = CyUtils.dpToPx(4, this);
+				txt.setPadding(padding * 2, padding, padding * 2, padding);
+				txt.setLayoutParams(params);
+				txt.setBackgroundResource(R.drawable.tag_border);
+				txt.setText(tagJson);
+				txt.setTextColor(0xFFFFFFFF);
+				txt.setMaxWidth(CyUtils.dpToPx(100, this));
+				txt.setSingleLine();
+				txt.setEllipsize(TruncateAt.END);
+				mLayoutTag.addView(txt);
+			}
+			
+			String contactJson = lookList.get(mSelecting).contacts;
+			try {
+				JSONArray jContacts = new JSONArray(contactJson);
+				for (int i = 0; i < jContacts.length(); i++) {
+					TextView txt = new TextView(this);
+					LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					int padding = CyUtils.dpToPx(4, this);
+					txt.setPadding(padding * 2, padding, padding * 2, padding);
+					txt.setLayoutParams(params);
+					txt.setBackgroundResource(R.drawable.contact_border);
+					txt.setText(jContacts.getString(i));
+					txt.setTextColor(0xFFFFFFFF);
+					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setSingleLine();
+					txt.setEllipsize(TruncateAt.END);
+					mLayoutTag.addView(txt);
+				}
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
 	}
 
 	@Override
@@ -251,13 +344,19 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			return;
 		}
 		
-		List<Looks> lookList = null;
 		try {
 			lookList = mHelper.getDao().queryForAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			finish();
 		}
+		
+		if (lookList.size() > 0) {
+			mSelecting = lookList.size() - 1;
+		} else {
+			mSelecting = -1;
+		}
+		loadImage();
 //		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
 	}
 	
