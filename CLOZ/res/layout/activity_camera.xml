@@ -11,21 +11,27 @@
         android:layout_height="48dp"
         android:background="#2D2D2D" >
 
-        <Button
+        <TextView
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:gravity="center"
             android:background="#00000000"
-            android:text="Cancel"
-            android:textColor="#007AFF" />
+            android:text="@string/text_cancel"
+            android:textColor="#007AFF"
+            android:textSize="18sp" />
 
-        <Button
+        <TextView
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
             android:layout_gravity="right"
             android:background="#00000000"
-            android:text="Save"
+            android:text="@string/camera_save"
+            android:textSize="18sp"
             android:textColor="#FFFF00" />
     </FrameLayout>
 
@@ -35,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/lstThumbnail"
         android:paddingLeft="8dp"
-        android:text="Tap camera to take another photo"
+        android:text="@string/camera_guide"
         android:textColor="#FFFFFF"
         android:textSize="12sp" />
 

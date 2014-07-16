@@ -1,17 +1,24 @@
 package com.hienbibi.cloz;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.FontsCollection;
-
-import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.app.Activity;
-import android.content.Intent;
 
 public class TagActivity extends Activity {
 	
@@ -19,7 +26,11 @@ public class TagActivity extends Activity {
 	
 	private Listener mListener;
 	
-	@ViewById(id = R.id.edtTag)	private EditText mEdtTag;
+	@ViewById(id = R.id.edtTag)		private EditText mEdtTag;
+	@ViewById(id = R.id.lstTag)		private ListView mLstTag;
+	
+	
+	private ArrayAdapter<String> mAdapter;
 	
 	public static class Listener {
 		public void onComplete(HashMap<String, Object> result) {}
@@ -49,6 +60,30 @@ public class TagActivity extends Activity {
 		}
 		
 		FontsCollection.setFont(findViewById(android.R.id.content));
+		
+		mEdtTag.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (s.toString().contains(" ")) {
+					String[] tagArr = s.toString().split(" ");
+					mAdapter.addAll(tagArr);
+					s.clear();
+				}
+			}
+			
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+		});
+		
+		mLstTag.setAdapter(mAdapter = new ArrayAdapter<String>(this, R.layout.tag_item, R.id.txtTag, new ArrayList<String>()));
+		mLstTag.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
+				mAdapter.remove(mAdapter.getItem(pos));
+			}
+		});
 	}
 
 	@Click(id = R.id.btnBack)
@@ -60,7 +95,16 @@ public class TagActivity extends Activity {
 	private void onContinueClick(View v) {
 		
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		result.put("tag", mEdtTag.getText().toString().trim());
+		ArrayList<String> tagList = new ArrayList<String>();
+		for (int i = 0; i < mAdapter.getCount(); i++) {
+			tagList.add(mAdapter.getItem(i));
+		}
+		{
+			String t = mEdtTag.getText().toString().trim();
+			if (t.length() > 0)
+				tagList.add(t);
+		}
+		result.put("tag", tagList);
 		mListener.onComplete(result);
 		finish();
 	}

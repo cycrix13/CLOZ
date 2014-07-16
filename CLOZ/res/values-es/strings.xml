@@ -1,7 +1,22 @@
 <resources>
     
     <string name="text_ok">Ok</string>
-    <string name="text_cancel">Cancel</string>
+    <string name="text_cancel">Cancelar</string>
+    <string name="text_yes">Sí</string>
+    <string name="text_no">No</string>
+    
+    <!-- ************************************************** -->
+    <!-- Looks -->
+    
+    <string name="look_all">Todos mis Looks</string>
+    <string name="look_result">Resultados</string>
+    <string name="look_edit">Editar</string>
+    <string name="look_save">Guardar</string>
+    <string name="look_share">Compartir</string>
+    <string name="look_delete">Eliminar</string>
+    <string name="look_save">Guardar</string>
+    <string name="look_msg_delete_image">¿Quieres borrar esta imagen?</string>
+    <string name="look_msg_delete_look">¿Quieres eliminar todo este Look?</string>
     
     <!-- ************************************************** -->
     <!-- Main menu -->
@@ -39,13 +54,18 @@
     <string name="help_text3_6">3) Sigue los pasos guiados.</string>
     
     <!-- ************************************************** -->
+    <!-- Camera -->
+    
+    <string name="camera_save">Guardar</string>
+    <string name="camera_guide">Toque en la cámara para tomar otr...</string>
+    
+    <!-- ************************************************** -->
     <!-- Contact -->
     
     <string name="contact_text1">¿Quién te verá con este Look?</string>
     <string name="contact_text2">Buscar</string>
     <string name="contact_text3">Atrás</string>
     <string name="contact_text4">Continuar</string>
-    
     <string name="contact_noselect">Por favor, seleccione uno o más contactos.</string>
     
     <!-- ************************************************** -->

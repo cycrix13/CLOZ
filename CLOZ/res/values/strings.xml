@@ -12,12 +12,28 @@
     
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
+    <string name="text_yes">Yes</string>
+    <string name="text_no">No</string>
 
     <!-- ************************************************** -->
     <!-- Fonts -->
 
     <string name="font1">font:font1.ttf</string>
     <string name="font2">font:font1.ttc</string>
+    
+    <!-- ************************************************** -->
+    <!-- Looks -->
+    
+    <string name="look_all">All my Looks</string>
+    <string name="look_result">Result</string>
+    <string name="look_edit">Edit</string>
+    <string name="look_save">Save</string>
+    <string name="look_share">Share</string>
+    <string name="look_delete">Delete</string>
+    <string name="look_save">Save</string>
+    <string name="look_msg_delete_image">Do you want to delete this image?</string>
+    <string name="look_msg_delete_look">Do you want to delete this Look?</string>
+    
 
     <!-- ************************************************** -->
     <!-- Main menu -->
@@ -54,6 +70,13 @@
     <string name="help_text3_5">2) New look</string>
     <string name="help_text3_6">3) Follow guided steps</string>
 
+    <!-- ************************************************** -->
+    <!-- Camera -->
+    
+    <string name="camera_save">Save</string>
+    <string name="camera_guide">Tap camera to take another photo</string>
+    
+    
     <!-- ************************************************** -->
     <!-- Contact -->
 

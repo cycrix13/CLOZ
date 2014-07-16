@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:singleLine="true"
         android:ems="10" >
 
         <requestFocus />
@@ -52,5 +53,14 @@
         android:contentDescription="@string/font1"
         android:text="@string/tag_text2"
         android:textColor="#FFFFFF" />
+
+    <ListView
+        android:id="@+id/lstTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnContinue"
+        android:layout_below="@+id/relativeLayout1" >
+
+    </ListView>
 
 </RelativeLayout>

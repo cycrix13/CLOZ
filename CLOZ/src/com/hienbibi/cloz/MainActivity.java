@@ -19,30 +19,35 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils.TruncateAt;
 import android.view.Display;
-import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.ListView;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
+import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
@@ -56,18 +61,32 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 	private DatabaseHelper mHelper;
 	
 //	@ViewById(id = R.id.lstLook)	private ListView mLstLook;
-	@ViewById(id = R.id.fliper)		private ViewFlipper mFlipper;
+	@ViewById(id = R.id.fliper)		private ShitLayout mFlipper;
 	
 	@ViewById(id = R.id.txtDate1)	private TextView mTxtData1;
 	@ViewById(id = R.id.txtDate2)	private TextView mTxtData2;
 	@ViewById(id = R.id.txtDate3)	private TextView mTxtData3;
-	@ViewById(id = R.id.txtShare)	private TextView mTxtShare;
+//	@ViewById(id = R.id.txtShare)	private TextView mTxtShare;
 	
 	@ViewById(id = R.id.layoutTag)	private InlineLayout mLayoutTag;
 	
-	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
-	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
-	private ImageView[] mImgArr = new ImageView[2];
+	@ViewById(id = R.id.txtDelete)	private TextView mTxtDelete;
+	@ViewById(id = R.id.txtEdit)	private TextView mTxtEdit;
+	@ViewById(id = R.id.txtShare)	private View mBtnShare;
+	@ViewById(id = R.id.imgAddImage)private View mImgAddImage;
+	@ViewById(id = R.id.imgAddTag)	private View mImgAddTag;
+	@ViewById(id = R.id.imgDeleteImg)private View mImgDeleteImage;
+	@ViewById(id = R.id.layoutDate)	private View mLayoutDate;
+	@ViewById(id = R.id.layoutSeperate)	private View mLayoutSeperate;
+	
+	
+//	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
+//	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
+	
+	private ViewPager mPager1;
+	private boolean mEditing = false;
+	
+//	private ImageView[] mImgArr = new ImageView[2];
 	private int mSelecting = 0;
 	List<Looks> lookList;
 
@@ -97,9 +116,6 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			finish();
 			return;
 		}
-		
-		mImgArr[0] = mImg1;
-		mImgArr[1] = mImg2;
 
 		FlashActivity.newInstance(this);
 
@@ -129,88 +145,107 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			loadImage();
 		}
 		
-		
-		final GestureDetector detector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
-			
-			@Override
-			public boolean onDown(MotionEvent e) {
-				return true;
-			}
-			
-			@Override
-			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-				
-				if (lookList.size() == 0)
-					return true;
-				
-				int nextIndex;
-				if (velocityY > 0) {
-					nextIndex = Math.max(mSelecting - 1, 0);
-				} else {
-					nextIndex = Math.min(mSelecting + 1, lookList.size() - 1);
-				}
-				
-				if (nextIndex == mSelecting)
-					return true;
-				
-				if (velocityY > 0) {
-					mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_down);
-					mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_down);
-				} else {
-					mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_up);
-					mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_up);
-				}
-				
-				mSelecting = nextIndex;
-				loadImage();
-				
-				return true;
-			}
-		});
-		
 		mFlipper.setOnTouchListener(new OnTouchListener() {
+
+//			private float startY;
+			private float range = CyUtils.dpToPx(16, MainActivity.this);
+			private boolean complete = false;
+
 			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1) {
-				return detector.onTouchEvent(arg1);
+			public boolean onTouch(View v, MotionEvent event) {
+
+				ShitLayout s = (ShitLayout) v;
+				
+				switch (event.getActionMasked()) {
+				case MotionEvent.ACTION_DOWN:
+//					startY = event.getY();
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+					if (!complete && Math.abs(event.getY() - s.startY) > range) {
+						prepareForLoadImage(event.getY() - s.startY);
+						complete = true;
+					}
+					break;
+
+				case MotionEvent.ACTION_UP:
+				case MotionEvent.ACTION_POINTER_UP:
+				case MotionEvent.ACTION_CANCEL:
+					complete = false;
+					break;
+				}
+				
+				return true;
 			}
 		});
+	}
+	
+	private void prepareForLoadImage(float deltaY) {
 		
-//		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
-//		mLstLook.setOnScrollListener(this);
+		if (lookList.size() == 0)
+			return;
+		
+		int nextIndex;
+		if (deltaY > 0) {
+			nextIndex = Math.max(mSelecting - 1, 0);
+		} else {
+			nextIndex = Math.min(mSelecting + 1, lookList.size() - 1);
+		}
+		
+		if (nextIndex == mSelecting)
+			return;
+		
+		if (deltaY > 0) {
+			mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_down);
+			mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_down);
+		} else {
+			mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_up);
+			mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_up);
+		}
+		
+		mSelecting = nextIndex;
+		loadImage();
 	}
 	
 	private void loadImage() {
 		
 		int visibility = mSelecting >= 0 ? View.VISIBLE : View.INVISIBLE;
+		
+		mTxtEdit.setVisibility(visibility);
+		mLayoutSeperate.setVisibility(visibility);
+		if (mSelecting >= 0 && !mEditing)
+			mBtnShare.setVisibility(View.VISIBLE);
+		else
+			mBtnShare.setVisibility(View.INVISIBLE);
+		
 		mFlipper.setVisibility(visibility);
 		if (mSelecting >= 0) {
 			String fileNames = lookList.get(mSelecting).fileName;
 
-			Bitmap bm = null;
-			try {
-				JSONArray jArr = new JSONArray(fileNames);
-				String path = getFilesDir().getAbsolutePath() + "/" + jArr.getString(0);
-				bm = loadImageOptimize(path);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
 			int i = 1 - mFlipper.getDisplayedChild();
-			ImageView img = (ImageView) mFlipper.getChildAt(i);
-			img.setImageBitmap(bm);
+			
+			ViewGroup group = (ViewGroup) mFlipper.getChildAt(i);
+			group.removeAllViews();
+			ViewPager pager = new ViewPager(this);
+			ViewGroup.LayoutParams param = new LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+			pager.setLayoutParams(param);
+			pager.setAdapter(new LookAdapter(pager, fileNames));
+			group.addView(pager);
+			
+//			ImageView img = (ImageView) mFlipper.getChildAt(i);
+//			img.setImageBitmap(bm);
 			mFlipper.setDisplayedChild(i);
-
 		}
 		
 		// d
 		// LLL
 		// yyyy
 		
-		
-		mTxtData1.setVisibility(visibility);
-		mTxtData2.setVisibility(visibility);
-		mTxtData3.setVisibility(visibility);
-		mTxtShare.setVisibility(visibility);
+		mLayoutDate.setVisibility(visibility);
+//		mTxtData1.setVisibility(visibility);
+//		mTxtData2.setVisibility(visibility);
+//		mTxtData3.setVisibility(visibility);
 		if (mSelecting >= 0) {
 			String dateJson = lookList.get(mSelecting).date;
 			try {
@@ -230,19 +265,25 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		if (mSelecting >= 0) {
 			
 			String tagJson = lookList.get(mSelecting).tags;
-			if (tagJson.length() > 0) {
-				TextView txt = new TextView(this);
-				LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				int padding = CyUtils.dpToPx(4, this);
-				txt.setPadding(padding * 2, padding, padding * 2, padding);
-				txt.setLayoutParams(params);
-				txt.setBackgroundResource(R.drawable.tag_border);
-				txt.setText(tagJson);
-				txt.setTextColor(0xFFFFFFFF);
-				txt.setMaxWidth(CyUtils.dpToPx(100, this));
-				txt.setSingleLine();
-				txt.setEllipsize(TruncateAt.END);
-				mLayoutTag.addView(txt);
+			try {
+				JSONArray jTag = new JSONArray(tagJson);
+				for (int i = 0; i < jTag.length(); i++) {
+					TextView txt = new TextView(this);
+					LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					int padding = CyUtils.dpToPx(4, this);
+					txt.setPadding(padding * 2, padding, padding * 2, padding);
+					txt.setLayoutParams(params);
+					txt.setBackgroundResource(R.drawable.tag_border);
+					txt.setText(jTag.getString(i));
+					txt.setTextColor(0xFFFFFFFF);
+					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setSingleLine();
+					txt.setEllipsize(TruncateAt.END);
+					mLayoutTag.addView(txt);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
 			}
 			
 			String contactJson = lookList.get(mSelecting).contacts;
@@ -329,7 +370,14 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			dateJson = jArr.toString();
 		}
 		
-		String tagJson = (String) result.get("tag");
+		String tagJson;
+		{
+			ArrayList<String> tagList = (ArrayList<String>) result.get("tag");
+			JSONArray jArr = new JSONArray();
+			for (String tag : tagList)
+				jArr.put(tag);
+			tagJson = jArr.toString();
+		}
 		
 		Looks look = new Looks();
 		look.fileName = imageJson;
@@ -357,7 +405,6 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			mSelecting = -1;
 		}
 		loadImage();
-//		mLstLook.setAdapter(mAdapter = new LookAdapter(lookList));
 	}
 	
 	public void copy(File src, File dst) throws IOException {
@@ -443,32 +490,57 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		preScrollState = scrollState;
 	}
 
-	private class LookAdapter extends ArrayAdapter<Looks> {
+	private class LookAdapter extends PagerAdapter {
 
-		public LookAdapter(List<Looks> objects) {
-			super(MainActivity.this, R.layout.look_item, R.id.txtDate, objects);
+//		private ArrayList<ViewGroup> mViewList = new ArrayList<ViewGroup>();
+		private ArrayList<String> mPathList = new ArrayList<String>();
+
+		public LookAdapter(ViewGroup container, String jsonArrPath) {
+
+			try {
+				JSONArray jArr = new JSONArray(jsonArrPath);
+				for (int i = 0; i < jArr.length(); i++) {
+					String path = jArr.getString(i);
+					mPathList.add(path);
+				}
+			} catch (JSONException e) {
+			}
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = super.getView(position, convertView, parent);
+		public Object instantiateItem(ViewGroup container, final int position) {
 			
-			Looks item = getItem(position);
-			ImageView img = (ImageView) convertView.findViewById(R.id.img);
+			ImageView img = new ImageView(MainActivity.this);
+			ViewGroup.LayoutParams param = new LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+			img.setLayoutParams(param);
+			String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+			img.setImageBitmap(loadImageOptimize(path));
 			
-			JSONArray jArr = null;
-			try {
-				jArr = new JSONArray(item.fileName);
-				String path = getFilesDir().getAbsolutePath() + "/" + jArr.getString(0);
-				img.setImageBitmap(loadImageOptimize(path));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-			return convertView;
+			container.addView(img);
+			return img;
 		}
-		
-		
+
+		@Override
+		public int getCount() {
+			return mPathList.size();
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			container.removeView((View)object);
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return (view == object);
+		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			
+			return PagerAdapter.POSITION_UNCHANGED;
+		}
 	}
 	
 	private Bitmap loadImageOptimize(String fileName) {
@@ -505,6 +577,82 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		bmOpt.inPurgeable = true;
 		
 		Bitmap bitmap = BitmapFactory.decodeFile(fileName, bmOpt);
+		bitmap = RotateBitmap(bitmap, orientation);
 		return bitmap;
+	}
+	
+	private static Bitmap RotateBitmap(Bitmap source, int orientation) {
+		Matrix matrix = new Matrix();
+		
+		switch (orientation) {
+		
+		case ExifInterface.ORIENTATION_ROTATE_90:
+			matrix.postRotate(90);
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_180:
+			matrix.postRotate(180);
+			break;
+		case ExifInterface.ORIENTATION_ROTATE_270:
+			matrix.postRotate(270);
+			break;
+		default:
+			return source;
+		}
+		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+	}
+	
+	@Click(id = R.id.txtEdit)
+	private void onEditClick(View v) {
+		mEditing = !mEditing;
+		
+		int visibleEdit = mEditing ? View.VISIBLE : View.INVISIBLE;
+		int visibleNoEdit = mEditing ? View.INVISIBLE : View.VISIBLE;
+		
+		mTxtDelete.setVisibility(visibleEdit);
+		mTxtEdit.setText(mEditing ? R.string.look_save : R.string.look_edit);
+		mBtnShare.setVisibility(visibleNoEdit);
+		mImgAddImage.setVisibility(visibleEdit);
+		mImgAddTag.setVisibility(mEditing ? View.VISIBLE : View.GONE);
+		mImgDeleteImage.setVisibility(visibleEdit);
+		
+		mLayoutDate.setBackgroundColor(mEditing ? 0x80000000 : 0x00000000);
+	}
+	
+	@Click(id = R.id.txtDelete)
+	private void onDeleteClick(View v) {
+		
+		if (lookList.size() == 0 || mSelecting == -1) {
+			onEditClick(null);
+			return;
+		}
+		
+		new AlertDialog.Builder(this)
+		.setMessage(R.string.look_msg_delete_look)
+		.setPositiveButton(R.string.text_ok, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Looks item = lookList.get(mSelecting);
+				
+				try {
+					mHelper.getDao().deleteById(item.id);
+					lookList = mHelper.getDao().queryForAll();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				if (lookList.size() == 0) {
+					mSelecting = -1;
+					onEditClick(null);
+				} else {
+					mSelecting = Math.min(mSelecting, lookList.size() - 1);
+					mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_up);
+					mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_up);
+				}
+				
+				loadImage();
+			}
+		})
+		.setNegativeButton(R.string.text_no, null)
+		.create().show();
 	}
 }

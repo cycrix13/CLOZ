@@ -5,7 +5,7 @@
     android:background="@drawable/help3"
     tools:context=".MainActivity" >
 
-    <ViewFlipper
+    <com.hienbibi.cloz.ShitLayout
         android:id="@+id/fliper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,6 +13,21 @@
         android:inAnimation="@android:anim/slide_in_left"
         android:outAnimation="@android:anim/slide_out_right" >
 
+        <FrameLayout
+            android:id="@+id/layoutPage1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/layoutPage2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </FrameLayout>
+
+        <!-- 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="match_parent"
@@ -24,11 +39,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter" />
-
-    </ViewFlipper>
+             -->
+            
+    </com.hienbibi.cloz.ShitLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/layoutDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -40,13 +56,13 @@
             android:id="@+id/txtDate1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="14"
-            android:textColor="#FFFFFF"
-            android:textSize="48sp"
             android:shadowColor="#000000"
             android:shadowDx="-3"
             android:shadowDy="-3"
-            android:shadowRadius="1" />
+            android:shadowRadius="1"
+            android:text="14"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp" />
 
         <TextView
             android:id="@+id/txtDate2"
@@ -73,28 +89,66 @@
             android:text="2014"
             android:textColor="#FFFFFF"
             android:textSize="36sp" />
-
     </LinearLayout>
 
     <TextView
         android:id="@+id/txtShare"
-        android:layout_width="96dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout1"
+        android:layout_below="@+id/layoutDate"
         android:layout_marginTop="24dp"
         android:background="@drawable/share_border"
         android:gravity="center"
-        android:text="Share"
+        android:minWidth="96dp"
+        android:text="@string/look_share"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
 
     <com.cycrix.util.InlineLayout
         android:id="@+id/layoutTag"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="160dp"
         android:layout_alignParentBottom="true" >
-
     </com.cycrix.util.InlineLayout>
+
+    <ImageView
+        android:id="@+id/imgAddTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layoutTag"
+        android:layout_marginLeft="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:src="@drawable/add"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/layoutSeperate"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@+id/imgAddTag"
+        android:background="#808080" >
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imgAddImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtShare"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/add"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/imgDeleteImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtShare"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/delete_image"
+        android:visibility="invisible" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -105,14 +159,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="All my Looks"
-            android:textColor="#FFFFFF"
             android:gravity="center"
-            android:textSize="16sp"
             android:shadowColor="#000000"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="8" />
+            android:shadowRadius="8"
+            android:text="@string/look_all"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:text="@string/look_edit"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:text="@string/look_delete"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
@@ -120,13 +196,14 @@
         android:id="@+id/layoutHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
     </FrameLayout>
 
+    
     <fragment
         android:id="@+id/fragMenu"
         android:name="com.hienbibi.cloz.MenuFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-	
+    
+
 </RelativeLayout>
