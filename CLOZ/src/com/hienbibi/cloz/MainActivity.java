@@ -901,4 +901,9 @@ OnScrollListener, OnClickListener {
 			}
 		}, true);
 	}
+
+	@Override
+	public void onSearchClick() {
+		SearchActivity.newInstance(this, mHelper);
+	}
 }

@@ -9,6 +9,7 @@
     <string name="title_activity_flash">FlashActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_contact_list">ContactListActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
     
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
@@ -20,10 +21,10 @@
 
     <string name="font1">font:font1.ttf</string>
     <string name="font2">font:font1.ttc</string>
-    
+
     <!-- ************************************************** -->
     <!-- Looks -->
-    
+
     <string name="look_all">All my Looks</string>
     <string name="look_result">Result</string>
     <string name="look_edit">Edit</string>
@@ -32,14 +33,17 @@
     <string name="look_delete">Delete</string>
     <string name="look_msg_delete_image">Do you want to delete this image?</string>
     <string name="look_msg_delete_look">Do you want to delete this Look?</string>
+
     <string-array name="look_msg_add_tag">
-        <item >Contacts</item>
-        <item >Tags</item>
+        <item>Contacts</item>
+        <item>Tags</item>
     </string-array>
+
     <string name="look_msg_delete_tag">Do you want to delete this tag?</string>
+
     <string-array name="look_msg_add_image">
-        <item >Camera</item>
-        <item >Gallery</item>
+        <item>Camera</item>
+        <item>Gallery</item>
     </string-array>
 
     <!-- ************************************************** -->
@@ -79,11 +83,10 @@
 
     <!-- ************************************************** -->
     <!-- Camera -->
-    
+
     <string name="camera_save">Save</string>
     <string name="camera_guide">Tap camera to take another photo</string>
-    
-    
+
     <!-- ************************************************** -->
     <!-- Contact -->
 
@@ -92,16 +95,22 @@
     <string name="contact_text3">Back</string>
     <string name="contact_text4">Continue</string>
     <string name="contact_noselect">Please select one or more contacts.</string>
-    
+
     <!-- ************************************************** -->
     <!-- Date -->
-    
+
     <string name="date_text1">Select the date of the Look.</string>
-    
+
     <!-- ************************************************** -->
     <!-- Tag -->
-    
+
     <string name="tag_text1">Write extra tags (event, place…)</string>
     <string name="tag_text2">Finish! :)</string>
+    
+    <!-- ************************************************** -->
+    <!-- Search -->
+    
+    <string name="search_text1">Who are you meeting?</string>
+    <string name="search_text2">Find Looks!</string>
 
 </resources>
