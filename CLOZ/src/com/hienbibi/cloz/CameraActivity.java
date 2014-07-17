@@ -39,6 +39,8 @@ public class CameraActivity extends Activity {
 
 	public static final int MODE_CAMERA = 1;
 	public static final int MODE_FILE 	= 2;
+	public static final int MODE_PICK_CAMERA 	= 3;
+	public static final int MODE_PICK_FILE 		= 4;
 	
 	private static final int MEDIA_TYPE_IMAGE = 1;
 	
@@ -48,7 +50,7 @@ public class CameraActivity extends Activity {
 	private static Listener sListener;
 	private static int 		sMode;
 
-	private int 		mMaxItem = 4;
+	public static int 		mMaxItem = 4;
 	private Listener 	mListener;
 	private int 		mMode;
 	private Uri 		fileUri;
@@ -85,10 +87,12 @@ public class CameraActivity extends Activity {
 
 		switch (mMode) {
 		case MODE_CAMERA:
+		case MODE_PICK_CAMERA:
 			takePhoto();
 			break;
 
 		case MODE_FILE:
+		case MODE_PICK_FILE:
 			openGallary();
 			break;
 		}
@@ -197,6 +201,15 @@ public class CameraActivity extends Activity {
 		item.bitmap = bitmap;
 		item.path = imgPath;
 		mItemList.add(item);
+		
+		if (mMode == MODE_PICK_CAMERA || mMode == MODE_PICK_FILE) {
+			HashMap<String, Object> result = new HashMap<String, Object>();
+			result.put("images", mItemList);
+			mListener.onComplete(result);
+			finish();
+			return;
+		}
+		
 		mSelectingIndex = mItemList.size() - 1;
 		mImgClose.setVisibility(View.VISIBLE);
 		mAdapter.notifyDataSetChanged();

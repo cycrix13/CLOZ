@@ -14,9 +14,17 @@
     <string name="look_save">Guardar</string>
     <string name="look_share">Compartir</string>
     <string name="look_delete">Eliminar</string>
-    <string name="look_save">Guardar</string>
     <string name="look_msg_delete_image">¿Quieres borrar esta imagen?</string>
     <string name="look_msg_delete_look">¿Quieres eliminar todo este Look?</string>
+    <string-array name="look_msg_add_tag">
+        <item >Contactos</item>
+        <item >Etiquetas</item>
+    </string-array>
+    <string name="look_msg_delete_tag">¿Quieres eliminar esta etiqueta?</string>
+    <string-array name="look_msg_add_image">
+        <item >Cámera</item>
+        <item >Galería</item>
+    </string-array>
     
     <!-- ************************************************** -->
     <!-- Main menu -->

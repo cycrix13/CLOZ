@@ -21,7 +21,6 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -36,6 +35,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -43,6 +43,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -54,7 +55,8 @@ import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 
-public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, OnScrollListener {
+public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, 
+OnScrollListener, OnClickListener {
 
 	private MenuFragment mMenuFragment;
 	private HelpFragment mHelpFragment;
@@ -243,9 +245,6 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		// yyyy
 		
 		mLayoutDate.setVisibility(visibility);
-//		mTxtData1.setVisibility(visibility);
-//		mTxtData2.setVisibility(visibility);
-//		mTxtData3.setVisibility(visibility);
 		if (mSelecting >= 0) {
 			String dateJson = lookList.get(mSelecting).date;
 			try {
@@ -260,7 +259,7 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			}
 		}
 		
-		mLayoutTag.removeAllViewsInLayout();
+		mLayoutTag.removeAllViews();
 		mLayoutTag.setVisibility(visibility);
 		if (mSelecting >= 0) {
 			
@@ -279,6 +278,8 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 					txt.setMaxWidth(CyUtils.dpToPx(100, this));
 					txt.setSingleLine();
 					txt.setEllipsize(TruncateAt.END);
+					txt.setOnClickListener(this);
+					txt.setTag("tag");
 					mLayoutTag.addView(txt);
 				}
 			} catch (JSONException e) {
@@ -301,6 +302,8 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 					txt.setMaxWidth(CyUtils.dpToPx(100, this));
 					txt.setSingleLine();
 					txt.setEllipsize(TruncateAt.END);
+					txt.setOnClickListener(this);
+					txt.setTag("contact");
 					mLayoutTag.addView(txt);
 				}
 				
@@ -309,6 +312,66 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 				return;
 			}
 		}
+	}
+	
+	@Override
+	public void onClick(View v) {
+		
+		String type = (String) v.getTag();
+		TextView txt = (TextView) v;
+		
+		if (mEditing) {
+			deleteTag(txt.getText().toString(), type.equals("tag"));
+		} else {
+			new AlertDialog.Builder(this).setMessage(txt.getText().toString())
+			.setPositiveButton(R.string.text_ok, null).create().show();
+		}
+	}
+	
+	private void deleteTag(final String text, final boolean isTag) {
+		new AlertDialog.Builder(this)
+		.setTitle(text)
+		.setMessage(R.string.look_msg_delete_tag)
+		.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Looks item = lookList.get(mSelecting);
+				String json = null;
+				if (isTag)
+					json = item.tags;
+				else
+					json = item.contacts;
+				
+				String newJson = null;
+				try {
+					JSONArray jArr = new JSONArray(json);
+					JSONArray jNewArr = new JSONArray();
+					for (int i = 0; i < jArr.length(); i++) {
+						String textItem = jArr.getString(i);
+						if (!textItem.equals(text))
+							jNewArr.put(textItem);
+					}
+					newJson = jNewArr.toString();
+				} catch (JSONException e) {
+					return;
+				}
+				
+				if (isTag)
+					item.tags = newJson;
+				else
+					item.contacts = newJson;
+				
+				try {
+					mHelper.getDao().update(item);
+				} catch (SQLException e) {
+					return;
+				}
+				
+				loadImage();
+			}
+		})
+		.setNegativeButton(R.string.text_cancel, null)
+		.create().show();
 	}
 
 	@Override
@@ -514,8 +577,13 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 			ViewGroup.LayoutParams param = new LayoutParams(
 					ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			img.setLayoutParams(param);
-			String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
-			img.setImageBitmap(loadImageOptimize(path));
+			if (mPathList.size() > 0) {
+				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+				img.setImageBitmap(loadImageOptimize(path));
+			} else {
+				img.setScaleType(ScaleType.FIT_XY);
+				img.setImageResource(R.drawable.nolook);
+			}
 			
 			container.addView(img);
 			return img;
@@ -523,7 +591,7 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 
 		@Override
 		public int getCount() {
-			return mPathList.size();
+			return Math.max(mPathList.size(), 1);
 		}
 
 		@Override
@@ -628,7 +696,7 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		
 		new AlertDialog.Builder(this)
 		.setMessage(R.string.look_msg_delete_look)
-		.setPositiveButton(R.string.text_ok, new OnClickListener() {
+		.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Looks item = lookList.get(mSelecting);
@@ -654,5 +722,183 @@ public class MainActivity extends FragmentActivity implements MenuFragment.Liste
 		})
 		.setNegativeButton(R.string.text_no, null)
 		.create().show();
+	}
+	
+	@Click(id = R.id.imgAddTag)
+	private void onAddTagClick(View v) {
+		
+		new AlertDialog.Builder(this).setItems(R.array.look_msg_add_tag, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case 0:
+					ContactListActivity.newInstance(MainActivity.this, new ContactListActivity.Listener() {
+						@Override
+						public void onComplete(HashMap<String, Object> result) {
+							Looks item = lookList.get(mSelecting);
+							try {
+								JSONArray jContacts = new JSONArray(item.contacts);
+								ArrayList<String> newContactList = (ArrayList<String>) result.get("contacts");
+								item.contacts = addStringNoDuplicate(jContacts, newContactList);
+								mHelper.getDao().update(item);
+								loadImage();
+							} catch (Exception e) {
+							}
+						}
+					}, true);
+					
+					break;
+					
+				case 1:
+					TagActivity.newInstance(MainActivity.this, new TagActivity.Listener() {
+						@Override
+						public void onComplete(HashMap<String, Object> result) {
+							Looks item = lookList.get(mSelecting);
+							try {
+								JSONArray jContacts = new JSONArray(item.tags);
+								ArrayList<String> newContactList = (ArrayList<String>) result.get("tag");
+								item.tags = addStringNoDuplicate(jContacts, newContactList);
+								mHelper.getDao().update(item);
+								loadImage();
+							} catch (Exception e) {
+							}
+						}
+					});
+					break;
+				}
+			}
+		}).setNegativeButton(R.string.text_cancel, null).create().show();
+	}
+	
+	private String addStringNoDuplicate(JSONArray jArr, ArrayList<String> newList) {
+
+		JSONArray result = new JSONArray(newList);
+
+		try {
+			for (int i = 0; i < jArr.length(); i++) {
+				String item = jArr.getString(i);
+				if (!newList.contains(item))
+					result.put(item);
+			}
+			
+			return result.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	@Click(id = R.id.imgDeleteImg)
+	private void onDeleteImageClick(View v) {
+		
+		new AlertDialog.Builder(this)
+		.setMessage(R.string.look_msg_delete_image)
+		.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Looks item = lookList.get(mSelecting);
+				try {
+					JSONArray jArr = new JSONArray(item.fileName);
+					ViewGroup g = (ViewGroup) mFlipper.getChildAt(mFlipper.getDisplayedChild());
+					ViewPager pager = (ViewPager) g.getChildAt(0);
+					int currentIndex = pager.getCurrentItem();
+					
+					JSONArray jNewArr = new JSONArray();
+					for (int i = 0; i < jArr.length(); i++) {
+						if (i != currentIndex)
+							jNewArr.put(jArr.getString(i));
+					}
+					
+					item.fileName = jNewArr.toString();
+					mHelper.getDao().update(item);
+					loadImage();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+			}
+		})
+		.setNegativeButton(R.string.text_no, null)
+		.create().show();
+	}
+	
+	@Click(id = R.id.imgAddImage)
+	private void onAddImageClick(View v) {
+		
+		Looks item = lookList.get(mSelecting);
+		
+		try {
+			JSONArray jArr = new JSONArray(item.fileName);
+			if (jArr.length() >= CameraActivity.mMaxItem)
+				return;
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		new AlertDialog.Builder(this).setItems(R.array.look_msg_add_image, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				CameraActivity.newInstance(MainActivity.this, new CameraActivity.Listener() {
+					@Override
+					public void onComplete(HashMap<String, Object> result) {
+						Looks item = lookList.get(mSelecting);
+						try {
+							JSONArray jArr = new JSONArray(item.fileName);
+							ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) result.get("images");
+							JSONArray jNewArr = new JSONArray();
+							
+							for (ImageItem imageItem : imageList) {
+								File srcFile = new File(imageItem.path);
+								String randomPath = generateRandomImageFileName(MainActivity.this);
+								File dstFile = getFileStreamPath(randomPath);
+								try {
+									copy(srcFile, dstFile);
+								} catch (IOException e) {
+									e.printStackTrace();
+									return;
+								}
+								jNewArr.put(randomPath);
+							}
+							
+							for (int i = 0; i < jArr.length(); i++)
+								jNewArr.put(jArr.getString(i));
+							item.fileName = jNewArr.toString();
+							mHelper.getDao().update(item);
+							loadImage();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}, which == 0 ? CameraActivity.MODE_PICK_CAMERA : CameraActivity.MODE_PICK_FILE);
+			}
+		}).setNegativeButton(R.string.text_cancel, null).create().show();
+	}
+	
+	@Click(id = R.id.layoutDate)
+	private void onDateClick(View v) {
+		
+		if (!mEditing)
+			return;
+		
+		DateActivity.newInstance(this, new DateActivity.Listener() {
+			@Override
+			public void onComplete(HashMap<String, Object> result) {
+				Looks item = lookList.get(mSelecting);
+				int[] date = (int[]) result.get("date");
+				JSONArray jDate = new JSONArray();
+				for (int i : date)
+					jDate.put(i);
+				item.date = jDate.toString();
+				try {
+					mHelper.getDao().update(item);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return;
+				}
+				loadImage();
+			}
+		}, true);
 	}
 }
