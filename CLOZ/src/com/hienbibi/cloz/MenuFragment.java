@@ -2,6 +2,7 @@ package com.hienbibi.cloz;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -57,7 +58,11 @@ public class MenuFragment extends Fragment {
 	
 	@Click(id = R.id.txtMenu)
 	void onMenuClick(View v) {
-		int screenWidth = getResources().getDisplayMetrics().widthPixels;
+		
+		Intent intent = new Intent(getActivity(), LoginUsingActivityActivity.class);
+		getActivity().startActivity(intent);
+		
+		/*int screenWidth = getResources().getDisplayMetrics().widthPixels;
 		if (mLayoutMenu.getTranslationY() == screenWidth) {
 			
 			ObjectAnimator animator1 = ObjectAnimator.ofFloat(mLayoutMenu, "translationY", 
@@ -80,7 +85,7 @@ public class MenuFragment extends Fragment {
 			set.playTogether(animator1, animator2, animator3);
 			set.setInterpolator(new AccelerateDecelerateInterpolator());
 			set.start();
-		}
+		}*/
 	}
 	
 	@Click(id = R.id.layoutNewLook)

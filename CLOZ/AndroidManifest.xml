@@ -17,7 +17,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name="com.hienbibi.cloz.MainActivity"
             android:label="@string/app_name"
@@ -55,6 +55,15 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
+        
+        <activity
+            android:name="com.hienbibi.cloz.LoginUsingActivityActivity"
+            android:label="@string/title_activity_date"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+        </activity>
+        
         <activity
             android:name="com.hienbibi.cloz.TagActivity"
             android:label="@string/title_activity_tag"
@@ -62,6 +71,8 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysVisible" >
         </activity>
+        <meta-data android:value="@string/app_id" android:name="com.facebook.sdk.ApplicationId"/>
+        <activity android:name="com.facebook.LoginActivity"></activity>
     </application>
 
 </manifest>
