@@ -1069,4 +1069,10 @@ OnScrollListener, OnClickListener {
 			mTxtBackAll.setVisibility(View.INVISIBLE);
 		}
 	}
+
+	@Override
+	public void onUseInfoClick() {
+		// TODO Auto-generated method stub
+		UseInfoActivity.newInstance(this, null, true);
+	}
 }

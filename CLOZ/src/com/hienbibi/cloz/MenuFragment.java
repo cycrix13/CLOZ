@@ -124,11 +124,17 @@ public class MenuFragment extends Fragment {
 	void onSearchClick(View v) {
 		if (mListener != null) mListener.onSearchClick();
 	}
+	
+	@Click(id = R.id.layoutUseInfo)
+	void onUseInfoClick(View v) {
+		if (mListener != null) mListener.onUseInfoClick();
+	}
 
 	public interface Listener {
 		void onCameraClick();
 		void onGalleryClick();
 		void onHelpClick();
 		void onSearchClick();
+		void onUseInfoClick();
 	}
 }

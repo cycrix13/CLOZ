@@ -10,6 +10,7 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_contact_list">ContactListActivity</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_useinfo">UseInfoActivity</string>
     
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
@@ -114,4 +115,14 @@
     <string name="search_text1">Who are you meeting?</string>
     <string name="search_text2">Find Looks!</string>
 
+    
+    <!-- User Info -->
+    <string name="useinfo_text1">Info of use</string>
+    <string name="close_text">Close</string>
+    <string name="look_text">Looks</string>
+    <string name="image_text">Images</string>
+    <string name="people_text">People</string>
+    <string name="query_text">Queries</string>
+    
+    
 </resources>
