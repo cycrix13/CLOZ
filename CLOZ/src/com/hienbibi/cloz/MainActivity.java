@@ -54,6 +54,7 @@ import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
+import com.hienbibi.cloz.SearchActivity.TItem;
 
 public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, 
 OnScrollListener, OnClickListener {
@@ -80,7 +81,8 @@ OnScrollListener, OnClickListener {
 	@ViewById(id = R.id.imgDeleteImg)private View mImgDeleteImage;
 	@ViewById(id = R.id.layoutDate)	private View mLayoutDate;
 	@ViewById(id = R.id.layoutSeperate)	private View mLayoutSeperate;
-	
+	@ViewById(id = R.id.txtBackAll) private View mTxtBackAll;
+	@ViewById(id = R.id.txtAll) private TextView mTxtAll;
 	
 //	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
 //	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
@@ -91,8 +93,11 @@ OnScrollListener, OnClickListener {
 //	private ImageView[] mImgArr = new ImageView[2];
 	private int mSelecting = 0;
 	List<Looks> lookList;
+	private boolean mResultMode = false;
 
 	private LookAdapter mAdapter;
+	private ArrayList<String> mConditionTag;
+	private ArrayList<String> mConditionContact;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -261,12 +266,76 @@ OnScrollListener, OnClickListener {
 		
 		mLayoutTag.removeAllViews();
 		mLayoutTag.setVisibility(visibility);
+		
+		if (mResultMode) {
+			String tagJson = lookList.get(mSelecting).tags;
+			try {
+				JSONArray jTag = new JSONArray(tagJson);
+				for (int i = 0; i < jTag.length(); i++) {
+					
+					if (!mConditionTag.contains(jTag.getString(i)))
+						continue;
+					
+					TextView txt = new TextView(this);
+						LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					int padding = CyUtils.dpToPx(4, this);
+					txt.setPadding(padding * 2, padding, padding * 2, padding);
+					txt.setLayoutParams(params);
+					txt.setBackgroundResource(R.drawable.search_result_border);
+					txt.setText(jTag.getString(i));
+					txt.setTextColor(0xFFFFFFFF);
+					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setSingleLine();
+					txt.setEllipsize(TruncateAt.END);
+					txt.setOnClickListener(this);
+					txt.setTag("tag");
+					mLayoutTag.addView(txt);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
+			}
+			
+			String contactJson = lookList.get(mSelecting).contacts;
+			try {
+				JSONArray jContacts = new JSONArray(contactJson);
+				for (int i = 0; i < jContacts.length(); i++) {
+					
+					if (!mConditionContact.contains(jContacts.getString(i)))
+						continue;
+					
+					TextView txt = new TextView(this);
+					LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					int padding = CyUtils.dpToPx(4, this);
+					txt.setPadding(padding * 2, padding, padding * 2, padding);
+					txt.setLayoutParams(params);
+					txt.setBackgroundResource(R.drawable.search_result_border);
+					txt.setText(jContacts.getString(i));
+					txt.setTextColor(0xFFFFFFFF);
+					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setSingleLine();
+					txt.setEllipsize(TruncateAt.END);
+					txt.setOnClickListener(this);
+					txt.setTag("contact");
+					mLayoutTag.addView(txt);
+				}
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+		
 		if (mSelecting >= 0) {
 			
 			String tagJson = lookList.get(mSelecting).tags;
 			try {
 				JSONArray jTag = new JSONArray(tagJson);
 				for (int i = 0; i < jTag.length(); i++) {
+					
+					if (mResultMode && mConditionTag.contains(jTag.getString(i)))
+							continue;
+					
 					TextView txt = new TextView(this);
 					LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 					int padding = CyUtils.dpToPx(4, this);
@@ -291,6 +360,10 @@ OnScrollListener, OnClickListener {
 			try {
 				JSONArray jContacts = new JSONArray(contactJson);
 				for (int i = 0; i < jContacts.length(); i++) {
+					
+					if (mResultMode && mConditionContact.contains(jContacts.getString(i)))
+						continue;
+					
 					TextView txt = new TextView(this);
 					LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 					int padding = CyUtils.dpToPx(4, this);
@@ -676,7 +749,7 @@ OnScrollListener, OnClickListener {
 		int visibleEdit = mEditing ? View.VISIBLE : View.INVISIBLE;
 		int visibleNoEdit = mEditing ? View.INVISIBLE : View.VISIBLE;
 		
-		mTxtDelete.setVisibility(visibleEdit);
+		updateLayout();
 		mTxtEdit.setText(mEditing ? R.string.look_save : R.string.look_edit);
 		mBtnShare.setVisibility(visibleNoEdit);
 		mImgAddImage.setVisibility(visibleEdit);
@@ -904,6 +977,96 @@ OnScrollListener, OnClickListener {
 
 	@Override
 	public void onSearchClick() {
-		SearchActivity.newInstance(this, mHelper);
+		SearchActivity.newInstance(this, mHelper, new SearchActivity.Listener() {
+			@Override
+			public void onComplete(ArrayList<TItem> result) {
+				changeToResultMode(result);
+			}
+		});
+	}
+	
+	private void changeToResultMode(ArrayList<TItem> condition) {
+		
+		// Change GUI
+		mResultMode = true;
+		updateLayout();
+		
+		// Query data
+		ArrayList<String> tagList = new ArrayList<String>();
+		ArrayList<String> contactList = new ArrayList<String>();
+		for (TItem item : condition) {
+			if (item.isContact) {
+				if (!contactList.contains(item.text)) contactList.add(item.text);
+			} else {
+				if (!tagList.contains(item.text)) tagList.add(item.text);
+			}
+		}
+		
+		mConditionTag = tagList;
+		mConditionContact = contactList;
+		
+		ArrayList<Looks> result = null;
+		try {
+			List<Looks> allLook = mHelper.getDao().queryForAll();
+			result = new ArrayList<Looks>();
+			for (Looks lookItem : allLook) {
+				if (changeToResultModeHelper(lookItem.contacts, contactList) ||
+						changeToResultModeHelper(lookItem.tags, tagList)) {
+					result.add(lookItem);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		// Display data
+		lookList = result;
+		mSelecting = 0;
+		loadImage();
+	}
+	
+	private boolean changeToResultModeHelper(String jsonStr, ArrayList<String> condition) throws Exception {
+		
+		JSONArray jStr = new JSONArray(jsonStr);
+		for (int i = 0; i < jStr.length(); i++) {
+			if (condition.contains(jStr.getString(i)))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	@Click(id = R.id.txtBackAll)
+	private void onBackAllClick(View v) {
+		
+		// Change GUI
+		mResultMode = false;
+		updateLayout();
+		
+		// Query data
+		try {
+			lookList = mHelper.getDao().queryForAll();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		// Display data
+		mSelecting = lookList.size() != 0 ? 0 : -1;
+		loadImage();
+	}
+	
+	private void updateLayout() {
+		if (mEditing) {
+			mTxtDelete.setVisibility(View.VISIBLE);
+			mTxtBackAll.setVisibility(View.INVISIBLE);
+		} else if (mResultMode) {
+			mTxtDelete.setVisibility(View.INVISIBLE);
+			mTxtBackAll.setVisibility(View.VISIBLE);
+		} else {
+			mTxtDelete.setVisibility(View.INVISIBLE);
+			mTxtBackAll.setVisibility(View.INVISIBLE);
+		}
 	}
 }

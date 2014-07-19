@@ -102,6 +102,10 @@
         android:minWidth="96dp"
         android:text="@string/look_share"
         android:textColor="#FFFFFF"
+        android:shadowColor="#000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
         android:textSize="24sp" />
 
     <com.cycrix.util.InlineLayout
@@ -156,6 +160,7 @@
         android:background="#70FFFFFF" >
 
         <TextView
+            android:id="@+id/txtAll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -186,6 +191,17 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:text="@string/look_delete"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:visibility="invisible" />
+        
+        <TextView
+            android:id="@+id/txtBackAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:text="@string/look_back_all"
             android:textColor="#000000"
             android:textSize="16sp"
             android:visibility="invisible" />

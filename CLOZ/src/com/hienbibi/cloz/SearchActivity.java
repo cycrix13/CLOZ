@@ -6,44 +6,56 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.cycrix.androidannotation.AndroidAnnotationParser;
-import com.cycrix.androidannotation.ViewById;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cycrix.androidannotation.AndroidAnnotationParser;
+import com.cycrix.androidannotation.Click;
+import com.cycrix.androidannotation.ViewById;
+
 public class SearchActivity extends Activity {
 	
 	private static DatabaseHelper sHelper;
+	private static Listener sListener;
 	
 	private DatabaseHelper mHelper; 
+	private Listener mListener;
 	
 	private ArrayList<String> mTagList = new ArrayList<String>();
 	private ArrayList<String> mContactList = new ArrayList<String>();
 	private ArrayList<TItem> mItemList = new ArrayList<SearchActivity.TItem>();
+	private ArrayList<TItem> mFilterItemList;
 	private ItemAdapter mAdapter;
 	
-	@ViewById(id = R.id.lst)	private ListView mLst;
+	@ViewById(id = R.id.lst)		private ListView mLst;
+	@ViewById(id = R.id.edtSearch)	private EditText mEdtSearch;
 	
-	private static class TItem {
+	public static class TItem {
 		public String text;
 		public boolean check;
 		public boolean isContact;
 		public String toString() { return text; }
 	}
 	
-	public static void newInstance(Activity act, DatabaseHelper helper) {
+	public static class Listener {
+		public void onComplete(ArrayList<TItem> result) {}
+	}
+	
+	public static void newInstance(Activity act, DatabaseHelper helper, Listener listener) {
 		sHelper = helper;
+		sListener = listener;
 		Intent intent = new Intent(act, SearchActivity.class);
 		act.startActivity(intent);
 	}
@@ -56,6 +68,9 @@ public class SearchActivity extends Activity {
 		mHelper = sHelper;
 		sHelper = null;
 		
+		mListener = sListener;
+		sListener = null;
+		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
 			getTagContact();
@@ -65,8 +80,26 @@ public class SearchActivity extends Activity {
 			return;
 		}
 		
-		mLst.setAdapter(mAdapter = new ItemAdapter(mItemList));
+		mFilterItemList = new ArrayList<SearchActivity.TItem>(mItemList);
+		mLst.setAdapter(mAdapter = new ItemAdapter(mFilterItemList));
 		mLst.setOnItemClickListener(mAdapter);
+		
+		mEdtSearch.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+				mFilterItemList.clear();
+				String searchStr = s.toString().toLowerCase();
+				for (TItem item : mItemList)
+					if (item.text.toLowerCase().contains(searchStr))
+						mFilterItemList.add(item);
+					
+				mAdapter.notifyDataSetChanged();
+			}
+			
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+			public void afterTextChanged(Editable arg0) {}
+		});
 	}
 	
 	private void getTagContact() throws Exception {
@@ -104,6 +137,23 @@ public class SearchActivity extends Activity {
 				container.add(str);
 			}
 		}
+	}
+	
+	@Click(id = R.id.btnBack)
+	private void onBackClick(View v) {
+		finish();
+	}
+	
+	@Click(id = R.id.btnContinue)
+	private void onContinueClick(View v) {
+		
+		ArrayList<TItem> result = new ArrayList<SearchActivity.TItem>();
+		for (TItem item : mItemList)
+			if (item.check)
+				result.add(item);
+		
+		mListener.onComplete(result);
+		finish();
 	}
 	
 	private class ItemAdapter extends ArrayAdapter<TItem> implements OnItemClickListener {
