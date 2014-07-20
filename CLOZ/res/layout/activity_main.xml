@@ -26,6 +26,13 @@
             android:layout_height="match_parent" >
 
         </FrameLayout>
+        
+        <FrameLayout
+            android:id="@+id/layoutPage3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </FrameLayout>
 
         <!-- 
         <ImageView
@@ -221,12 +228,10 @@
         android:layout_height="match_parent" >
     </FrameLayout>
 
-
     <fragment
         android:id="@+id/fragMenu"
         android:name="com.hienbibi.cloz.MenuFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 </RelativeLayout>

@@ -29,15 +29,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils.TruncateAt;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,12 +45,10 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
@@ -220,6 +217,73 @@ OnScrollListener, OnClickListener {
 		loadImage();
 	}
 	
+	private void loadFlipper() {
+		
+		loadFlipperPage(mSelecting - 1);
+		loadFlipperPage(mSelecting);
+		loadFlipperPage(mSelecting + 1);
+		
+		for (int i = 0; i < mFlipper.getChildCount(); i++) {
+			Object tag = mFlipper.getChildAt(i).getTag();
+			if (tag != null && ((Integer) tag) == mSelecting) {
+				mFlipper.setDisplayedChild(i);
+				return;
+			}
+		}
+	}
+	
+	private void loadFlipperPage(int pageIndex) {
+		
+		if (pageIndex < 0 || pageIndex > lookList.size() - 1)
+			return;
+		
+		// Find. If found, return
+		for (int i = 0; i < mFlipper.getChildCount(); i++) {
+			Object tag = mFlipper.getChildAt(i).getTag();
+			if (tag != null && ((Integer) tag) == pageIndex)
+				return;
+		}
+
+		// If not found, find the idle one
+		ViewGroup idleOne = null;
+		for (int i = 0; i < mFlipper.getChildCount(); i++) {
+			Object tag = mFlipper.getChildAt(i).getTag();
+			if (tag == null || Math.abs(((Integer) tag) - mSelecting) > 1)
+				idleOne = (ViewGroup) mFlipper.getChildAt(i);
+		}
+		
+		if (idleOne == null)
+			return;		// 	This MUST NOT happen! 
+		
+		// Load page into that page
+		String fileNames = lookList.get(pageIndex).fileName;
+		idleOne.removeAllViews();
+		ViewPager pager = new ViewPager(this);
+		ViewGroup.LayoutParams param = new LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		pager.setLayoutParams(param);
+		pager.setAdapter(new LookAdapter(pager, fileNames));
+		idleOne.addView(pager);
+		idleOne.setTag(pageIndex);
+	}
+	
+	private void refreshCurrentPage() {
+		
+		if (mSelecting < 0)
+			return;
+		
+		ViewGroup currentOne = null;
+		for (int i = 0; i < mFlipper.getChildCount(); i++) {
+			Object tag = mFlipper.getChildAt(i).getTag();
+			if (tag == null || ((Integer) tag) == mSelecting)
+				currentOne = (ViewGroup) mFlipper.getChildAt(i);
+		}
+		
+		String fileNames = lookList.get(mSelecting).fileName;
+		ViewPager pager = (ViewPager) currentOne.getChildAt(0);
+		pager.setAdapter(new LookAdapter(pager, fileNames));
+	}
+	
 	private void loadImage() {
 		
 		int visibility = mSelecting >= 0 ? View.VISIBLE : View.INVISIBLE;
@@ -233,22 +297,7 @@ OnScrollListener, OnClickListener {
 		
 		mFlipper.setVisibility(visibility);
 		if (mSelecting >= 0) {
-			String fileNames = lookList.get(mSelecting).fileName;
-
-			int i = 1 - mFlipper.getDisplayedChild();
-			
-			ViewGroup group = (ViewGroup) mFlipper.getChildAt(i);
-			group.removeAllViews();
-			ViewPager pager = new ViewPager(this);
-			ViewGroup.LayoutParams param = new LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-			pager.setLayoutParams(param);
-			pager.setAdapter(new LookAdapter(pager, fileNames));
-			group.addView(pager);
-			
-//			ImageView img = (ImageView) mFlipper.getChildAt(i);
-//			img.setImageBitmap(bm);
-			mFlipper.setDisplayedChild(i);
+			loadFlipper();
 		}
 		
 		// d
@@ -658,7 +707,8 @@ OnScrollListener, OnClickListener {
 			img.setLayoutParams(param);
 			if (mPathList.size() > 0) {
 				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
-				img.setImageBitmap(loadImageOptimize(path));
+//				img.setImageBitmap(loadImageOptimize(path));
+				new LoadImageTask(path, img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
 				img.setScaleType(ScaleType.FIT_XY);
 				img.setImageResource(R.drawable.nolook);
@@ -687,6 +737,29 @@ OnScrollListener, OnClickListener {
 		public int getItemPosition(Object object) {
 			
 			return PagerAdapter.POSITION_UNCHANGED;
+		}
+	}
+	
+	private class LoadImageTask extends AsyncTask<Void, Void, Bitmap>{
+		
+		private String mPath;
+		private ImageView mImg;
+		
+		public LoadImageTask(String path, ImageView img) {
+			mPath = path;
+			mImg = img;
+		}
+
+		@Override
+		protected Bitmap doInBackground(Void... params) {
+			return loadImageOptimize(mPath);
+		}
+		
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			super.onPostExecute(result);
+			
+			mImg.setImageBitmap(result);
 		}
 	}
 	
@@ -891,7 +964,7 @@ OnScrollListener, OnClickListener {
 					
 					item.fileName = jNewArr.toString();
 					mHelper.getDao().update(item);
-					loadImage();
+					refreshCurrentPage();
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -945,7 +1018,7 @@ OnScrollListener, OnClickListener {
 								jNewArr.put(jArr.getString(i));
 							item.fileName = jNewArr.toString();
 							mHelper.getDao().update(item);
-							loadImage();
+							refreshCurrentPage();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
