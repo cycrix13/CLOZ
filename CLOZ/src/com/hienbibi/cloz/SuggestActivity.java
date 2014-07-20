@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
+import com.cycrix.util.FontsCollection;
 
 public class SuggestActivity extends Activity {
 	
@@ -62,7 +63,7 @@ public class SuggestActivity extends Activity {
 			return;
 		}
 		
-		
+		FontsCollection.setFont(findViewById(android.R.id.content));
 	}
 	
 	@Click(id = R.id.btcSend)
