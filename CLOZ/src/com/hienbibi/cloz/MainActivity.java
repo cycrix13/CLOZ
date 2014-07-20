@@ -20,8 +20,10 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -29,6 +31,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -44,6 +47,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
@@ -71,7 +75,7 @@ OnScrollListener, OnClickListener {
 	@ViewById(id = R.id.txtDate1)	private TextView mTxtData1;
 	@ViewById(id = R.id.txtDate2)	private TextView mTxtData2;
 	@ViewById(id = R.id.txtDate3)	private TextView mTxtData3;
-//	@ViewById(id = R.id.txtShare)	private TextView mTxtShare;
+	@ViewById(id = R.id.txtShare)	private TextView mTxtShare;
 	
 	@ViewById(id = R.id.layoutTag)	private InlineLayout mLayoutTag;
 	
@@ -1057,6 +1061,119 @@ OnScrollListener, OnClickListener {
 		// Display data
 		mSelecting = lookList.size() != 0 ? 0 : -1;
 		loadImage();
+	}
+	
+	@Click(id = R.id.txtShare)
+	public void onShareClick(View v) {
+		final Dialog dialog = new Dialog(MainActivity.this);
+		dialog.setContentView(R.layout.share_dialog);
+		dialog.setTitle("Share");
+
+		Button dialogButton = (Button) dialog.findViewById(R.id.bttClose);
+		
+		ImageView bttFaceBook = (ImageView) dialog.findViewById(R.id.bttFacebook);
+		bttFaceBook.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				File filePath = MainActivity.this.getFileStreamPath("add.png");
+				share("Facebook",filePath.toString(),"text");
+			}
+		});
+		
+		ImageView bttTwitter = (ImageView) dialog.findViewById(R.id.bttTwitter);
+		bttTwitter.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				File filePath = MainActivity.this.getFileStreamPath("add.png");
+				share("Twitter",filePath.toString(),"text");
+			}
+		});
+		
+		ImageView bttInstagram = (ImageView) dialog.findViewById(R.id.bttInstagram);
+		bttInstagram.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				File filePath = MainActivity.this.getFileStreamPath("add.png");
+				share("Instagram",filePath.toString(),"text");
+			}
+		});
+		
+		ImageView bttWhatapp = (ImageView) dialog.findViewById(R.id.bttWhatApp);
+		bttWhatapp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				File filePath = MainActivity.this.getFileStreamPath("add.png");
+				share("Whatsapp",filePath.toString(),"text");
+			}
+		});
+		
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+	
+	void share(String nameApp, String imagePath, String message) {
+			List<Intent> targetedShareIntents = new ArrayList<Intent>();
+			Intent share = new Intent(android.content.Intent.ACTION_SEND);
+			share.setType("image/jpeg");
+			List<ResolveInfo> resInfo = getPackageManager()
+					.queryIntentActivities(share, 0);
+			if (!resInfo.isEmpty()) {
+				for (ResolveInfo info : resInfo) {
+					 
+					if (info.activityInfo.packageName.toLowerCase().contains(
+							nameApp)
+							|| info.activityInfo.name.toLowerCase().contains(
+									nameApp)) {
+						Intent targetedShare = new Intent(
+								android.content.Intent.ACTION_SEND);
+						targetedShare.setType("image/jpeg");
+						targetedShare.putExtra(Intent.EXTRA_SUBJECT,
+								"Sample Photo");
+						targetedShare.putExtra(Intent.EXTRA_TEXT, message);
+						targetedShare.putExtra(Intent.EXTRA_STREAM,
+								Uri.fromFile(new File(imagePath)));
+						targetedShare.setPackage(info.activityInfo.packageName);
+						targetedShareIntents.add(targetedShare);
+					}
+				}
+				
+				if (targetedShareIntents.size() > 0) {
+					startActivity(targetedShareIntents.get(0));
+					return;
+				}else {
+					this.showAlertBoxShare("You don't seem to have " + nameApp + " installed on this device");
+					return;
+				}
+			}else
+				this.showAlertBoxShare("You don't seem to have " + nameApp + " installed on this device");
+	}
+	
+	public void showAlertBoxShare(String message) {
+		AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);                      
+	    dlgAlert.setTitle("Message"); 
+	    dlgAlert.setMessage(message); 
+	    dlgAlert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	             dialog.dismiss();
+	        }
+	   });
+	    dlgAlert.setCancelable(true);
+	    dlgAlert.create().show();
 	}
 	
 	@Override
