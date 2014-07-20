@@ -94,4 +94,18 @@
     <string name="search_text1">¿Con quién vas a quedar?</string>
     <string name="search_text2">¡Encontrar Looks!</string>
 
+    <!-- User Info -->
+    <string name="useinfo_text1">Estadísticas</string>
+    <string name="close_text">Cerrar</string>
+    <string name="look_text">Looks</string>
+    <string name="image_text">Imágenes</string>
+    <string name="people_text">Personas</string>
+    <string name="query_text">Búsquedas</string>
+    
+    
+     <!-- Suggest -->
+    <string name="suggest_text">Sugerencias</string>
+    <string name="content_text"> Valoramos mucho tus sugerencias.Te escuchamos y trabajaremos para mejorarla a tu gusto.</string>
+    <string name="send_text">Enviar sugerencia.!</string>
+    
 </resources>
