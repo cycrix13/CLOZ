@@ -1136,9 +1136,9 @@ OnScrollListener, OnClickListener {
 				for (ResolveInfo info : resInfo) {
 					 
 					if (info.activityInfo.packageName.toLowerCase().contains(
-							nameApp)
+							nameApp.toLowerCase())
 							|| info.activityInfo.name.toLowerCase().contains(
-									nameApp)) {
+									nameApp.toLowerCase())) {
 						Intent targetedShare = new Intent(
 								android.content.Intent.ACTION_SEND);
 						targetedShare.setType("image/jpeg");
