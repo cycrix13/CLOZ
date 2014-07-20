@@ -56,7 +56,7 @@ import com.cycrix.util.InlineLayout;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
 
-public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, 
+public class MainActivity extends BaseDemoActivity implements MenuFragment.Listener, CameraActivity.Listener, 
 OnScrollListener, OnClickListener {
 
 	private MenuFragment mMenuFragment;
@@ -1055,6 +1055,11 @@ OnScrollListener, OnClickListener {
 		// Display data
 		mSelecting = lookList.size() != 0 ? 0 : -1;
 		loadImage();
+	}
+	
+	@Override
+	public void onSyncClick() {
+		BackupActivity.newInstance(this);
 	}
 	
 	private void updateLayout() {

@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hienbibi.cloz.BackupActivity" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#75C96A"
+        android:layout_marginTop="36dp" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/font1"
+            android:gravity="center"
+            android:text="Google Drive"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/textView3"
+            android:padding="8dp"
+            android:src="@drawable/icloud" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#75C96A"
+            android:contentDescription="@string/font1"
+            android:gravity="center"
+            android:text="Automatic backup:"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txtOnOff"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#75C96A"
+            android:contentDescription="@string/font1"
+            android:gravity="center"
+            android:text="ON/OFF"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txtSyncFrom"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="#F6D833"
+            android:contentDescription="@string/font1"
+            android:gravity="center"
+            android:text="Sync from Google Drive"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txtDeleteBackup"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="#C01A2E"
+            android:contentDescription="@string/font1"
+            android:gravity="center"
+            android:text="Delete backup on Google Drive"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+<TextView
+    android:id="@+id/txtClose"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginTop="8dp"
+    android:background="#7D8782"
+    android:contentDescription="@string/font1"
+    android:gravity="center"
+    android:text="Close"
+    android:textColor="#FFFFFF"
+    android:textSize="30sp" />
+
+</RelativeLayout>

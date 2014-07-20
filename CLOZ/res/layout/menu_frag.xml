@@ -123,7 +123,7 @@
                     android:visibility="invisible" >
 
                     <LinearLayout
-                        android:id="@+id/layoutCamera"
+                        android:id="@+id/layoutPickCamera"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -178,6 +178,7 @@
                     android:visibility="invisible" >
 
                     <LinearLayout
+                        android:id="@+id/layoutSync"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

@@ -105,7 +105,7 @@ public class MenuFragment extends Fragment {
 		animator1.start();
 	}
 	
-	@Click(id = R.id.layoutCamera)
+	@Click(id = R.id.layoutPickCamera)
 	void onCameraClick(View v) {
 		if (mListener != null) mListener.onCameraClick();
 	}
@@ -124,11 +124,17 @@ public class MenuFragment extends Fragment {
 	void onSearchClick(View v) {
 		if (mListener != null) mListener.onSearchClick();
 	}
+	
+	@Click(id = R.id.layoutSync)
+	void onSyncClick(View v) {
+		if (mListener != null) mListener.onSyncClick();
+	}
 
 	public interface Listener {
 		void onCameraClick();
 		void onGalleryClick();
 		void onHelpClick();
 		void onSearchClick();
+		void onSyncClick();
 	}
 }

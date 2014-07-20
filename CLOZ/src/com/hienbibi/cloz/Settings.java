@@ -11,6 +11,7 @@ public class Settings {
 	private static Context mContext;
 
 	public boolean firstTime;
+	public boolean autoBackup;
 
 	public static void init(Context context) {
 		if (sInstance == null) {
@@ -34,6 +35,7 @@ public class Settings {
 				mContext.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
 
 		editor.putBoolean("firstTime", firstTime);
+		editor.putBoolean("autoBackup", autoBackup);
 //		editor.putString("tokenID", getAccessToken());
 //		editor.putString("refreshID", getRefreshToken());
 //		editor.putString("activateID", activateID);
@@ -68,6 +70,7 @@ public class Settings {
 				mContext.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
 
 		firstTime		= preference.getBoolean("firstTime", true);
+		autoBackup		= preference.getBoolean("autoBackup", false);
 //		setAccessToken(preference.getString("tokenID", "abc"), preference.getString("refreshID", ""));
 //		activateID 		= preference.getString("activateID", "");
 //		userID 			= preference.getString("userID", "");
