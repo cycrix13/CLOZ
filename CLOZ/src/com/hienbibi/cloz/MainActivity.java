@@ -1078,7 +1078,7 @@ OnScrollListener, OnClickListener {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
-				share("Facebook",filePath.toString(),"text");
+				share("Facebook",filePath.toString(),"CLOZ App");
 			}
 		});
 		
@@ -1089,7 +1089,7 @@ OnScrollListener, OnClickListener {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
-				share("Twitter",filePath.toString(),"text");
+				share("Twitter",filePath.toString(),"CLOZ App");
 			}
 		});
 		
@@ -1100,7 +1100,7 @@ OnScrollListener, OnClickListener {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
-				share("Instagram",filePath.toString(),"text");
+				share("Instagram",filePath.toString(),"CLOZ App");
 			}
 		});
 		
@@ -1111,7 +1111,7 @@ OnScrollListener, OnClickListener {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
-				share("Whatsapp",filePath.toString(),"text");
+				share("Whatsapp",filePath.toString(),"CLOZ App");
 			}
 		});
 		
@@ -1143,7 +1143,7 @@ OnScrollListener, OnClickListener {
 								android.content.Intent.ACTION_SEND);
 						targetedShare.setType("image/jpeg");
 						targetedShare.putExtra(Intent.EXTRA_SUBJECT,
-								"Sample Photo");
+								"Sharing");
 						targetedShare.putExtra(Intent.EXTRA_TEXT, message);
 						targetedShare.putExtra(Intent.EXTRA_STREAM,
 								Uri.fromFile(new File(imagePath)));
