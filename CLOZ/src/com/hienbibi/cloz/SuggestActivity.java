@@ -14,13 +14,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
-import com.cycrix.util.FontsCollection;
 
-public class UseInfoActivity extends Activity {
+public class SuggestActivity extends Activity {
 	
 	private static boolean sSingleMode;
 	private static Listener sListener;
@@ -39,7 +39,7 @@ public class UseInfoActivity extends Activity {
 	}
 
 	public static void newInstance(Activity act, Listener listener, boolean singleMode) {
-		Intent intent = new Intent(act, UseInfoActivity.class);
+		Intent intent = new Intent(act, SuggestActivity.class);
 		act.startActivity(intent);
 		sListener = listener;
 		sSingleMode = singleMode;
@@ -48,7 +48,7 @@ public class UseInfoActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_useinfo);
+		setContentView(R.layout.activity_suggest);
 		
 		mSingleMode = sSingleMode;
 		mListener = sListener;
@@ -62,51 +62,21 @@ public class UseInfoActivity extends Activity {
 			return;
 		}
 		
-		FontsCollection.setFont(findViewById(android.R.id.content));
 		
-		mHelper = new DatabaseHelper(this);
-		try {
-			lookList = mHelper.getDao().queryForAll();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			finish();
-		}
-		
-		mTextViewLook.setText(Integer.toString(lookList.size()));
-		
-		ArrayList<String> listContact = new ArrayList<String>();
-		int numPic = 0;
-		int numContact = 0;
-		for (int i = 0; i < lookList.size(); i++) {
-			Looks look = lookList.get(i);
-			
-			JSONArray jArr = null;
-			try {
-				jArr = new JSONArray(look.fileName);
-			} catch (JSONException e) {
-			}
-			
-			if (jArr != null)
-				numPic += jArr.length();
-			
-			JSONArray jContacts = null;
-			String contactJson = lookList.get(i).contacts;
-			try {
-				jContacts = new JSONArray(contactJson);
-				for (int j = 0; i < jContacts.length(); j++) {
-					if (!listContact.contains(jContacts.get(j))) {
-						listContact.add(jContacts.get(j).toString());
-					}
-				}
-			}
-			catch  (JSONException e) {};
-		}
-		numContact = listContact.size();
-		
-		mTextViewImage.setText(Integer.toString(numPic));
-		mTextViewPeople.setText(Integer.toString(numContact));
-		mTextViewQuery.setText(Integer.toString(Settings.instance().numQuery));
 	}
+	
+	@Click(id = R.id.btcSend)
+	private void onSendClick(View v) {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("message/rfc822");
+		i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"clozappandroid@gmail.com"});
+		try {
+		    startActivity(Intent.createChooser(i, "Send mail..."));
+		} catch (android.content.ActivityNotFoundException ex) {
+		    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
 	
 	@Click(id = R.id.buttonClose)
 	private void onBackClick(View v) {

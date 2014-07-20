@@ -1075,4 +1075,10 @@ OnScrollListener, OnClickListener {
 		// TODO Auto-generated method stub
 		UseInfoActivity.newInstance(this, null, true);
 	}
+
+	@Override
+	public void onSuggestClick() {
+		// TODO Auto-generated method stub
+		SuggestActivity.newInstance(this, null, true);
+	}
 }

@@ -129,6 +129,11 @@ public class MenuFragment extends Fragment {
 	void onUseInfoClick(View v) {
 		if (mListener != null) mListener.onUseInfoClick();
 	}
+	
+	@Click(id = R.id.layoutSuggest)
+	void onSuggestClick(View v) {
+		if (mListener != null) mListener.onSuggestClick();
+	}
 
 	public interface Listener {
 		void onCameraClick();
@@ -136,5 +141,6 @@ public class MenuFragment extends Fragment {
 		void onHelpClick();
 		void onSearchClick();
 		void onUseInfoClick();
+		void onSuggestClick();
 	}
 }
