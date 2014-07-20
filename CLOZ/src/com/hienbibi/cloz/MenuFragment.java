@@ -5,7 +5,9 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -45,14 +47,59 @@ public class MenuFragment extends Fragment {
 			getActivity().finish();
 			return;
 		}
+		
+		view.findViewById(R.id.layoutRoot).setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View arg0, MotionEvent event) {
+				
+				int screenWidth = getResources().getDisplayMetrics().widthPixels;
+				switch (event.getActionMasked()) {
+				case MotionEvent.ACTION_UP:
+					
+					ObjectAnimator animator1 = ObjectAnimator.ofFloat(mLayoutMenu, "translationY", screenWidth);
+					ObjectAnimator animator2 = ObjectAnimator.ofFloat(mTxtMenu, "alpha", 0, 1);
+					ObjectAnimator animator3 = ObjectAnimator.ofFloat(mImgMenu, "alpha", 1, 0);
+
+					AnimatorSet set = new AnimatorSet();
+					set.playTogether(animator1, animator2, animator3);
+					set.setInterpolator(new AccelerateDecelerateInterpolator());
+					set.start();
+					return true;
+
+				default:
+					if (mLayoutMenu.getTranslationY() != screenWidth)
+						return true;
+					break;
+				}
+				return false;
+			}
+		});
 	}
 	
 	public void close() {
 		
 		int screenWidth = getResources().getDisplayMetrics().widthPixels;
 		mLayoutMenu.setTranslationY(screenWidth);
-//		mTxtMenu.setAlpha(1);
-//		mImgMenu.setAlpha(0);
+		ObjectAnimator animator2 = ObjectAnimator.ofFloat(mTxtMenu, "alpha", 0, 1);
+		ObjectAnimator animator3 = ObjectAnimator.ofFloat(mImgMenu, "alpha", 1, 0);
+		AnimatorSet set = new AnimatorSet();
+		set.playTogether(animator2, animator3);
+		set.setDuration(0);
+		set.start();
+	}
+	
+	public void closeAnim() {
+		int screenWidth = getResources().getDisplayMetrics().widthPixels;
+		ObjectAnimator animator1 = ObjectAnimator.ofFloat(mLayoutMenu, "translationY", 
+				screenWidth);
+		ObjectAnimator animator2 = ObjectAnimator.ofFloat(mTxtMenu, "alpha", 0, 1);
+		ObjectAnimator animator3 = ObjectAnimator.ofFloat(mImgMenu, "alpha", 1, 0);
+
+		AnimatorSet set = new AnimatorSet();
+		set.playTogether(animator1, animator2, animator3);
+		set.setInterpolator(new AccelerateDecelerateInterpolator());
+		set.start();
 	}
 	
 	@Click(id = R.id.txtMenu)
@@ -108,41 +155,49 @@ public class MenuFragment extends Fragment {
 	@Click(id = R.id.layoutPickCamera)
 	void onCameraClick(View v) {
 		if (mListener != null) mListener.onCameraClick();
+		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutGallery)
 	void onGalleryClick(View v) {
 		if (mListener != null) mListener.onGalleryClick();
+		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutHelp)
 	void onHelpClick(View v) {
 		if (mListener != null) mListener.onHelpClick();
+		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutSearch)
 	void onSearchClick(View v) {
 		if (mListener != null) mListener.onSearchClick();
+		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutSync)
 	void onSyncClick(View v) {
 		if (mListener != null) mListener.onSyncClick();
+		closeAnim();
 	}
 
 	@Click(id = R.id.layoutUseInfo)
 	void onUseInfoClick(View v) {
 		if (mListener != null) mListener.onUseInfoClick();
+		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutSuggest)
 	void onSuggestClick(View v) {
 		if (mListener != null) mListener.onSuggestClick();
+		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutRate)
 	void onRateClick(View v) {
 		if (mListener != null) mListener.onRateClick();
+		closeAnim();
 	}
 
 	public interface Listener {

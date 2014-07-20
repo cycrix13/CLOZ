@@ -9,7 +9,7 @@
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#FFF704" >
+        android:background="#F2E300" >
 
         <Button
             android:id="@+id/btnBack"
@@ -17,16 +17,15 @@
             android:layout_height="match_parent"
             android:background="#00000000"
             android:text="@string/contact_text3"
-            android:textColor="#808080" />
+            android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/btnBack"
             android:gravity="center"
             android:text="@string/search_text1"
             android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
@@ -35,9 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="#FFF704"
+        android:background="#F2E300"
         android:text="@string/search_text2"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/edtSearch"

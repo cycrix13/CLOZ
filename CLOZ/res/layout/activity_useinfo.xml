@@ -3,7 +3,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   
+    android:background="#E2DBDD"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
-        android:background="#75C96A" >
+        android:background="#68C660" >
 
         <TextView
             android:id="@+id/textViewUseInfo"
@@ -46,6 +46,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="#68C660"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -166,6 +167,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:background="#7D8782"
         android:text="@string/close_text"
         android:textColor="#FFFFFF"
