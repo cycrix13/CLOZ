@@ -74,29 +74,32 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
-
         <activity
             android:name=".BackupActivity"
             android:label="@string/title_activity_backup"
-			android:screenOrientation="portrait"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >			>
-		</activity>
-        
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+        </activity>
         <activity
-            android:name="com.hienbibi.cloz.UseInfoActivity"
+            android:name=".UseInfoActivity"
             android:label="@string/title_activity_search"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
-        
         <activity
-            android:name="com.hienbibi.cloz.SuggestActivity"
+            android:name=".SuggestActivity"
             android:label="@string/title_activity_search"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+        </activity>
+        <activity
+            android:name=".CountDownActivity"
+            android:label="@string/title_activity_count_down"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
         </activity>
     </application>
 

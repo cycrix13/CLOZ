@@ -108,4 +108,10 @@
     <string name="content_text"> Valoramos mucho tus sugerencias.Te escuchamos y trabajaremos para mejorarla a tu gusto.</string>
     <string name="send_text">Enviar sugerencia.!</string>
     
+    <!-- ************************************************** -->
+    <!-- Count down -->
+    <string name="count_text1">¡GENIAL!</string>
+    <string name="count_text2">Tu Look se ha guardado correctamente.</string>
+    <string name="count_text3">¡BUSCANDO!!</string>
+    
 </resources>

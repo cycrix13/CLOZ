@@ -596,6 +596,8 @@ OnScrollListener, OnClickListener {
 			mSelecting = -1;
 		}
 		loadImage();
+		
+		CountDownActivity.newInstance(this, false);
 	}
 	
 	public void copy(File src, File dst) throws IOException {
@@ -1103,6 +1105,8 @@ OnScrollListener, OnClickListener {
 		lookList = result;
 		mSelecting = 0;
 		loadImage();
+		
+		CountDownActivity.newInstance(this, true);
 	}
 	
 	private boolean changeToResultModeHelper(String jsonStr, ArrayList<String> condition) throws Exception {
