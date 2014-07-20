@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/layoutView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="20dp" >
+
+        <ImageView
+            android:id="@+id/bttFacebook"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/facebook" />
+
+        <ImageView
+            android:id="@+id/bttTwitter"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/twitter" />
+
+        <ImageView
+            android:id="@+id/bttInstagram"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/instagram" />
+
+        <ImageView
+            android:id="@+id/bttWhatApp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/whatsapp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bttClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutView"
+        android:layout_centerInParent="true"
+        android:text="@string/text_ok"
+        android:layout_marginBottom="5dp" />
+
+</RelativeLayout>
