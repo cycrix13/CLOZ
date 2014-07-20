@@ -11,7 +11,8 @@ import android.widget.TextView;
 public class FontsCollection {
 	public static final String[] fontNameArr = new String[] {
 		"font1.ttf",
-		"font2.ttc"
+		"font2.ttc",
+		"font3.ttf",
 	};
 	
 	public static HashMap<String, Typeface> fonts = new HashMap<String, Typeface>();

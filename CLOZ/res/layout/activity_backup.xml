@@ -39,6 +39,7 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/txtBackupTitle"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="#75C96A"
@@ -48,16 +49,44 @@
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/txtOnOff"
+        <LinearLayout
+            android:id="@+id/layoutOnOff"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:background="#75C96A"
-            android:contentDescription="@string/font1"
-            android:gravity="center"
-            android:text="ON/OFF"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/txtOn"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:contentDescription="@string/font1"
+                android:gravity="center"
+                android:text="ON"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:contentDescription="@string/font1"
+                android:gravity="center"
+                android:text="/"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtOff"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:contentDescription="@string/font1"
+                android:gravity="center"
+                android:text="OFF"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+            
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txtSyncFrom"
