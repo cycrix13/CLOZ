@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/btnSuggestA"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:background="#75C96A" >
+
+        <TextView
+            android:id="@+id/textViewUseInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/suggest_text"
+            android:textColor="#FFFFFF"
+            android:textSize="35sp"
+            android:contentDescription="@string/font1" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/textViewUseInfo"
+            android:src="@drawable/suggest" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/RelativeLayout2"
+        android:layout_marginTop="20dp"
+        android:background="#75C96A" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:paddingTop="0dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent" >
+
+                <TextView
+                    android:id="@+id/textViewLooksNum1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="0dp"
+                    android:text="@string/content_text"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:contentDescription="@string/font1" />
+                
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btcSend"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/RelativeLayout01"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="@string/send_text"
+        android:textColor="#FFFFFF"
+        android:textColorHint="@android:color/holo_red_dark"
+        android:textSize="20sp"
+        android:contentDescription="@string/font1"/>
+
+    <Button
+        android:id="@+id/buttonClose"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#7D8782"
+        android:text="@string/close_text"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:contentDescription="@string/font1" />
+
+</RelativeLayout>

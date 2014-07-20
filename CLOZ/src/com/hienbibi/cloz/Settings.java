@@ -12,6 +12,7 @@ public class Settings {
 
 	public boolean firstTime;
 	public boolean autoBackup;
+	public int numQuery;
 
 	public static void init(Context context) {
 		if (sInstance == null) {
@@ -36,6 +37,7 @@ public class Settings {
 
 		editor.putBoolean("firstTime", firstTime);
 		editor.putBoolean("autoBackup", autoBackup);
+		editor.putInt("numQuery", numQuery);
 //		editor.putString("tokenID", getAccessToken());
 //		editor.putString("refreshID", getRefreshToken());
 //		editor.putString("activateID", activateID);
@@ -71,6 +73,7 @@ public class Settings {
 
 		firstTime		= preference.getBoolean("firstTime", true);
 		autoBackup		= preference.getBoolean("autoBackup", false);
+		numQuery		= preference.getInt("numQuery", 0);
 //		setAccessToken(preference.getString("tokenID", "abc"), preference.getString("refreshID", ""));
 //		activateID 		= preference.getString("activateID", "");
 //		userID 			= preference.getString("userID", "");

@@ -130,11 +130,29 @@ public class MenuFragment extends Fragment {
 		if (mListener != null) mListener.onSyncClick();
 	}
 
+	@Click(id = R.id.layoutUseInfo)
+	void onUseInfoClick(View v) {
+		if (mListener != null) mListener.onUseInfoClick();
+	}
+	
+	@Click(id = R.id.layoutSuggest)
+	void onSuggestClick(View v) {
+		if (mListener != null) mListener.onSuggestClick();
+	}
+	
+	@Click(id = R.id.layoutRate)
+	void onRateClick(View v) {
+		if (mListener != null) mListener.onRateClick();
+	}
+
 	public interface Listener {
 		void onCameraClick();
 		void onGalleryClick();
 		void onHelpClick();
 		void onSearchClick();
 		void onSyncClick();
+		void onUseInfoClick();
+		void onSuggestClick();
+		void onRateClick();
 	}
 }

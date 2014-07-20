@@ -10,6 +10,10 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_contact_list">ContactListActivity</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_useinfo">UseInfoActivity</string>
+    <string name="title_activity_suggest">SuggestActivity</string>
+    
+
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_yes">Yes</string>
@@ -114,4 +118,19 @@
     <string name="search_text2">Find Looks!</string>
     <string name="title_activity_backup">BackupActivity</string>
 
+    
+    <!-- User Info -->
+    <string name="useinfo_text1">Info of use</string>
+    <string name="close_text">Close</string>
+    <string name="look_text">Looks</string>
+    <string name="image_text">Images</string>
+    <string name="people_text">People</string>
+    <string name="query_text">Queries</string>
+    
+    
+     <!-- Suggest -->
+    <string name="suggest_text">Suggest</string>
+    <string name="content_text">We appreciate your suggestions to improve CLOZ. We will listen to you and do our best.</string>
+    <string name="send_text">Send a suggestion</string>
+    
 </resources>

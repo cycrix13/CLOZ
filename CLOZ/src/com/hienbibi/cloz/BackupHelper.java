@@ -22,7 +22,7 @@ GoogleApiClient.OnConnectionFailedListener {
 	private GoogleApiClient mGoogleApiClient;
 	private boolean mConnected;
 	
-	public static void init(Context ctx) {
+	public static void init(Activity ctx) {
 		if (mInstance != null)
 			return;
 		

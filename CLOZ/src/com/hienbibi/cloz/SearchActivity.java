@@ -151,7 +151,8 @@ public class SearchActivity extends Activity {
 		for (TItem item : mItemList)
 			if (item.check)
 				result.add(item);
-		
+		Settings.instance().numQuery += 1;
+		Settings.instance().save();
 		mListener.onComplete(result);
 		finish();
 	}
