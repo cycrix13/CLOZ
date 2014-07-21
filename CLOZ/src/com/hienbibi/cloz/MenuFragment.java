@@ -139,7 +139,7 @@ public class MenuFragment extends Fragment {
 		int screenWidth = getResources().getDisplayMetrics().widthPixels;
 		ObjectAnimator animator1 = ObjectAnimator.ofFloat(mLayoutMenu, "translationY", screenWidth / 3);
 		animator1.setInterpolator(new AccelerateDecelerateInterpolator());
-		animator1.start();
+		animator1.start(); 
 	}
 	
 	@Click(id = R.id.layoutMore)

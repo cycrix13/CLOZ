@@ -10,6 +10,8 @@ import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -102,6 +105,46 @@ OnScrollListener, OnClickListener {
 	private ArrayList<String> mConditionTag;
 	private ArrayList<String> mConditionContact;
 	
+	public class CustomComparator implements Comparator<Looks> {
+	    @Override
+	    public int compare(Looks o1, Looks o2) {
+	    	try {
+	    		String dateStr1 = "";
+				JSONArray dateArr1 = new JSONArray(o1.date);
+				for (int i = 0; i < dateArr1.length(); i++) {
+					dateStr1 += dateArr1.getString(i);
+					if (i < dateArr1.length() - 1) {
+						dateStr1+="-";
+					}
+				}
+				
+				String dateStr2 = "";
+				JSONArray dateArr2 = new JSONArray(o2.date);
+				for (int i = 0; i < dateArr2.length(); i++) {
+					dateStr2 += dateArr2.getString(i);
+					if (i < dateArr2.length() - 1) {
+						dateStr2+="-";
+					}
+				}
+				  
+		    	SimpleDateFormat  format = new SimpleDateFormat("dd-MM-yyyy");  
+		    	try {  
+		    	    Date date1 = format.parse(dateStr1);   
+		    	    Date date2 = format.parse(dateStr2);
+		    	    return date2.compareTo(date1);
+		    	} catch (ParseException e) {  
+		    	    // TODO Auto-generated catch block  
+		    	    e.printStackTrace();  
+		    	}
+		    	return 0;
+			} catch (Exception e) {
+			}
+	    	
+	    	return 0;
+	       
+	    }
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -142,6 +185,7 @@ OnScrollListener, OnClickListener {
 		
 		try {
 			lookList = mHelper.getDao().queryForAll();
+			Collections.sort(lookList, new CustomComparator());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			finish();
@@ -585,6 +629,7 @@ OnScrollListener, OnClickListener {
 		
 		try {
 			lookList = mHelper.getDao().queryForAll();
+			Collections.sort(lookList, new CustomComparator());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			finish();
@@ -858,6 +903,7 @@ OnScrollListener, OnClickListener {
 				try {
 					mHelper.getDao().deleteById(item.id);
 					lookList = mHelper.getDao().queryForAll();
+					Collections.sort(lookList, new CustomComparator());
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -1089,6 +1135,7 @@ OnScrollListener, OnClickListener {
 		ArrayList<Looks> result = null;
 		try {
 			List<Looks> allLook = mHelper.getDao().queryForAll();
+			Collections.sort(lookList, new CustomComparator());
 			result = new ArrayList<Looks>();
 			for (Looks lookItem : allLook) {
 				if (changeToResultModeHelper(lookItem.contacts, contactList) ||
@@ -1130,6 +1177,7 @@ OnScrollListener, OnClickListener {
 		// Query data
 		try {
 			lookList = mHelper.getDao().queryForAll();
+			Collections.sort(lookList, new CustomComparator());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return;
