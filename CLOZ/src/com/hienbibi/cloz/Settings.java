@@ -13,6 +13,8 @@ public class Settings {
 	public boolean firstTime;
 	public boolean autoBackup;
 	public int numQuery;
+	public boolean unlockZoom;
+	public boolean unlockPub;
 
 	public static void init(Context context) {
 		if (sInstance == null) {
@@ -38,31 +40,8 @@ public class Settings {
 		editor.putBoolean("firstTime", firstTime);
 		editor.putBoolean("autoBackup", autoBackup);
 		editor.putInt("numQuery", numQuery);
-//		editor.putString("tokenID", getAccessToken());
-//		editor.putString("refreshID", getRefreshToken());
-//		editor.putString("activateID", activateID);
-//		editor.putString("userID", userID);
-//		editor.putString("phoneNumber", phoneNumber);
-//		editor.putString("avatar", avatar);
-//		editor.putString("name", name);
-//
-//		editor.putString("fb_id", fb_id);
-//		editor.putString("fb_access_token", fb_access_token);
-//		editor.putString("email", email);
-//		editor.putInt("gender", gender);
-//		editor.putString("dob", dob);
-//		editor.putString("job", job);
-//
-//		editor.putString("cityId", cityId);
-//
-//		editor.putString("cover", cover);
-//		editor.putInt("socialType", socialType);
-//		editor.putBoolean("firstTime", firstTime);
-//		editor.putString("server", server);
-//		
-//		editor.putFloat("lat", lat);
-//		editor.putFloat("lng", lng);
-//		editor.putLong("time", time);
+		editor.putBoolean("unlockZoom", unlockZoom);
+		editor.putBoolean("unlockPub", unlockPub);
 
 		editor.commit();
 	}
@@ -74,31 +53,7 @@ public class Settings {
 		firstTime		= preference.getBoolean("firstTime", true);
 		autoBackup		= preference.getBoolean("autoBackup", false);
 		numQuery		= preference.getInt("numQuery", 0);
-//		setAccessToken(preference.getString("tokenID", "abc"), preference.getString("refreshID", ""));
-//		activateID 		= preference.getString("activateID", "");
-//		userID 			= preference.getString("userID", "");
-//		phoneNumber 	= preference.getString("phoneNumber", "");
-//		avatar 			= preference.getString("avatar", "");
-//		name			= preference.getString("name", "");
-//
-//		fb_id 			= preference.getString("fb_id", "");
-//		fb_access_token = preference.getString("fb_access_token", "");
-//		email 			= preference.getString("email", "");
-//		gender 			= preference.getInt("gender", -1);
-//		dob 			= preference.getString("dob", "");
-//		job 			= preference.getString("job", "");
-//
-//		cityId 			= preference.getString("cityId", "1");
-//
-//		cover 			= preference.getString("cover", "");
-//		socialType		= preference.getInt("socialType", 0);
-//		firstTime		= preference.getBoolean("firstTime", true);
-//		
-//		server 			= preference.getString("server", "https://api.infory.vn");
-//		
-//		lat				= preference.getFloat("lat", -1);
-//		lng				= preference.getFloat("lng", -1);
-//		lng				= preference.getFloat("lng", -1);
-//		time			= preference.getLong("time", 0);
+		unlockZoom		= preference.getBoolean("unlockZoom", false);
+		unlockPub		= preference.getBoolean("unlockPub", false);
 	}
 }

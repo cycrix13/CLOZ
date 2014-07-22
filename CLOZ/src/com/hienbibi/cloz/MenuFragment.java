@@ -199,6 +199,12 @@ public class MenuFragment extends Fragment {
 		if (mListener != null) mListener.onRateClick();
 		closeAnim();
 	}
+	
+	@Click(id = R.id.layoutInApp)
+	void onInappClick(View v) {
+		if (mListener != null) mListener.onInAppClick();
+		closeAnim();
+	}
 
 	public interface Listener {
 		void onCameraClick();
@@ -209,5 +215,6 @@ public class MenuFragment extends Fragment {
 		void onUseInfoClick();
 		void onSuggestClick();
 		void onRateClick();
+		void onInAppClick();
 	}
 }

@@ -665,7 +665,8 @@ OnScrollListener, OnClickListener {
 		}
 		loadImage();
 		
-		CountDownActivity.newInstance(this, false);
+		if (!Settings.instance().unlockPub)
+			CountDownActivity.newInstance(this, false);
 		
 		if (Settings.instance().autoBackup)
 			BackupHelper.notifyDataChange();
@@ -1072,7 +1073,8 @@ OnScrollListener, OnClickListener {
 		
 		try {
 			JSONArray jArr = new JSONArray(item.fileName);
-			if (jArr.length() >= CameraActivity.mMaxItem)
+			int maxItem = Settings.instance().unlockZoom ? 4 : 1;
+			if (jArr.length() >= maxItem)
 				return;
 		} catch (JSONException e1) {
 			e1.printStackTrace();
@@ -1198,7 +1200,8 @@ OnScrollListener, OnClickListener {
 		mSelecting = 0;
 		loadImage();
 		
-		CountDownActivity.newInstance(this, true);
+		if (!Settings.instance().unlockPub)
+			CountDownActivity.newInstance(this, true);
 	}
 	
 	private boolean changeToResultModeHelper(String jsonStr, ArrayList<String> condition) throws Exception {
@@ -1366,21 +1369,21 @@ OnScrollListener, OnClickListener {
 
 	@Override
 	public void onUseInfoClick() {
-		// TODO Auto-generated method stub
 		UseInfoActivity.newInstance(this, null, true);
 	}
 
 	@Override
 	public void onSuggestClick() {
-		// TODO Auto-generated method stub
 		SuggestActivity.newInstance(this, null, true);
 	}
 
 	@Override
 	public void onRateClick() {
-		// TODO Auto-generated method stub
 		 this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.hienbibi.cloz")));
-		
+	}
+	
+	@Override
+	public void onInAppClick() {
+		InAppActivity.newInstance(this);
 	}
 }
-

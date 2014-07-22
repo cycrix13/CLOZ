@@ -82,6 +82,11 @@ public class CameraActivity extends Activity {
 			return;
 		}
 		
+		if (Settings.instance().unlockZoom)
+			mMaxItem = 4;
+		else
+			mMaxItem = 1;
+		
 		mLstThumbnail.setAdapter(mAdapter = new ThumbAdapter());
 		mLstThumbnail.setOnItemClickListener(mAdapter);
 

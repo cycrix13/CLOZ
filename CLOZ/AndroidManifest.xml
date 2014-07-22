@@ -104,7 +104,9 @@
         </activity>
         <activity
             android:name=".InAppActivity"
-            android:label="@string/title_activity_in_app" >
+            android:label="@string/title_activity_in_app"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
         </activity>
     </application>
 
