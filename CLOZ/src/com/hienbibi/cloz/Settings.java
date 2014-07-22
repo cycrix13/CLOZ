@@ -15,6 +15,8 @@ public class Settings {
 	public int numQuery;
 	public boolean unlockZoom;
 	public boolean unlockPub;
+	
+	public boolean hasSecondLook;
 
 	public static void init(Context context) {
 		if (sInstance == null) {
@@ -42,6 +44,7 @@ public class Settings {
 		editor.putInt("numQuery", numQuery);
 		editor.putBoolean("unlockZoom", unlockZoom);
 		editor.putBoolean("unlockPub", unlockPub);
+		editor.putBoolean("hasSecondLook", hasSecondLook);
 
 		editor.commit();
 	}
@@ -55,5 +58,6 @@ public class Settings {
 		numQuery		= preference.getInt("numQuery", 0);
 		unlockZoom		= preference.getBoolean("unlockZoom", false);
 		unlockPub		= preference.getBoolean("unlockPub", false);
+		hasSecondLook	= preference.getBoolean("hasSecondLook", false);
 	}
 }

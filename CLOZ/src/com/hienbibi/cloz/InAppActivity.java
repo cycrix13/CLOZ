@@ -27,10 +27,10 @@ public class InAppActivity extends Activity {
 	
 	private static final String  TAG = "InAppActivity";
 	
-	public static final String SKU_4IMAGES 		= "zoom_4images";
-	public static final String SKU_DELETE_PUB 	= "delete_pub";
-//	public static final String SKU_4IMAGES 		= "android.test.purchased";
-//	public static final String SKU_DELETE_PUB 	= "android.test.purchased";
+//	public static final String SKU_4IMAGES 		= "zoom_4images";
+//	public static final String SKU_DELETE_PUB 	= "delete_pub";
+	public static final String SKU_4IMAGES 		= "android.test.purchased";
+	public static final String SKU_DELETE_PUB 	= "android.test.purchased";
 //	android.test.purchased
 	public static final int REQUEST_CODE_PURCHASE = 1001;
 	

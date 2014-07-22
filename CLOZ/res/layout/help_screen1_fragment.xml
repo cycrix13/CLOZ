@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:alpha="0.7"
@@ -11,18 +11,24 @@
         android:id="@+id/ImageView02"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/morethanonelook" />
+        android:src="@drawable/morethanonelook"
+        android:layout_alignParentTop="true" />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ImageView01"
+        android:layout_below="@+id/ImageView02"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
         android:src="@drawable/fingerhelpingscreens" />
 
     <ImageView
         android:id="@+id/ImageView01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/morethanonelook2" />
+        android:src="@drawable/morethanonelook2"
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</RelativeLayout>

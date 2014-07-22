@@ -88,6 +88,7 @@ OnScrollListener, OnClickListener {
 	@ViewById(id = R.id.layoutSeperate)	private View mLayoutSeperate;
 	@ViewById(id = R.id.txtBackAll) private View mTxtBackAll;
 	@ViewById(id = R.id.txtAll) private TextView mTxtAll;
+	@ViewById(id = R.id.layoutSecondLookHolder) private ViewGroup mLayoutSecondLookHolder;
 	
 //	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
 //	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
@@ -103,6 +104,7 @@ OnScrollListener, OnClickListener {
 	private LookAdapter mAdapter;
 	private ArrayList<String> mConditionTag;
 	private ArrayList<String> mConditionContact;
+	private boolean mZoomEnable;
 	
 	public class CustomComparator implements Comparator<Looks> {
 	    @Override
@@ -218,6 +220,12 @@ OnScrollListener, OnClickListener {
 					if (!complete && Math.abs(event.getY() - s.startY) > range) {
 						prepareForLoadImage(event.getY() - s.startY);
 						complete = true;
+					} else if (!complete && Math.abs(event.getX() - s.startX) > range * 2) {
+						complete = true;
+						showHelpScreen3();
+					} else if (event.getPointerCount() >= 2) {
+						complete = true;
+						showHelpScreen2();
 					}
 					break;
 
@@ -235,8 +243,47 @@ OnScrollListener, OnClickListener {
 		if (Settings.instance().autoBackup) {
 			BackupHelper.init(this, mHelper);
 		}
+		
+		mZoomEnable = Settings.instance().unlockZoom;
 	}
 	
+	protected void showHelpScreen2() {
+		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.help_screen2_fragment, mLayoutSecondLookHolder, true);
+		view.findViewById(R.id.btnClose).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mLayoutSecondLookHolder.removeAllViews();
+			}
+		});
+		
+		view.findViewById(R.id.btnActive).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mLayoutSecondLookHolder.removeAllViews();
+				InAppActivity.newInstance(MainActivity.this);
+			}
+		});
+	}
+
+	protected void showHelpScreen3() {
+		
+		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.help_screen3_fragment, mLayoutSecondLookHolder, true);
+		view.findViewById(R.id.btnClose).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mLayoutSecondLookHolder.removeAllViews();
+			}
+		});
+		
+		view.findViewById(R.id.btnActive).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mLayoutSecondLookHolder.removeAllViews();
+				InAppActivity.newInstance(MainActivity.this);
+			}
+		});
+	}
+
 	private void prepareForLoadImage(float deltaY) {
 		
 		if (lookList.size() == 0)
@@ -670,6 +717,19 @@ OnScrollListener, OnClickListener {
 		
 		if (Settings.instance().autoBackup)
 			BackupHelper.notifyDataChange();
+		
+		if (!Settings.instance().hasSecondLook && lookList.size() == 2) {
+			Settings.instance().hasSecondLook = true;
+			Settings.instance().save();
+			
+			View v = getLayoutInflater().inflate(R.layout.help_screen1_fragment, mLayoutSecondLookHolder, true);
+			v.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					mLayoutSecondLookHolder.removeAllViews();
+				}
+			});
+		}
 	}
 	
 	public void copy(File src, File dst) throws IOException {
@@ -781,9 +841,10 @@ OnScrollListener, OnClickListener {
 			
 			 //GestureImageView img = new GestureImageView(MainActivity.this);
 			 SubsamplingScaleImageView img = new SubsamplingScaleImageView(MainActivity.this);
+			 img.setZoomEnabled(mZoomEnable);
 			 //img.setMinScale(1);
 			 //img.setMaxScale(10);
-			 //img.setStrict(false);
+			 //img.setStrict(false);	
 			 img.setLayoutParams(params);
 			// img.setImageResource(R.drawable.camera);
 			if (mPathList.size() > 0) {
@@ -792,8 +853,8 @@ OnScrollListener, OnClickListener {
 //				img.setImageBitmap(loadImageOptimize(path));
 				//new LoadImageTask(path, img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
-				//img.setScaleType(ScaleType.FIT_XY);
-				//img.setImageResource(R.drawable.nolook);
+//				img.setScaleType(ScaleType.FIT_XY);
+//				img.setImageResource(R.drawable.nolook);
 			}
 			
 			container.addView(img);
@@ -1074,8 +1135,10 @@ OnScrollListener, OnClickListener {
 		try {
 			JSONArray jArr = new JSONArray(item.fileName);
 			int maxItem = Settings.instance().unlockZoom ? 4 : 1;
-			if (jArr.length() >= maxItem)
+			if (jArr.length() >= maxItem) {
+				if (maxItem == 1) showHelpScreen3();
 				return;
+			}
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}

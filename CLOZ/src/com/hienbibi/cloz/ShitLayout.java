@@ -4,6 +4,7 @@ import com.cycrix.util.CyUtils;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ViewFlipper;
 
@@ -46,8 +47,13 @@ public class ShitLayout extends ViewFlipper {
 			if (!complete && distance > range) {
 				bigY = Math.abs(dy) > Math.abs(dx);
 				complete = true;
-				return bigY;
+				return bigY || !Settings.instance().unlockZoom;
 			}
+			
+			if (event.getPointerCount() >= 2 && !Settings.instance().unlockZoom)
+				return true;
+			
+			Log.d("Cycrix", "onInterceptTouchEvent");
 			break;
 
 		case MotionEvent.ACTION_UP:
