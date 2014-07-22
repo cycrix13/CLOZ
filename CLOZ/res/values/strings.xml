@@ -12,6 +12,7 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_useinfo">UseInfoActivity</string>
     <string name="title_activity_suggest">SuggestActivity</string>
+    <string name="title_activity_in_app">InAppActivity</string>
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_yes">Yes</string>
@@ -129,11 +130,20 @@
     <string name="content_text">We appreciate your suggestions to improve CLOZ. We will listen to you and do our best.</string>
     <string name="send_text">Send a suggestion</string>
     <string name="title_activity_count_down">CountDownActivity</string>
-    
+
     <!-- ************************************************** -->
     <!-- Count down -->
     <string name="count_text1">¡GREAT!</string>
     <string name="count_text2">Your look has been saved.</string>
     <string name="count_text3">Searching!</string>
+    
+    <!-- ************************************************** -->
+    <!-- In app -->
+    <string name="inapp_text1">EXTRAS</string>
+    <string name="inapp_text2">We do our best to make a great free app for everyone but we need to offer some extra premium features to at least try to cover our costs. This will help us to keep improving.</string>
+    <string name="inapp_text3">Zoom + up to 4 images/Look</string>
+    <string name="inapp_text4">Delete pub</string>
+    <string name="inapp_text5">Restore</string>
+    <string name="inapp_text6">Close</string>
 
 </resources>

@@ -114,4 +114,13 @@
     <string name="count_text2">Tu Look se ha guardado correctamente.</string>
     <string name="count_text3">¡BUSCANDO!!</string>
     
+    <!-- ************************************************** -->
+    <!-- In app -->
+    <string name="inapp_text1">EXTRAS</string>
+    <string name="inapp_text2">Nos esforzamos por ofrecer una app genial y gratis para todos. Aún así necesitamos ofrecer alguna opción premium para tratar al menos de cubrir los costes y poder seguir mejorando.</string>
+    <string name="inapp_text3">Zoom + hasta 4 imágenes/Look.</string>
+    <string name="inapp_text4">Eliminar publi</string>
+    <string name="inapp_text5">Restaurar</string>
+    <string name="inapp_text6">Cerrar</string>
+    
 </resources>

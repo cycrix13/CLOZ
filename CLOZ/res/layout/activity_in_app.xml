@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:background="#68C660" >
+
+        <TextView
+            android:id="@+id/textViewUseInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/font1"
+            android:text="@string/inapp_text1"
+            android:textColor="#FFFFFF"
+            android:textSize="35sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/textViewUseInfo"
+            android:padding="8dp"
+            android:src="@drawable/inapp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/RelativeLayout2"
+        android:layout_marginTop="8dp"
+        android:background="#68C660"
+        android:padding="16dp"
+        android:text="@string/inapp_text2"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn4Image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#E30009"
+            android:text="@string/inapp_text3"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btnDeletePub"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#2C32DE"
+            android:text="@string/inapp_text4"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btnRestore"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#FF8000"
+            android:text="@string/inapp_text5"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#7D8782"
+            android:text="@string/inapp_text6"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

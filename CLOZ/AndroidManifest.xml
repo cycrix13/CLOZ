@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -100,6 +101,10 @@
             android:label="@string/title_activity_count_down"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".InAppActivity"
+            android:label="@string/title_activity_in_app" >
         </activity>
     </application>
 
