@@ -2,7 +2,9 @@ package com.hienbibi.cloz;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Date;
@@ -46,6 +48,7 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 	private Activity mAct;
 	private ProgressDialog progress;
 	private DatabaseHelper mDb;
+	private DownCallBack mDownBackup;
 	
 	public static void init(Activity act, DatabaseHelper db) {
 		if (mInstance != null)
@@ -70,6 +73,14 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		progress = ProgressDialog.show(act, null, "Connecting to Google Drive...", true, false);
 		mGoogleApiClient.connect();
 	}
+	
+	public void downBackupAfterConnect(DownCallBack callback) {
+		
+		if (!mConnected)
+			mDownBackup = callback;
+		else
+			mInstance.dowṇ̣(callback);
+	}
  	
 	public static BackupHelper instance() {
 		return mInstance;
@@ -79,6 +90,12 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		if (mInstance != null)
 			mInstance.pnotifyDataChange();
 	}
+	
+//	public static void downBackup(DownCallBack callback) {
+//		
+//		if (mInstance != null)
+//			mInstance.dowṇ̣(callback);
+//	}
 	
 	private void pnotifyDataChange() {
 		
@@ -93,6 +110,19 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 	
 	private void sync() {
 		new SyncTask().execute();
+	}
+	
+	private void dowṇ̣(DownCallBack callback) {
+		
+		if (!mConnected)
+			return;
+		
+		new DownTask(callback).execute();
+	}
+	
+	public static class DownCallBack {
+		void onSuccess() {}
+		void onFail(Exception e) {}
 	}
 	
 	private class SyncTask extends AsyncTask<Void, Void, Object> {
@@ -237,26 +267,113 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		}
 	}
 	
-	private class DownTask extends AsyncTask<Void, Void, Void> {
+	private class DownTask extends AsyncTask<Void, Void, Object> {
+		
+		private DownCallBack mCallBack;
+		
+		public DownTask(DownCallBack callback) {
+			mCallBack = callback;
+		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Object doInBackground(Void... params) {
 			
+			Exception ex = null;
+			try {
+				doDownAction();
+			} catch (Exception e) {
+				e.printStackTrace();
+				ex = e;
+			}
+			
+			return ex;
+		}
+		
+		private void doDownAction() throws IOException, SQLException, JSONException {
+
 			DriveId appFolderId = Drive.DriveApi.getAppFolder(mGoogleApiClient).getDriveId();
 			
 			MetadataBufferResult result = Drive.DriveApi.getFolder(mGoogleApiClient, appFolderId)
 					.queryChildren(mGoogleApiClient, null).await();
 			
 			if (!result.getStatus().isSuccess()) {
-//				throw new IOException("Create new drive content failed");
+				throw new IOException("Get drive file list failed");
 			}
 
 			MetadataBuffer metadataBuffer = result.getMetadataBuffer();
+
+			// Down db
 			Metadata dbMeta = findMetadataByTitle(metadataBuffer, DatabaseHelper.DATABASE_NAME);
 			
+			if (dbMeta == null) {
+				throw new IOException("Db not found on drive");
+			}
+				
+			File dbFile = mAct.getDatabasePath(DatabaseHelper.DATABASE_NAME);
+			DriveFile dbDriveFile = Drive.DriveApi.getFile(mGoogleApiClient, dbMeta.getDriveId());
 			
-			return null;
-		}		
+			downFile(dbFile, dbDriveFile);
+			Log.d("File list", "Downloaded db");
+			
+			// Down image file
+			DatabaseHelper helper = new DatabaseHelper(mAct);
+			List<Looks> lookList = helper.getDao().queryForAll();
+			
+			for (Looks lookItem : lookList) {
+				JSONArray jFile = new JSONArray(lookItem.fileName);
+				
+				for (int i = 0; i < jFile.length(); i++) {
+					String fileName = jFile.getString(i);
+					
+					Metadata meta = findMetadataByTitle(metadataBuffer, fileName);
+					
+					if (meta == null) {
+						Log.d("File list", "Broken backup: file " + fileName + " found in db but not in drive");
+						continue;
+					}
+					
+					File file = mAct.getFileStreamPath(fileName);
+					DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, meta.getDriveId());
+					
+					downFile(file, driveFile);
+					Log.d("File list", "Downloaded " + fileName);
+				}
+			}
+			
+			metadataBuffer.close();
+		}	
+		
+		private void downFile(File file, DriveFile driveFile) throws IOException {
+			
+			ContentsResult contentsResult = driveFile
+					.openContents(mGoogleApiClient, DriveFile.MODE_READ_ONLY, null).await();
+			
+			if (!contentsResult.getStatus().isSuccess())
+				throw new IOException("Open drive contents failed");
+			
+			InputStream driveStream = contentsResult.getContents().getInputStream();
+			
+			FileOutputStream fileStream = new FileOutputStream(file);
+			
+			byte[] byteBuffer = new byte[1024];
+			int hasRead;
+			while ((hasRead = driveStream.read(byteBuffer)) > 0)
+				fileStream.write(byteBuffer, 0, hasRead);
+			fileStream.close();
+			driveStream.close();
+			
+			driveFile.discardContents(mGoogleApiClient, contentsResult.getContents()).await();
+		}
+		
+		@Override
+		protected void onPostExecute(Object result) {
+			super.onPostExecute(result);
+			
+			if (result == null)
+				mCallBack.onSuccess();
+			else
+				mCallBack.onFail((Exception) result);
+		}
 	}
 	
 	private Metadata findMetadataByTitle(MetadataBuffer buffer, String title) {
@@ -307,6 +424,11 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		progress = null;
 //		pnotifyDataChange();
 		CyUtils.showToast("Connected to Google Drive", mAct);
+		
+		if (mDownBackup != null) {
+			dowṇ̣(mDownBackup);
+			mDownBackup = null;
+		}
 	}
 
 	@Override

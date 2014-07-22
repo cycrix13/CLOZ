@@ -332,6 +332,24 @@ OnScrollListener, OnClickListener {
 		pager.setAdapter(new LookAdapter(pager, fileNames));
 	}
 	
+	public void refreshDb() {
+		try {
+			lookList = mHelper.getDao().queryForAll();
+			Collections.sort(lookList, new CustomComparator());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			finish();
+		}
+		
+		if (lookList.size() > 0) {
+			mSelecting = 0;
+			loadImage();
+		} else {
+			mSelecting = -1;
+			loadImage();
+		}
+	}
+	
 	private void loadImage() {
 		
 		int visibility = mSelecting >= 0 ? View.VISIBLE : View.INVISIBLE;

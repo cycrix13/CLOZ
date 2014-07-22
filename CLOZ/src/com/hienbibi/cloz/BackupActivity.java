@@ -3,6 +3,7 @@ package com.hienbibi.cloz;
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
+import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
 
 import android.app.Activity;
@@ -24,8 +25,12 @@ public class BackupActivity extends Activity {
 	static private DatabaseHelper sDb;
 	private DatabaseHelper mDb;
 	
+	static private MainActivity sAct;
+	private MainActivity mAct;
+	
 	public static void newInstance(MainActivity act) {
 		sDb = act.mHelper;
+		sAct = act;
 		Intent intent = new Intent(act, BackupActivity.class);
 		act.startActivity(intent);
 	}
@@ -37,6 +42,9 @@ public class BackupActivity extends Activity {
 		
 		mDb = sDb;
 		sDb = null;
+		
+		mAct = sAct;
+		sAct = null;
 		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
@@ -83,5 +91,24 @@ public class BackupActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		BackupHelper.instance().onActivityResult(requestCode, resultCode, data);
+	}
+	
+	@Click(id = R.id.txtSyncFrom)
+	private void onSyncFromClick(View v) {
+		
+		BackupHelper.init(this, mDb);
+		BackupHelper.instance().downBackupAfterConnect(new BackupHelper.DownCallBack() {
+			@Override
+			void onFail(Exception e) {
+				CyUtils.showToast("Sync from google failed", BackupActivity.this);
+			}
+			
+			@Override
+			void onSuccess() {
+				CyUtils.showToast("Sync from google completed", BackupActivity.this);
+				mAct.refreshDb();
+			}
+		});
+		
 	}
 }
