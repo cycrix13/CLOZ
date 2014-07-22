@@ -61,6 +61,7 @@ import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
+import com.polites.android.GestureImageView;
 
 public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, 
 OnScrollListener, OnClickListener {
@@ -748,14 +749,20 @@ OnScrollListener, OnClickListener {
 		@Override
 		public Object instantiateItem(ViewGroup container, final int position) {
 			
-			ImageView img = new ImageView(MainActivity.this);
-			ViewGroup.LayoutParams param = new LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-			img.setLayoutParams(param);
+			//ImageView img = new ImageView(MainActivity.this);
+			ViewGroup.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+			//img.setLayoutParams(param);
+			
+			 GestureImageView img = new GestureImageView(MainActivity.this);
+			 img.setMinScale(1);
+			 img.setMaxScale(10);
+			 img.setStrict(false);
+			 img.setLayoutParams(params);
+			 img.setImageResource(R.drawable.camera);
 			if (mPathList.size() > 0) {
-				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+				//String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
 //				img.setImageBitmap(loadImageOptimize(path));
-				new LoadImageTask(path, img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				//new LoadImageTask(path, img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
 				img.setScaleType(ScaleType.FIT_XY);
 				img.setImageResource(R.drawable.nolook);
