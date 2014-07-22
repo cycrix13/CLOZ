@@ -67,7 +67,7 @@ OnScrollListener, OnClickListener {
 
 	private MenuFragment mMenuFragment;
 	private HelpFragment mHelpFragment;
-	private DatabaseHelper mHelper;
+	public DatabaseHelper mHelper;
 	
 //	@ViewById(id = R.id.lstLook)	private ListView mLstLook;
 	@ViewById(id = R.id.fliper)		private ShitLayout mFlipper;
@@ -232,6 +232,10 @@ OnScrollListener, OnClickListener {
 				return true;
 			}
 		});
+		
+		if (Settings.instance().autoBackup) {
+			BackupHelper.init(this, mHelper);
+		}
 	}
 	
 	private void prepareForLoadImage(float deltaY) {
@@ -535,6 +539,8 @@ OnScrollListener, OnClickListener {
 				
 				try {
 					mHelper.getDao().update(item);
+					if (Settings.instance().autoBackup)
+						BackupHelper.notifyDataChange();
 				} catch (SQLException e) {
 					return;
 				}
@@ -643,6 +649,9 @@ OnScrollListener, OnClickListener {
 		loadImage();
 		
 		CountDownActivity.newInstance(this, false);
+		
+		if (Settings.instance().autoBackup)
+			BackupHelper.notifyDataChange();
 	}
 	
 	public void copy(File src, File dst) throws IOException {
@@ -918,6 +927,8 @@ OnScrollListener, OnClickListener {
 				}
 				
 				loadImage();
+				if (Settings.instance().autoBackup)
+					BackupHelper.notifyDataChange();
 			}
 		})
 		.setNegativeButton(R.string.text_no, null)
@@ -942,6 +953,8 @@ OnScrollListener, OnClickListener {
 								item.contacts = addStringNoDuplicate(jContacts, newContactList);
 								mHelper.getDao().update(item);
 								loadImage();
+								if (Settings.instance().autoBackup)
+									BackupHelper.notifyDataChange();
 							} catch (Exception e) {
 							}
 						}
@@ -960,6 +973,8 @@ OnScrollListener, OnClickListener {
 								item.tags = addStringNoDuplicate(jContacts, newContactList);
 								mHelper.getDao().update(item);
 								loadImage();
+								if (Settings.instance().autoBackup)
+									BackupHelper.notifyDataChange();
 							} catch (Exception e) {
 							}
 						}
@@ -1013,7 +1028,8 @@ OnScrollListener, OnClickListener {
 					item.fileName = jNewArr.toString();
 					mHelper.getDao().update(item);
 					refreshCurrentPage();
-					
+					if (Settings.instance().autoBackup)
+						BackupHelper.notifyDataChange();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return;
@@ -1067,6 +1083,8 @@ OnScrollListener, OnClickListener {
 							item.fileName = jNewArr.toString();
 							mHelper.getDao().update(item);
 							refreshCurrentPage();
+							if (Settings.instance().autoBackup)
+								BackupHelper.notifyDataChange();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -1098,6 +1116,8 @@ OnScrollListener, OnClickListener {
 					return;
 				}
 				loadImage();
+				if (Settings.instance().autoBackup)
+					BackupHelper.notifyDataChange();
 			}
 		}, true);
 	}

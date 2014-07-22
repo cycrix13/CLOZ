@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,8 +34,19 @@ public class CyUtils {
 
 		}
 	}
-	public static void showToast(String message, Context ct) {
-		Toast.makeText(ct, message, Toast.LENGTH_SHORT).show();
+	public static void showToast(final String message, final Context ct) {
+		
+		Runnable run = new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(ct, message, Toast.LENGTH_SHORT).show();
+			}
+		};
+		
+		if (Looper.getMainLooper().getThread() != Thread.currentThread()) 
+			new Handler(Looper.getMainLooper()).post(run);
+		else
+			run.run();
 	}
 
 	public static String right(String s, int n) {

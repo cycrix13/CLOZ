@@ -2,9 +2,14 @@ package com.hienbibi.cloz;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,16 +23,13 @@ import com.cycrix.util.CyUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
+import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
 
@@ -43,15 +45,16 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 	private boolean mConnected;
 	private Activity mAct;
 	private ProgressDialog progress;
+	private DatabaseHelper mDb;
 	
-	public static void init(Activity act) {
+	public static void init(Activity act, DatabaseHelper db) {
 		if (mInstance != null)
 			return;
 		
-		mInstance = new BackupHelper(act);
+		mInstance = new BackupHelper(act, db);
 	}
 	
-	private BackupHelper(Activity act) {
+	private BackupHelper(Activity act, DatabaseHelper db) {
 		if (mGoogleApiClient == null) {
 			mGoogleApiClient = new GoogleApiClient.Builder(act)
 			.addApi(Drive.API)
@@ -63,6 +66,7 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		}
 		
 		mAct = act;
+		mDb = db;
 		progress = ProgressDialog.show(act, null, "Connecting to Google Drive...", true, false);
 		mGoogleApiClient.connect();
 	}
@@ -77,6 +81,10 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 	}
 	
 	private void pnotifyDataChange() {
+		
+		if (!Settings.instance().autoBackup)
+			return;
+		
 		if (!mConnected)
 			return;
 	
@@ -87,10 +95,21 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		new SyncTask().execute();
 	}
 	
-	private class SyncTask extends AsyncTask<Void, Void, Void> {
+	private class SyncTask extends AsyncTask<Void, Void, Object> {
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Object doInBackground(Void... params) {
+			
+			try {
+				doSyncAction();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return true;
+		}
+		
+		private void doSyncAction() throws IOException, SQLException, JSONException {
 			
 			DriveId appFolderId = Drive.DriveApi.getAppFolder(mGoogleApiClient).getDriveId();
 			
@@ -98,46 +117,83 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 					.queryChildren(mGoogleApiClient, null).await();
 			
 			if (!result.getStatus().isSuccess()) {
-				CyUtils.showToast("Problem backup", mAct);
-				return null;
+				throw new IOException("Create new drive content failed");
 			}
 
 			MetadataBuffer metadataBuffer = result.getMetadataBuffer();
-			Metadata dbMeta = findDatabaseMetadata(metadataBuffer);
+			Metadata dbMeta = findMetadataByTitle(metadataBuffer, DatabaseHelper.DATABASE_NAME);
+			
+			// Sync db
 			File dbFile = mAct.getDatabasePath(DatabaseHelper.DATABASE_NAME);
 			if (dbMeta == null || modifyDataNeedUpdate(dbMeta, dbFile)) {
+				
 				if (dbMeta != null)
 					uploadExistedFile(dbFile, dbMeta.getDriveId());
 				else
 					uploadNewFile(dbFile);
-			}
-
-			return null;
-		}
-		
-		private Metadata findDatabaseMetadata(MetadataBuffer buffer) {
-			for (int i = 0; i < buffer.getCount(); i++) {
-				if (buffer.get(i).getTitle().equals(DatabaseHelper.DATABASE_NAME))
-					return buffer.get(i);
+				
+				sync();
+				return;
 			}
 			
-			return null;
+			// Sync image
+			List<Looks> lookList = mDb.getDao().queryForAll();
+			for (Looks lookItem : lookList) {
+				JSONArray jFile = new JSONArray(lookItem.fileName);
+				for (int i = 0; i < jFile.length(); i++) {
+					
+					String fileName = jFile.getString(i);
+					File file = mAct.getFileStreamPath(fileName);
+					
+					if (!file.exists() || !file.isFile())
+						continue;
+					
+					Metadata meta = findMetadataByTitle(metadataBuffer, file.getName());
+					if (meta == null || modifyDataNeedUpdate(meta, file)) {
+						if (meta != null)
+							uploadExistedFile(file, meta.getDriveId());
+						else
+							uploadNewFile(file);
+						
+						sync();
+						return;
+					}
+				}
+			}
+			
+			CyUtils.showToast("Backup completed", mAct);
 		}
+		
+		
 		
 		private boolean modifyDataNeedUpdate(Metadata meta, File local) {
 			Date driveDate = meta.getModifiedDate();
 			return local.lastModified() > driveDate.getTime();
 		}
 		
-		private void uploadExistedFile(File file, DriveId driveId) {
+		private void uploadExistedFile(File file, DriveId driveId) throws IOException {
 			DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, driveId);
 			writeFileToDrive(driveFile, file);
 		}
 		
-		private void uploadNewFile(final File file) {
+		private void uploadNewFile(final File file) throws IOException {
 			ContentsResult result = Drive.DriveApi.newContents(mGoogleApiClient).await();
 			if (!result.getStatus().isSuccess()) {
-				CyUtils.showToast("Problem backup", mAct);
+				throw new IOException("Create new drive content failed");
+			}
+			
+			OutputStream outputStream = result.getContents().getOutputStream();
+			try {
+				FileInputStream fileInStream = new FileInputStream(file);
+				byte[] byteBuffer = new byte[1024];
+				int hasRead;
+				while ((hasRead = fileInStream.read(byteBuffer)) > 0) {
+					outputStream.write(byteBuffer, 0, hasRead);
+				}
+				fileInStream.close();
+				outputStream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 				return;
 			}
 
@@ -149,46 +205,72 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 			DriveFileResult fileResult = Drive.DriveApi.getAppFolder(mGoogleApiClient)
 					.createFile(mGoogleApiClient, changeSet, result.getContents()).await();
 			if (!fileResult.getStatus().isSuccess()) {
-				CyUtils.showToast("Problem backup", mAct);
-				return;
+				throw new IOException("Save drive contents failed");
 			}
-
-			DriveFile driveFile = fileResult.getDriveFile();
-			writeFileToDrive(driveFile, file);
+			
+			Log.d("File list", "Uploaded new file " + file.getName());
 		}
 	
-		private void writeFileToDrive(DriveFile driveFile, File file) {
+		private void writeFileToDrive(DriveFile driveFile, File file) throws IOException {
 			ContentsResult contentsResult = driveFile
 					.openContents(mGoogleApiClient, DriveFile.MODE_WRITE_ONLY, null).await();
 			
-			if (!contentsResult.getStatus().isSuccess()) {
-				CyUtils.showToast("Problem backup", mAct);
-                return;
-            }
+			if (!contentsResult.getStatus().isSuccess())
+				throw new IOException("Open drive contents failed");
 			
 			OutputStream outputStream = contentsResult.getContents().getOutputStream();
 			
-			try {
-				FileInputStream fileInStream = new FileInputStream(file);
-				byte[] byteBuffer = new byte[1024];
-				int hasRead;
-				while ((hasRead = fileInStream.read(byteBuffer)) > 0) {
-					outputStream.write(byteBuffer, 0, hasRead);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			FileInputStream fileInStream = new FileInputStream(file);
+			byte[] byteBuffer = new byte[1024];
+			int hasRead;
+			while ((hasRead = fileInStream.read(byteBuffer)) > 0)
+				outputStream.write(byteBuffer, 0, hasRead);
+			fileInStream.close();
 			
 			com.google.android.gms.common.api.Status status = driveFile.commitAndCloseContents(
                     mGoogleApiClient, contentsResult.getContents()).await();
 			
-			if (!status.getStatus().isSuccess()) {
-				CyUtils.showToast("Problem backup", mAct);
-			} else {
-				CyUtils.showToast("Backup file...", mAct);
-			}
+			if (!status.getStatus().isSuccess())
+				throw new IOException("Save drive contents failed");
+			
+			Log.d("File list", "Uploaded overwrite file " + file.getName());
 		}
+	}
+	
+	private class DownTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			
+			DriveId appFolderId = Drive.DriveApi.getAppFolder(mGoogleApiClient).getDriveId();
+			
+			MetadataBufferResult result = Drive.DriveApi.getFolder(mGoogleApiClient, appFolderId)
+					.queryChildren(mGoogleApiClient, null).await();
+			
+			if (!result.getStatus().isSuccess()) {
+//				throw new IOException("Create new drive content failed");
+			}
+
+			MetadataBuffer metadataBuffer = result.getMetadataBuffer();
+			Metadata dbMeta = findMetadataByTitle(metadataBuffer, DatabaseHelper.DATABASE_NAME);
+			
+			
+			return null;
+		}		
+	}
+	
+	private Metadata findMetadataByTitle(MetadataBuffer buffer, String title) {
+		
+		for (int i = 0; i < buffer.getCount(); i++) {
+			Log.d("File list", buffer.get(i).getTitle());
+		}
+		
+		for (int i = 0; i < buffer.getCount(); i++) {
+			if (buffer.get(i).getTitle().equals(title))
+				return buffer.get(i);
+		}
+		
+		return null;
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -223,7 +305,7 @@ public class BackupHelper implements GoogleApiClient.ConnectionCallbacks, Google
 		mConnected = true;
 		progress.dismiss();
 		progress = null;
-		pnotifyDataChange();
+//		pnotifyDataChange();
 		CyUtils.showToast("Connected to Google Drive", mAct);
 	}
 

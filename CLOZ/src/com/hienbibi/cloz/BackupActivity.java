@@ -21,7 +21,11 @@ public class BackupActivity extends Activity {
 	@ViewById(id = R.id.txtOn)				private TextView mTxtOn;
 	@ViewById(id = R.id.txtOff)				private TextView mTxtOff;
 	
-	public static void newInstance(Activity act) {
+	static private DatabaseHelper sDb;
+	private DatabaseHelper mDb;
+	
+	public static void newInstance(MainActivity act) {
+		sDb = act.mHelper;
 		Intent intent = new Intent(act, BackupActivity.class);
 		act.startActivity(intent);
 	}
@@ -30,6 +34,9 @@ public class BackupActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_backup);
+		
+		mDb = sDb;
+		sDb = null;
 		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
@@ -66,7 +73,7 @@ public class BackupActivity extends Activity {
 	private void onOnOffClick(View v) {
 		
 		if (!Settings.instance().autoBackup)
-			BackupHelper.init(this);
+			BackupHelper.init(this, mDb);
 		
 		Settings.instance().autoBackup = !Settings.instance().autoBackup;
 		Settings.instance().save();
