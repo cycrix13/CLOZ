@@ -59,6 +59,7 @@ import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
 import com.polites.android.GestureImageView;
@@ -753,19 +754,21 @@ OnScrollListener, OnClickListener {
 			ViewGroup.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			//img.setLayoutParams(param);
 			
-			 GestureImageView img = new GestureImageView(MainActivity.this);
-			 img.setMinScale(1);
-			 img.setMaxScale(10);
-			 img.setStrict(false);
+			 //GestureImageView img = new GestureImageView(MainActivity.this);
+			 SubsamplingScaleImageView img = new SubsamplingScaleImageView(MainActivity.this);
+			 //img.setMinScale(1);
+			 //img.setMaxScale(10);
+			 //img.setStrict(false);
 			 img.setLayoutParams(params);
-			 img.setImageResource(R.drawable.camera);
+			// img.setImageResource(R.drawable.camera);
 			if (mPathList.size() > 0) {
-				//String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+				img.setImageFile(path);
 //				img.setImageBitmap(loadImageOptimize(path));
 				//new LoadImageTask(path, img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
-				img.setScaleType(ScaleType.FIT_XY);
-				img.setImageResource(R.drawable.nolook);
+				//img.setScaleType(ScaleType.FIT_XY);
+				//img.setImageResource(R.drawable.nolook);
 			}
 			
 			container.addView(img);
@@ -1345,3 +1348,4 @@ OnScrollListener, OnClickListener {
 		
 	}
 }
+
