@@ -50,7 +50,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
@@ -59,10 +58,8 @@ import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
-import com.polites.android.GestureImageView;
 
 public class MainActivity extends FragmentActivity implements MenuFragment.Listener, CameraActivity.Listener, 
 OnScrollListener, OnClickListener {
