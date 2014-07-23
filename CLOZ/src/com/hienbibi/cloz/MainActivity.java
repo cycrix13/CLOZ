@@ -90,6 +90,7 @@ OnScrollListener, OnClickListener {
 	@ViewById(id = R.id.txtBackAll) private View mTxtBackAll;
 	@ViewById(id = R.id.txtAll) private TextView mTxtAll;
 	@ViewById(id = R.id.layoutSecondLookHolder) private ViewGroup mLayoutSecondLookHolder;
+	@ViewById(id = R.id.layoutHolder) private ViewGroup mLayoutHolder;
 	
 //	@ViewById(id = R.id.imageView1)	private ImageView mImg1;
 //	@ViewById(id = R.id.imageView2)	private ImageView mImg2;
@@ -166,6 +167,7 @@ OnScrollListener, OnClickListener {
 		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
+			FontsCollection.setFont(findViewById(android.R.id.content));
 		} catch (Exception e) {
 			e.printStackTrace();
 			finish();
@@ -982,6 +984,21 @@ OnScrollListener, OnClickListener {
 		mImgDeleteImage.setVisibility(visibleEdit);
 		
 		mLayoutDate.setBackgroundColor(mEditing ? 0x80000000 : 0x00000000);
+		
+		if (Settings.instance().firstEdit) {
+			Settings.instance().firstEdit = false;
+			Settings.instance().save();
+			
+			View view = getLayoutInflater().inflate(R.layout.help_screen4_fragment, mLayoutHolder, false);
+			FontsCollection.setFont(view);
+			view.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View arg0) {
+					mLayoutHolder.removeAllViews();
+				}
+			});
+			mLayoutHolder.addView(view);
+		}
 	}
 	
 	@Click(id = R.id.txtDelete)

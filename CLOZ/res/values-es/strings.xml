@@ -62,6 +62,13 @@
     <string name="help_text3_5">2) Nuevo Look</string>
     <string name="help_text3_6">3) Sigue los pasos guiados.</string>
     
+    <string name="help_text4_1">Aquí para borrar el Look</string>
+    <string name="help_text4_2">Aquí para cambiar la fecha</string>
+    <string name="help_text4_3">Aquí para añadir una imagen al Look</string>
+    <string name="help_text4_4">Aquí para borrar esta imagen</string>
+    <string name="help_text4_5">Aquí para añadir una etiqueta</string>
+    <string name="help_text4_6">Pulsa una etiqueta para borrarla</string>
+    
     <!-- ************************************************** -->
     <!-- Camera -->
     

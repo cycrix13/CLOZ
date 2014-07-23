@@ -22,7 +22,7 @@
     <!-- Fonts -->
 
     <string name="font1">font:font1.ttf</string>
-    <string name="font2">font:font1.ttc</string>
+    <string name="font2">font:font2.ttc</string>
 
     <!-- ************************************************** -->
     <!-- Looks -->
@@ -83,6 +83,13 @@
     <string name="help_text3_4">1) Menu</string>
     <string name="help_text3_5">2) New look</string>
     <string name="help_text3_6">3) Follow guided steps</string>
+    
+    <string name="help_text4_1">Here to delete the Look</string>
+    <string name="help_text4_2">Here to change the date</string>
+    <string name="help_text4_3">Here to add an image to the look</string>
+    <string name="help_text4_4">Here to delete this image</string>
+    <string name="help_text4_5">Here to add a tag</string>
+    <string name="help_text4_6">Press a tag to delete it</string>
 
     <!-- ************************************************** -->
     <!-- Camera -->

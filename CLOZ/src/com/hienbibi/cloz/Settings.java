@@ -17,6 +17,7 @@ public class Settings {
 	public boolean unlockPub;
 	
 	public boolean hasSecondLook;
+	public boolean firstEdit;
 
 	public static void init(Context context) {
 		if (sInstance == null) {
@@ -45,6 +46,7 @@ public class Settings {
 		editor.putBoolean("unlockZoom", unlockZoom);
 		editor.putBoolean("unlockPub", unlockPub);
 		editor.putBoolean("hasSecondLook", hasSecondLook);
+		editor.putBoolean("firstEdit", firstEdit);
 
 		editor.commit();
 	}
@@ -59,5 +61,6 @@ public class Settings {
 		unlockZoom		= preference.getBoolean("unlockZoom", false);
 		unlockPub		= preference.getBoolean("unlockPub", false);
 		hasSecondLook	= preference.getBoolean("hasSecondLook", false);
+		firstEdit		= preference.getBoolean("firstEdit", true);
 	}
 }
