@@ -58,6 +58,7 @@ import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
+import com.flurry.android.FlurryAgent;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
 
@@ -784,6 +785,7 @@ OnScrollListener, OnClickListener {
 			 //img.setMaxScale(10);
 			 //img.setStrict(false);
 			 img.setLayoutParams(params);
+			 //img.
 			// img.setImageResource(R.drawable.camera);
 			if (mPathList.size() > 0) {
 				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
@@ -904,6 +906,7 @@ OnScrollListener, OnClickListener {
 	
 	@Click(id = R.id.txtEdit)
 	private void onEditClick(View v) {
+		FlurryAgent.logEvent("PRESS_EDIT");
 		mEditing = !mEditing;
 		
 		int visibleEdit = mEditing ? View.VISIBLE : View.INVISIBLE;
@@ -921,7 +924,7 @@ OnScrollListener, OnClickListener {
 	
 	@Click(id = R.id.txtDelete)
 	private void onDeleteClick(View v) {
-		
+		FlurryAgent.logEvent("PRESS_DELETE");
 		if (lookList.size() == 0 || mSelecting == -1) {
 			onEditClick(null);
 			return;
@@ -962,7 +965,7 @@ OnScrollListener, OnClickListener {
 	
 	@Click(id = R.id.imgAddTag)
 	private void onAddTagClick(View v) {
-		
+		FlurryAgent.logEvent("PRESS_ADDTAG");
 		new AlertDialog.Builder(this).setItems(R.array.look_msg_add_tag, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -1235,6 +1238,7 @@ OnScrollListener, OnClickListener {
 	
 	@Click(id = R.id.txtShare)
 	public void onShareClick(View v) {
+		FlurryAgent.logEvent("PRESS_SHARE");
 		final Dialog dialog = new Dialog(MainActivity.this);
 		dialog.setContentView(R.layout.share_dialog);
 		dialog.setTitle("Share");
@@ -1247,6 +1251,7 @@ OnScrollListener, OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				FlurryAgent.logEvent("PRESS_FACEBOOK");
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
 				share("Facebook",filePath.toString(),"CLOZ App");
 			}
@@ -1257,6 +1262,7 @@ OnScrollListener, OnClickListener {
 			
 			@Override
 			public void onClick(View v) {
+				FlurryAgent.logEvent("PRESS_TWITTER");
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
 				share("Twitter",filePath.toString(),"CLOZ App");
@@ -1268,6 +1274,7 @@ OnScrollListener, OnClickListener {
 			
 			@Override
 			public void onClick(View v) {
+				FlurryAgent.logEvent("PRESS_INSTAGRAM");
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
 				share("Instagram",filePath.toString(),"CLOZ App");
@@ -1279,6 +1286,7 @@ OnScrollListener, OnClickListener {
 			
 			@Override
 			public void onClick(View v) {
+				FlurryAgent.logEvent("PRESS_WHATSAPP");
 				// TODO Auto-generated method stub
 				File filePath = MainActivity.this.getFileStreamPath("add.png");
 				share("Whatsapp",filePath.toString(),"CLOZ App");
@@ -1381,6 +1389,20 @@ OnScrollListener, OnClickListener {
 		// TODO Auto-generated method stub
 		 this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.hienbibi.cloz")));
 		
+	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }
 

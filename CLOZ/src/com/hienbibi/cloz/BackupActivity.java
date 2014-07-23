@@ -5,6 +5,7 @@ import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
+import com.flurry.android.FlurryAgent;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -110,5 +111,19 @@ public class BackupActivity extends Activity {
 			}
 		});
 		
+	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }
