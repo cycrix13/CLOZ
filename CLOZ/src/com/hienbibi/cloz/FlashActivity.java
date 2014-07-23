@@ -1,5 +1,7 @@
 package com.hienbibi.cloz;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -24,5 +26,19 @@ public class FlashActivity extends Activity {
 	public static void newInstance(Activity act) {
 		Intent intent = new Intent(act, FlashActivity.class);
 		act.startActivity(intent);
+	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

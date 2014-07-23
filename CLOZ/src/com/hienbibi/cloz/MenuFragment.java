@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
+import com.flurry.android.FlurryAgent;
 
 public class MenuFragment extends Fragment {
 	
@@ -104,6 +105,9 @@ public class MenuFragment extends Fragment {
 	
 	@Click(id = R.id.txtMenu)
 	void onMenuClick(View v) {
+		
+		 FlurryAgent.logEvent("PRESS_MENU");
+		
 		int screenWidth = getResources().getDisplayMetrics().widthPixels;
 		if (mLayoutMenu.getTranslationY() == screenWidth) {
 			
@@ -133,6 +137,8 @@ public class MenuFragment extends Fragment {
 	@Click(id = R.id.layoutNewLook)
 	void onNewLookClick(View v) {
 		
+		FlurryAgent.logEvent("PRESS_NEWLOOK");
+		
 		mLayoutCamera.setVisibility(View.VISIBLE);
 		mLayoutMore1.setVisibility(View.INVISIBLE);
 		mLayoutMore2.setVisibility(View.INVISIBLE);
@@ -144,6 +150,7 @@ public class MenuFragment extends Fragment {
 	
 	@Click(id = R.id.layoutMore)
 	void onMoreClick(View v) {
+		FlurryAgent.logEvent("PRESS_MORE");
 		mLayoutCamera.setVisibility(View.INVISIBLE);
 		mLayoutMore1.setVisibility(View.VISIBLE);
 		mLayoutMore2.setVisibility(View.VISIBLE);
@@ -154,48 +161,57 @@ public class MenuFragment extends Fragment {
 	
 	@Click(id = R.id.layoutPickCamera)
 	void onCameraClick(View v) {
+		FlurryAgent.logEvent("PRESS_CAMERA");
+		
 		if (mListener != null) mListener.onCameraClick();
 		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutGallery)
 	void onGalleryClick(View v) {
+		FlurryAgent.logEvent("PRESS_GALLERY");
 		if (mListener != null) mListener.onGalleryClick();
 		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutHelp)
 	void onHelpClick(View v) {
+		FlurryAgent.logEvent("PRESS_HELP");
 		if (mListener != null) mListener.onHelpClick();
 		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutSearch)
 	void onSearchClick(View v) {
+		FlurryAgent.logEvent("PRESS_SEARCH");
 		if (mListener != null) mListener.onSearchClick();
 		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutSync)
 	void onSyncClick(View v) {
+		FlurryAgent.logEvent("PRESS_BACKUP");
 		if (mListener != null) mListener.onSyncClick();
 		closeAnim();
 	}
 
 	@Click(id = R.id.layoutUseInfo)
 	void onUseInfoClick(View v) {
+		FlurryAgent.logEvent("PRESS_USEINFO");
 		if (mListener != null) mListener.onUseInfoClick();
 		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutSuggest)
 	void onSuggestClick(View v) {
+		FlurryAgent.logEvent("PRESS_SUGGEST");
 		if (mListener != null) mListener.onSuggestClick();
 		closeAnim();
 	}
 	
 	@Click(id = R.id.layoutRate)
 	void onRateClick(View v) {
+		FlurryAgent.logEvent("PRESS_RATE");
 		if (mListener != null) mListener.onRateClick();
 		closeAnim();
 	}

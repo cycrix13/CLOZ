@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class Settings {
 
 	public static final String SHARED_PREFERENCE_NAME = "SETTINGS";
-
+	public static final String API_FLURRY_KEY = "F7TCFBX279SCK2BYRT27";
 	private static Settings sInstance;
 	private static Context mContext;
 

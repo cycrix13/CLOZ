@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
+import com.flurry.android.FlurryAgent;
 
 public class SearchActivity extends Activity {
 	
@@ -185,5 +186,19 @@ public class SearchActivity extends Activity {
 			item.check = !item.check;
 			notifyDataSetChanged();
 		}
+	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

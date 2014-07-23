@@ -14,6 +14,7 @@ import com.hienbibi.cloz.util.Inventory;
 import com.hienbibi.cloz.util.IabHelper.QueryInventoryFinishedListener;
 import com.hienbibi.cloz.util.IabHelper.OnIabPurchaseFinishedListener;
 import com.hienbibi.cloz.util.IabHelper.OnConsumeMultiFinishedListener;
+import com.flurry.android.FlurryAgent;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,10 +28,10 @@ public class InAppActivity extends Activity {
 	
 	private static final String  TAG = "InAppActivity";
 	
-//	public static final String SKU_4IMAGES 		= "zoom_4images";
-//	public static final String SKU_DELETE_PUB 	= "delete_pub";
-	public static final String SKU_4IMAGES 		= "android.test.purchased";
-	public static final String SKU_DELETE_PUB 	= "android.test.purchased";
+	public static final String SKU_4IMAGES 		= "zoom_4images";
+	public static final String SKU_DELETE_PUB 	= "delete_pub";
+//	public static final String SKU_4IMAGES 		= "android.test.purchased";
+//	public static final String SKU_DELETE_PUB 	= "android.test.purchased";
 //	android.test.purchased
 	public static final int REQUEST_CODE_PURCHASE = 1001;
 	
@@ -296,5 +297,19 @@ public class InAppActivity extends Activity {
 		builder.setPositiveButton("OK", null);
 		builder.setCancelable(false);
 		builder.create().show();
+    }
+
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

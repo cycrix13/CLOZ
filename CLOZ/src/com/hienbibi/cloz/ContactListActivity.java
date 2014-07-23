@@ -23,6 +23,7 @@ import android.widget.ListView;
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
+import com.flurry.android.FlurryAgent;
 
 public class ContactListActivity extends Activity {
 	
@@ -107,7 +108,7 @@ public class ContactListActivity extends Activity {
 	
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
-		
+		FlurryAgent.logEvent("PRESS_CONTINUE");
 		if (getCheckContacts().size() == 0) {
 			new AlertDialog.Builder(this).setMessage(R.string.contact_noselect)
 					.setPositiveButton(R.string.text_ok, null).create().show();
@@ -183,5 +184,18 @@ public class ContactListActivity extends Activity {
 			item.check = !item.check;
 			notifyDataSetChanged();
 		}
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

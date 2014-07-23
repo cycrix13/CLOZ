@@ -11,6 +11,7 @@ import android.widget.DatePicker;
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
+import com.flurry.android.FlurryAgent;
 
 public class DateActivity extends Activity {
 	
@@ -58,7 +59,7 @@ public class DateActivity extends Activity {
 	
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
-		
+		FlurryAgent.logEvent("PRESS_CONTINUE");
 		if (mSingleMode) {
 			HashMap<String, Object> result = new HashMap<String, Object>();
 			int[] date = new int[] {mDatePicker.getDayOfMonth(), mDatePicker.getMonth() + 1, mDatePicker.getYear()};
@@ -75,6 +76,22 @@ public class DateActivity extends Activity {
 					finish();
 				}
 			});
-		}	
+		}
+		
+		
+	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

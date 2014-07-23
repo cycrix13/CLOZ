@@ -19,6 +19,7 @@ import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.FontsCollection;
+import com.flurry.android.FlurryAgent;
 
 public class TagActivity extends Activity {
 	
@@ -107,5 +108,19 @@ public class TagActivity extends Activity {
 		result.put("tag", tagList);
 		mListener.onComplete(result);
 		finish();
+	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, Settings.API_FLURRY_KEY);
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }
