@@ -626,15 +626,25 @@ OnScrollListener, OnClickListener {
 		mHelper.close();
 		Settings.release();
 	}
+	
+	private void removeHelp() {
+		if (mHelpFragment != null) {
+			getSupportFragmentManager().beginTransaction().remove(mHelpFragment).commit();
+			mMenuFragment.getView().setVisibility(View.VISIBLE);
+			mHelpFragment = null;
+		}
+	}
 
 	@Override
 	public void onCameraClick() {
 		CameraActivity.newInstance(this, this, CameraActivity.MODE_CAMERA);
+		removeHelp();
 	}
 
 	@Override
 	public void onGalleryClick() {
 		CameraActivity.newInstance(this, this, CameraActivity.MODE_FILE);
+		removeHelp();
 	}
 	
 	@Override
@@ -767,6 +777,10 @@ OnScrollListener, OnClickListener {
 
 	@Override
 	public void onHelpClick() {
+		if (mHelpFragment != null) {
+			return;
+		}
+		
 		mMenuFragment.close();
 		mHelpFragment = new HelpFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.layoutHolder, mHelpFragment).commit();
@@ -780,6 +794,7 @@ OnScrollListener, OnClickListener {
 			void onCloseClick() {
 				getSupportFragmentManager().beginTransaction().remove(mHelpFragment).commit();
 				mMenuFragment.getView().setVisibility(View.VISIBLE);
+				mHelpFragment = null;
 			}
 		});
 	}
@@ -1234,6 +1249,7 @@ OnScrollListener, OnClickListener {
 
 	@Override
 	public void onSearchClick() {
+		removeHelp();
 		SearchActivity.newInstance(this, mHelper, new SearchActivity.Listener() {
 			@Override
 			public void onComplete(ArrayList<TItem> result) {
@@ -1439,6 +1455,7 @@ OnScrollListener, OnClickListener {
 	
 	@Override
 	public void onSyncClick() {
+		removeHelp();
 		BackupActivity.newInstance(this);
 	}
 	
@@ -1446,32 +1463,39 @@ OnScrollListener, OnClickListener {
 		if (mEditing) {
 			mTxtDelete.setVisibility(View.VISIBLE);
 			mTxtBackAll.setVisibility(View.INVISIBLE);
+			mTxtAll.setText(R.string.look_all);
 		} else if (mResultMode) {
 			mTxtDelete.setVisibility(View.INVISIBLE);
 			mTxtBackAll.setVisibility(View.VISIBLE);
+			mTxtAll.setText(R.string.look_result);
 		} else {
 			mTxtDelete.setVisibility(View.INVISIBLE);
 			mTxtBackAll.setVisibility(View.INVISIBLE);
+			mTxtAll.setText(R.string.look_all);
 		}
 	}
 
 	@Override
 	public void onUseInfoClick() {
+		removeHelp();
 		UseInfoActivity.newInstance(this, null, true);
 	}
 
 	@Override
 	public void onSuggestClick() {
+		removeHelp();
 		SuggestActivity.newInstance(this, null, true);
 	}
 
 	@Override
 	public void onRateClick() {
+		removeHelp();
 		 this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.hienbibi.cloz")));
 	}
 	
 	@Override
 	public void onInAppClick() {
+		removeHelp();
 		InAppActivity.newInstance(this);
 	}
 	

@@ -79,7 +79,9 @@ public class AndroidAnnotationParser {
 						public void onClick(View v) {
 							try {
 								method.invoke(container, v);
-							} catch (Exception e) { }
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
 				} else if (classAnno == ItemClick.class) {
@@ -92,7 +94,9 @@ public class AndroidAnnotationParser {
 						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 							try {
 								method.invoke(container, parent, view, position, id);
-							} catch (Exception e) { }
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
 				}
