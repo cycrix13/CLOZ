@@ -52,6 +52,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils.TruncateAt;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
@@ -180,6 +181,10 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	
+	ScaleGestureDetector scaleDetector;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -191,6 +196,30 @@ public class MainActivity extends FragmentActivity implements
 		// getBaseContext().getResources().updateConfiguration(config,
 		// getBaseContext().getResources().getDisplayMetrics());
 
+		scaleDetector = new ScaleGestureDetector(MainActivity.this, new ScaleGestureDetector.OnScaleGestureListener() {
+			
+			@Override
+			public void onScaleEnd(ScaleGestureDetector detector) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onScaleBegin(ScaleGestureDetector detector) {
+				// TODO Auto-generated method stub
+				//showHelpScreen3();
+				return true;
+			}
+			
+			@Override
+			public boolean onScale(ScaleGestureDetector detector) {
+				// TODO Auto-generated method stub
+				showHelpScreen3();
+				return true;
+			}
+		});
+		
+		
 		Settings.init(this);
 		FontsCollection.init(this);
 		mHelper = new DatabaseHelper(this);
@@ -236,6 +265,8 @@ public class MainActivity extends FragmentActivity implements
 			loadImage();
 		}
 
+		
+		
 		mFlipper.setOnTouchListener(new OnTouchListener() {
 
 			// private float startY;
@@ -271,9 +302,9 @@ public class MainActivity extends FragmentActivity implements
 				case MotionEvent.ACTION_CANCEL:
 					complete = false;
 					break;
-				}
-
-				return true;
+				} 
+				
+				return false;
 			}
 		});
 
@@ -336,6 +367,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	protected void showHelpScreen2() {
+		if (mLayoutSecondLookHolder.getChildCount() >0)
+			return;
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
 				R.layout.help_screen2_fragment, mLayoutSecondLookHolder, true);
 		view.findViewById(R.id.btnClose).setOnClickListener(
@@ -357,7 +390,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	protected void showHelpScreen3() {
-
+		if (mLayoutSecondLookHolder.getChildCount() >0)
+			return;
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
 				R.layout.help_screen3_fragment, mLayoutSecondLookHolder, true);
 		view.findViewById(R.id.btnClose).setOnClickListener(
@@ -975,9 +1009,12 @@ public class MainActivity extends FragmentActivity implements
 			SubsamplingScaleImageView img = new SubsamplingScaleImageView(
 					MainActivity.this);
 			img.setZoomEnabled(mZoomEnable);
-			// img.setMinScale(1);
-			// img.setMaxScale(10);
-			// img.setStrict(false);
+			img.setOnTouchListener(new OnTouchListener() {
+	            @Override
+	            public boolean onTouch(View view, MotionEvent motionEvent) {
+	                return scaleDetector.onTouchEvent(motionEvent);
+	            }
+	        });
 			img.setLayoutParams(params);
 			// img.
 			// img.setImageResource(R.drawable.camera);

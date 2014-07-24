@@ -47,6 +47,7 @@ public class ShitLayout extends ViewFlipper {
 			if (!complete && distance > range) {
 				bigY = Math.abs(dy) > Math.abs(dx);
 				complete = true;
+				
 				return bigY || !Settings.instance().unlockZoom;
 			}
 			
