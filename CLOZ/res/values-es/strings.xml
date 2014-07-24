@@ -130,8 +130,7 @@
     <string name="inapp_text5">Restaurar</string>
     <string name="inapp_text6">Cerrar</string>
     
-    
-    <string name="app_name">SocialAuth - Custom UI</string>
+
     <string-array name="facebook_array">
     	<item>User Profile</item>
     	<item>Post Message</item>
@@ -223,4 +222,12 @@
     	<item>notepad</item>
     	<item>close</item>
     </string-array>
+    
+    <!-- ************************************************** -->
+    <!-- Tag people -->
+    
+    <string name="tagpeople_text1">¿Qué etiquetas quieres que aparezcan en la foto?</string>
+    <string name="tagpeople_text2">Continuar</string>
+    <string name="tagpeople_text3">Fecha</string>
+    
 </resources>

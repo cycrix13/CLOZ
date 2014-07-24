@@ -13,6 +13,7 @@
     <string name="title_activity_useinfo">UseInfoActivity</string>
     <string name="title_activity_suggest">SuggestActivity</string>
     <string name="title_activity_in_app">InAppActivity</string>
+    <string name="title_activity_tag_people">TagPeopleActivity</string>
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_yes">Yes</string>
@@ -83,7 +84,6 @@
     <string name="help_text3_4">1) Menu</string>
     <string name="help_text3_5">2) New look</string>
     <string name="help_text3_6">3) Follow guided steps</string>
-    
     <string name="help_text4_1">Here to delete the Look</string>
     <string name="help_text4_2">Here to change the date</string>
     <string name="help_text4_3">Here to add an image to the look</string>
@@ -143,7 +143,7 @@
     <string name="count_text1">¡GREAT!</string>
     <string name="count_text2">Your look has been saved.</string>
     <string name="count_text3">Searching!</string>
-    
+
     <!-- ************************************************** -->
     <!-- In app -->
     <string name="inapp_text1">EXTRAS</string>
@@ -153,96 +153,104 @@
     <string name="inapp_text5">Restore</string>
     <string name="inapp_text6">Close</string>
 
-    
     <string-array name="facebook_array">
-    	<item>User Profile</item>
-    	<item>Post Message</item>
-    	<item>Friends</item>
-    	<item>Get Feeds</item>
-    	<item>Upload Image</item>
-    	<item>Get Albums</item>
-    	<item>Update Story</item>
-    	<item>Close Dialog</item>
+        <item>User Profile</item>
+        <item>Post Message</item>
+        <item>Friends</item>
+        <item>Get Feeds</item>
+        <item>Upload Image</item>
+        <item>Get Albums</item>
+        <item>Update Story</item>
+        <item>Close Dialog</item>
     </string-array>
     <string-array name="twitter_array">
-    	<item>User Profile</item>
-    	<item>Send Tweet</item>
-    	<item>Friends</item>
-    	<item>Get Feeds</item>
-    	<item>Upload Image</item>
-    	<item>Get Albums</item>
-    	<item>Close Dialog</item>
-    </string-array>		
+        <item>User Profile</item>
+        <item>Send Tweet</item>
+        <item>Friends</item>
+        <item>Get Feeds</item>
+        <item>Upload Image</item>
+        <item>Get Albums</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="linkedin_array">
-    	<item>User Profile</item>
-    	<item>Post an Update</item>
-    	<item>Friends</item>
-    	<item>Get Feeds</item>
-    	<item>Career</item>
-    	<item>Close Dialog</item>
-    </string-array>	
+        <item>User Profile</item>
+        <item>Post an Update</item>
+        <item>Friends</item>
+        <item>Get Feeds</item>
+        <item>Career</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="myspace_array">
-    	<item>User Profile</item>
-    	<item>Post an Update</item>
-    	<item>Friends</item>
-    	<item>Close Dialog</item>
-    </string-array>	
+        <item>User Profile</item>
+        <item>Post an Update</item>
+        <item>Friends</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="yahoo_array">
-    	<item>User Profile</item>
-    	<item>Post an Update</item>
-    	<item>Friends</item>
-    	<item>Close Dialog</item>
-    </string-array>	
+        <item>User Profile</item>
+        <item>Post an Update</item>
+        <item>Friends</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="yammer_array">
-    	<item>User Profile</item>
-    	<item>Post an Update</item>
-    	<item>Contacts</item>
-    	<item>Close Dialog</item>
-    </string-array>	
+        <item>User Profile</item>
+        <item>Post an Update</item>
+        <item>Contacts</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="googleplus_array">
-    	<item>User Profile</item>
-    	<item>Friends</item>
-    	<item>Get Feeds</item>
-    	<item>Get Albums</item>
-    	<item>Close Dialog</item>
+        <item>User Profile</item>
+        <item>Friends</item>
+        <item>Get Feeds</item>
+        <item>Get Albums</item>
+        <item>Close Dialog</item>
     </string-array>
     <string-array name="google_array">
-    	<item>User Profile</item>
-    	<item>Friends</item>
-    	<item>Close Dialog</item>
-    </string-array>	
+        <item>User Profile</item>
+        <item>Friends</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="foursquare_array">
-    	<item>User Profile</item>
-    	<item>Contacts</item>
-    	<item>Close Dialog</item>
-    </string-array>	
+        <item>User Profile</item>
+        <item>Contacts</item>
+        <item>Close Dialog</item>
+    </string-array>
     <string-array name="flickr_array">
-    	<item>User Profile</item>
-    	<item>Contacts</item>
-    	<item>Close Dialog</item>
+        <item>User Profile</item>
+        <item>Contacts</item>
+        <item>Close Dialog</item>
     </string-array>
     <string-array name="instagram_array">
-    	<item>User Profile</item>
-    	<item>Contacts</item>
-    	<item>Get Feeds</item>
-    	<item>Close Dialog</item>
+        <item>User Profile</item>
+        <item>Contacts</item>
+        <item>Get Feeds</item>
+        <item>Close Dialog</item>
     </string-array>
     <string-array name="salesforce_array">
-    	<item>User Profile</item>
-    	<item>Close Dialog</item>
+        <item>User Profile</item>
+        <item>Close Dialog</item>
     </string-array>
     <string-array name="runkeeper_array">
-    	<item>User Profile</item>
-    	<item>Close Dialog</item>
+        <item>User Profile</item>
+        <item>Close Dialog</item>
     </string-array>
     <string-array name="drawable_array">
-    	<item>share</item>
-    	<item>profile</item>
-    	<item>contacts</item>
-    	<item>feeds</item>
-    	<item>image</item>
-    	<item>albums</item>
-    	<item>notepad</item>
-    	<item>close</item>
+        <item>share</item>
+        <item>profile</item>
+        <item>contacts</item>
+        <item>feeds</item>
+        <item>image</item>
+        <item>albums</item>
+        <item>notepad</item>
+        <item>close</item>
     </string-array>
+
+    <!-- ************************************************** -->
+    <!-- Tag people -->
+
+    <string name="tagpeople_text1">Which tags do you want toappear in the picture?</string>
+    <string name="tagpeople_text2">Continue</string>
+    <string name="tagpeople_text3">Date</string>
+    <string name="title_activity_move_tag">MoveTagActivity</string>
+
 </resources>

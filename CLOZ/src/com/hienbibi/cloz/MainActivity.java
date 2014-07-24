@@ -39,6 +39,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Bitmap.Config;
 import android.media.ExifInterface;
 import android.net.ParseException;
 import android.net.Uri;
@@ -1565,10 +1566,11 @@ public class MainActivity extends FragmentActivity implements
 	    return resizedBitmap;
 	}
 	
+	
+	
 	public Bitmap drawTextToBitmap(Bitmap bitmap) {
 		
 		bitmap = getResizedBitmap(bitmap, 800 * bitmap.getHeight() / bitmap.getWidth(), 800);
-		
 		
 		android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
 		// set default bitmap config if none
@@ -1639,79 +1641,74 @@ public class MainActivity extends FragmentActivity implements
 	@Click(id = R.id.txtShare)
 	public void onShareClick(View v) {
 		FlurryAgent.logEvent("PRESS_SHARE");
-		final Dialog dialog = new Dialog(MainActivity.this);
-		dialog.setContentView(R.layout.share_dialog);
-		dialog.setTitle("Share");
-
-		Button dialogButton = (Button) dialog.findViewById(R.id.bttClose);
-
-		ImageView bttFaceBook = (ImageView) dialog
-				.findViewById(R.id.bttFacebook);
-		bttFaceBook.setOnClickListener(new OnClickListener() {
-
+		
+		TagPeopleActivity.newInstance(this, mHelper, new TagPeopleActivity.Listener() {
 			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				FlurryAgent.logEvent("PRESS_FACEBOOK");
-				
-				shareBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.help1);
-				shareBitmap = drawTextToBitmap(shareBitmap);
-				
-				adapter.authorize(MainActivity.this, Provider.FACEBOOK);
+			public void onComplete(ArrayList<String> result, boolean haveDate) {
+				try {
+					int[] date = null;
+					if (haveDate) {
+						Looks look = lookList.get(mSelecting);
+						JSONArray jDate;
+						jDate = new JSONArray(look.date);
+						date = new int[] {jDate.getInt(0), jDate.getInt(1), jDate.getInt(2)};
+					}
+					MoveTagActivity.newInstance(MainActivity.this, getCurrentImagePath(), 
+							result, date, new MoveTagActivity.Listener() {
+						@Override
+						public void onComplete(Bitmap bm, int socialType, boolean saveImage) {
+							onShareCallback(bm, socialType, saveImage);
+						}
+					});
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
 		});
-
-		ImageView bttTwitter = (ImageView) dialog.findViewById(R.id.bttTwitter);
-		bttTwitter.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				FlurryAgent.logEvent("PRESS_TWITTER");
-				// TODO Auto-generated method stub
-				adapter.authorize(MainActivity.this, Provider.TWITTER);
-				adapter.addCallBack(Provider.TWITTER, "http://www.croz.com");
-			}
-		});
-
-		ImageView bttInstagram = (ImageView) dialog
-				.findViewById(R.id.bttInstagram);
-		bttInstagram.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				FlurryAgent.logEvent("PRESS_INSTAGRAM");
-				// TODO Auto-generated method stub
-				File filePath = MainActivity.this
-						.getFileStreamPath("help1.png");
-				Bitmap bm = BitmapFactory.decodeResource(getResources(),
-						R.drawable.help1);
-				bm = drawTextToBitmap(bm);
-				String path = saveBitmap(bm);
-				// share("Instagram", filePath.toString(), "CLOZ App");
-			}
-		});
-
-		ImageView bttWhatapp = (ImageView) dialog.findViewById(R.id.bttWhatApp);
-		bttWhatapp.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				FlurryAgent.logEvent("PRESS_WHATSAPP");
-				// TODO Auto-generated method stub
-				File filePath = MainActivity.this.getFileStreamPath("add.png");
-				// share("Whatsapp", filePath.toString(), "CLOZ App");
-			}
-		});
-
-		// if button is clicked, close the custom dialog
-		dialogButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-
-		dialog.show();
+	}
+	
+	String getCurrentImagePath() {
+		
+		Looks look = lookList.get(mSelecting);
+		ViewGroup vg = (ViewGroup) mFlipper.getChildAt(mFlipper.getDisplayedChild());
+		ViewPager pager = (ViewPager) vg.getChildAt(0);
+		int index = pager.getCurrentItem();
+		
+		try {
+			JSONArray jArr = new JSONArray(look.fileName);
+			return getFileStreamPath(jArr.getString(index)).getAbsolutePath();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+	
+	void onShareCallback(Bitmap bm, int socialType, boolean saveImage) {
+		
+		shareBitmap = bm;
+		
+		switch (socialType) {
+		case 0:	// Fb
+			FlurryAgent.logEvent("PRESS_FACEBOOK");
+			adapter.authorize(MainActivity.this, Provider.FACEBOOK);
+			break;
+		case 1:	// Twit
+			FlurryAgent.logEvent("PRESS_TWITTER");
+			adapter.authorize(MainActivity.this, Provider.TWITTER);
+			adapter.addCallBack(Provider.TWITTER, "http://www.croz.com");
+			break;
+		case 2:	// Insta
+			FlurryAgent.logEvent("PRESS_INSTAGRAM");
+			// share("Instagram", filePath.toString(), "CLOZ App");
+			break;
+		case 3:	// Whatsapp
+			FlurryAgent.logEvent("PRESS_WHATSAPP");
+			File filePath = MainActivity.this.getFileStreamPath("add.png");
+			// share("Whatsapp", filePath.toString(), "CLOZ App");
+			break;
+		}
 	}
 
 	void share(String nameApp, File imagePath, String message) {

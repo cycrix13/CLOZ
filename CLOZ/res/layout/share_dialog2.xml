@@ -16,8 +16,9 @@
             android:id="@+id/bttFacebook"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginRight="5dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginRight="5dp"
+            android:padding="4dp"
             android:src="@drawable/facebook" />
 
         <ImageView
@@ -25,6 +26,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginRight="5dp"
+            android:padding="4dp"
             android:src="@drawable/twitter" />
 
         <ImageView
@@ -32,6 +34,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginRight="5dp"
+            android:padding="4dp"
             android:src="@drawable/instagram" />
 
         <ImageView
@@ -39,6 +42,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginRight="5dp"
+            android:padding="4dp"
             android:src="@drawable/whatsapp" />
 
     </LinearLayout>
