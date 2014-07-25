@@ -1,7 +1,9 @@
 package com.hienbibi.cloz;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
@@ -111,36 +113,72 @@ public class MoveTagActivity extends Activity {
 				}	
 			});
 			
-			txt.setOnTouchListener(new OnTouchListener() {
-				
-				PointF start = new PointF();
-				int sh = getResources().getDisplayMetrics().heightPixels;
+			txt.setOnTouchListener(makeListener());
+		}
+		
+		if (mDate != null) {
+			View dateLayout = makeDateLayout();
+			mLayoutCanvas.addView(dateLayout);
+			dateLayout.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
 				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					
-					switch (event.getActionMasked()) {
-					case MotionEvent.ACTION_DOWN:
-						start.x = event.getX();
-						start.y = event.getY();
-						break;
-						
-					case MotionEvent.ACTION_MOVE:
-						float tx = v.getTranslationX() + event.getX() - start.x;
-						float ty = v.getTranslationY() + event.getY() - start.y;
-						ty = Math.max(dp48, Math.min(sh - v.getHeight() - dp48, ty));
-						v.setTranslationX(tx);
-						v.setTranslationY(ty);
-						break;
-						
-					case MotionEvent.ACTION_UP:
-						break;
-					}
-					
-					return true;
+				public void onLayoutChange(View v, int left, int top,
+						int right, int bottom, int oldLeft, int oldTop,
+						int oldRight, int oldBottom) {
+					Point p = randomPoint(right - left, bottom - top);
+					v.setTranslationX(p.x);
+					v.setTranslationY(p.y);
 				}
 			});
+			dateLayout.setOnTouchListener(makeListener());
 		}
+	}
+	
+	private View makeDateLayout() {
+		
+		View v = getLayoutInflater().inflate(R.layout.date_layout, mLayoutCanvas, false);
+		TextView txtDate1 = (TextView) v.findViewById(R.id.txtDate1);
+		TextView txtDate2 = (TextView) v.findViewById(R.id.txtDate2);
+		TextView txtDate3 = (TextView) v.findViewById(R.id.txtDate3);
+		
+		Date date = new Date(mDate[2], mDate[1] - 1, mDate[0]);
+		txtDate1.setText("" + mDate[0]);
+		txtDate2.setText(new SimpleDateFormat("LLL").format(date));
+		txtDate3.setText("" + mDate[2]);
+		
+		return v;
+	}
+	
+	private OnTouchListener makeListener() {
+		return new OnTouchListener() {
+			
+			PointF start = new PointF();
+			int sh = getResources().getDisplayMetrics().heightPixels;
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				switch (event.getActionMasked()) {
+				case MotionEvent.ACTION_DOWN:
+					start.x = event.getX();
+					start.y = event.getY();
+					break;
+					
+				case MotionEvent.ACTION_MOVE:
+					float tx = v.getTranslationX() + event.getX() - start.x;
+					float ty = v.getTranslationY() + event.getY() - start.y;
+					ty = Math.max(dp48, Math.min(sh - v.getHeight() - dp48, ty));
+					v.setTranslationX(tx);
+					v.setTranslationY(ty);
+					break;
+					
+				case MotionEvent.ACTION_UP:
+					break;
+				}
+				
+				return true;
+			}
+		};
 	}
 	
 	private Point randomPoint(int w, int h) {

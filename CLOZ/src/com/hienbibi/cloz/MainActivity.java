@@ -1642,7 +1642,17 @@ public class MainActivity extends FragmentActivity implements
 	public void onShareClick(View v) {
 		FlurryAgent.logEvent("PRESS_SHARE");
 		
-		TagPeopleActivity.newInstance(this, mHelper, new TagPeopleActivity.Listener() {
+		Looks look = lookList.get(mSelecting);
+		ArrayList<String> tagList = new ArrayList<String>();
+		try {
+			JSONArray jArr = new JSONArray(look.contacts);
+			for (int i = 0; i < jArr.length(); i++)
+				tagList.add(jArr.getString(i));
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		TagPeopleActivity.newInstance(this, mHelper, tagList, new TagPeopleActivity.Listener() {
 			@Override
 			public void onComplete(ArrayList<String> result, boolean haveDate) {
 				try {

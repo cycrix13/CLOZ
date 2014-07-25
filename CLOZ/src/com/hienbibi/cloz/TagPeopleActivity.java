@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,9 +30,11 @@ public class TagPeopleActivity extends Activity {
 
 	private static DatabaseHelper sHelper;
 	private static Listener sListener;
+	private static ArrayList<String> sTagList;
 	
 	private DatabaseHelper mHelper; 
 	private Listener mListener;
+	private ArrayList<String> mTagList;
 	
 	private ArrayList<TItem> mItemList = new ArrayList<TItem>();
 	private ArrayList<TItem> mFilterItemList;
@@ -52,9 +53,10 @@ public class TagPeopleActivity extends Activity {
 		public void onComplete(ArrayList<String> result, boolean haveDate) {}
 	}
 	
-	public static void newInstance(Activity act, DatabaseHelper helper, Listener listener) {
+	public static void newInstance(Activity act, DatabaseHelper helper, ArrayList<String> tagList, Listener listener) {
 		sHelper = helper;
 		sListener = listener;
+		sTagList = tagList;
 		Intent intent = new Intent(act, TagPeopleActivity.class);
 		act.startActivity(intent);
 	}
@@ -66,13 +68,14 @@ public class TagPeopleActivity extends Activity {
 		
 		mHelper = sHelper;
 		sHelper = null;
+		mTagList = sTagList;
 		
 		mListener = sListener;
 		sListener = null;
 		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
-			mItemList = getContactList();
+			mItemList = getItemList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			finish();
@@ -83,10 +86,23 @@ public class TagPeopleActivity extends Activity {
 		mLst.setAdapter(mAdapter = new ItemAdapter());
 		mLst.setOnItemClickListener(mAdapter);
 	}
+
+	private ArrayList<TItem> getItemList() {
+		
+		ArrayList<TItem> result = new ArrayList<TItem>();
+		
+		for (String tag : mTagList) {
+			TItem item = new TItem();
+			item.check = false;
+			item.text = tag;
+			result.add(item);
+		}
+		
+		return result;
+	}
 	
 //	private void getContact() throws Exception {
 //		
-//		List<Looks> lookList = mHelper.getDao().queryForAll();
 //		for (Looks look : lookList) {
 //			JSONArray jContact = new JSONArray(look.contacts);
 //			
@@ -100,15 +116,15 @@ public class TagPeopleActivity extends Activity {
 //			mItemList.add(item);
 //		}
 //	}
-	
-	private void helperShit(List<String> container, JSONArray jArr) throws JSONException {
-		for (int i = 0; i < jArr.length(); i++) {
-			String str = jArr.getString(i);
-			if (!container.contains(str)) {
-				container.add(str);
-			}
-		}
-	}
+//	
+//	private void helperShit(List<String> container, JSONArray jArr) throws JSONException {
+//		for (int i = 0; i < jArr.length(); i++) {
+//			String str = jArr.getString(i);
+//			if (!container.contains(str)) {
+//				container.add(str);
+//			}
+//		}
+//	}
 	
 	@Click(id = R.id.btnBack)
 	private void onBackClick(View v) {
