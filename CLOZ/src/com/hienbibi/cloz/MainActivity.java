@@ -83,8 +83,8 @@ import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
 
 public class MainActivity extends FragmentActivity implements
-		MenuFragment.Listener, CameraActivity.Listener, OnScrollListener,
-		OnClickListener {
+MenuFragment.Listener, CameraActivity.Listener, OnScrollListener,
+OnClickListener {
 
 	private MenuFragment mMenuFragment;
 	private HelpFragment mHelpFragment;
@@ -188,10 +188,10 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	
+
 	ScaleGestureDetector scaleDetector;
-	
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -204,20 +204,20 @@ public class MainActivity extends FragmentActivity implements
 		// getBaseContext().getResources().getDisplayMetrics());
 
 		scaleDetector = new ScaleGestureDetector(MainActivity.this, new ScaleGestureDetector.OnScaleGestureListener() {
-			
+
 			@Override
 			public void onScaleEnd(ScaleGestureDetector detector) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean onScaleBegin(ScaleGestureDetector detector) {
 				// TODO Auto-generated method stub
 				//showHelpScreen3();
 				return true;
 			}
-			
+
 			@Override
 			public boolean onScale(ScaleGestureDetector detector) {
 				// TODO Auto-generated method stub
@@ -225,8 +225,8 @@ public class MainActivity extends FragmentActivity implements
 				return true;
 			}
 		});
-		
-		
+
+
 		Settings.init(this);
 		FontsCollection.init(this);
 		mHelper = new DatabaseHelper(this);
@@ -272,8 +272,8 @@ public class MainActivity extends FragmentActivity implements
 			loadImage();
 		}
 
-		
-		
+
+
 		mFlipper.setOnTouchListener(new OnTouchListener() {
 
 			// private float startY;
@@ -310,7 +310,7 @@ public class MainActivity extends FragmentActivity implements
 					complete = false;
 					break;
 				} 
-				
+
 				return false;
 			}
 		});
@@ -324,11 +324,11 @@ public class MainActivity extends FragmentActivity implements
 		adapter = new SocialAuthAdapter(new ResponseListener());
 	}
 
-	
+
 	SocialAuthAdapter adapter;
 	private final class ResponseListener implements DialogListener {
 		public void onComplete(Bundle values) {
-			
+
 			try {
 				adapter.uploadImageAsync("Landscape Images", "icon.png", shareBitmap, 0,
 						new UploadImageListener());
@@ -341,25 +341,25 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		public void onBack() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onCancel() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onError(SocialAuthError arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 
 	// To get status of image upload after authentication
 	private final class UploadImageListener implements
-			SocialAuthListener<Integer> {
+	SocialAuthListener<Integer> {
 
 		@Override
 		public void onError(SocialAuthError e) {
@@ -369,7 +369,7 @@ public class MainActivity extends FragmentActivity implements
 		public void onExecute(String arg0, Integer arg1) {
 			// TODO Auto-generated method stub
 			Toast.makeText(MainActivity.this, "Image Uploaded", Toast.LENGTH_SHORT)
-					.show();
+			.show();
 		}
 	}
 
@@ -712,57 +712,57 @@ public class MainActivity extends FragmentActivity implements
 			deleteTag(txt.getText().toString(), type.equals("tag"));
 		} else {
 			new AlertDialog.Builder(this).setMessage(txt.getText().toString())
-					.setPositiveButton(R.string.text_ok, null).create().show();
+			.setPositiveButton(R.string.text_ok, null).create().show();
 		}
 	}
 
 	private void deleteTag(final String text, final boolean isTag) {
 		new AlertDialog.Builder(this)
-				.setTitle(text)
-				.setMessage(R.string.look_msg_delete_tag)
-				.setPositiveButton(R.string.text_ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Looks item = lookList.get(mSelecting);
-								String json = null;
-								if (isTag)
-									json = item.tags;
-								else
-									json = item.contacts;
+		.setTitle(text)
+		.setMessage(R.string.look_msg_delete_tag)
+		.setPositiveButton(R.string.text_ok,
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog,
+					int which) {
+				Looks item = lookList.get(mSelecting);
+				String json = null;
+				if (isTag)
+					json = item.tags;
+				else
+					json = item.contacts;
 
-								String newJson = null;
-								try {
-									JSONArray jArr = new JSONArray(json);
-									JSONArray jNewArr = new JSONArray();
-									for (int i = 0; i < jArr.length(); i++) {
-										String textItem = jArr.getString(i);
-										if (!textItem.equals(text))
-											jNewArr.put(textItem);
-									}
-									newJson = jNewArr.toString();
-								} catch (JSONException e) {
-									return;
-								}
+				String newJson = null;
+				try {
+					JSONArray jArr = new JSONArray(json);
+					JSONArray jNewArr = new JSONArray();
+					for (int i = 0; i < jArr.length(); i++) {
+						String textItem = jArr.getString(i);
+						if (!textItem.equals(text))
+							jNewArr.put(textItem);
+					}
+					newJson = jNewArr.toString();
+				} catch (JSONException e) {
+					return;
+				}
 
-								if (isTag)
-									item.tags = newJson;
-								else
-									item.contacts = newJson;
+				if (isTag)
+					item.tags = newJson;
+				else
+					item.contacts = newJson;
 
-								try {
-									mHelper.getDao().update(item);
-									if (Settings.instance().autoBackup)
-										BackupHelper.notifyDataChange();
-								} catch (SQLException e) {
-									return;
-								}
+				try {
+					mHelper.getDao().update(item);
+					if (Settings.instance().autoBackup)
+						BackupHelper.notifyDataChange();
+				} catch (SQLException e) {
+					return;
+				}
 
-								loadImage();
-							}
-						}).setNegativeButton(R.string.text_cancel, null)
-				.create().show();
+				loadImage();
+			}
+		}).setNegativeButton(R.string.text_cancel, null)
+		.create().show();
 	}
 
 	@Override
@@ -772,7 +772,7 @@ public class MainActivity extends FragmentActivity implements
 		mHelper.close();
 		Settings.release();
 	}
-	
+
 	private void removeHelp() {
 		if (mHelpFragment != null) {
 			getSupportFragmentManager().beginTransaction().remove(mHelpFragment).commit();
@@ -929,11 +929,11 @@ public class MainActivity extends FragmentActivity implements
 		if (mHelpFragment != null) {
 			return;
 		}
-		
+
 		mMenuFragment.close();
 		mHelpFragment = new HelpFragment();
 		getSupportFragmentManager().beginTransaction()
-				.add(R.id.layoutHolder, mHelpFragment).commit();
+		.add(R.id.layoutHolder, mHelpFragment).commit();
 		mHelpFragment.setListener(new HelpFragment.Listener() {
 			@Override
 			void onDrag(float offset) {
@@ -944,7 +944,7 @@ public class MainActivity extends FragmentActivity implements
 			@Override
 			void onCloseClick() {
 				getSupportFragmentManager().beginTransaction()
-						.remove(mHelpFragment).commit();
+				.remove(mHelpFragment).commit();
 				mMenuFragment.getView().setVisibility(View.VISIBLE);
 				mHelpFragment = null;
 			}
@@ -1017,11 +1017,11 @@ public class MainActivity extends FragmentActivity implements
 					MainActivity.this);
 			img.setZoomEnabled(mZoomEnable);
 			img.setOnTouchListener(new OnTouchListener() {
-	            @Override
-	            public boolean onTouch(View view, MotionEvent motionEvent) {
-	                return scaleDetector.onTouchEvent(motionEvent);
-	            }
-	        });
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent) {
+					return scaleDetector.onTouchEvent(motionEvent);
+				}
+			});
 			img.setLayoutParams(params);
 			// img.
 			// img.setImageResource(R.drawable.camera);
@@ -1163,11 +1163,11 @@ public class MainActivity extends FragmentActivity implements
 		mImgDeleteImage.setVisibility(visibleEdit);
 
 		mLayoutDate.setBackgroundColor(mEditing ? 0x80000000 : 0x00000000);
-		
+
 		if (Settings.instance().firstEdit) {
 			Settings.instance().firstEdit = false;
 			Settings.instance().save();
-			
+
 			View view = getLayoutInflater().inflate(R.layout.help_screen4_fragment, mLayoutHolder, false);
 			FontsCollection.setFont(view);
 			view.setOnClickListener(new OnClickListener() {				
@@ -1189,114 +1189,114 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		new AlertDialog.Builder(this)
-				.setMessage(R.string.look_msg_delete_look)
-				.setPositiveButton(R.string.text_ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Looks item = lookList.get(mSelecting);
+		.setMessage(R.string.look_msg_delete_look)
+		.setPositiveButton(R.string.text_ok,
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog,
+					int which) {
+				Looks item = lookList.get(mSelecting);
 
-								try {
-									mHelper.getDao().deleteById(item.id);
-									lookList = mHelper.getDao().queryForAll();
-									Collections.sort(lookList,
-											new CustomComparator());
-								} catch (SQLException e) {
-									e.printStackTrace();
-								}
+				try {
+					mHelper.getDao().deleteById(item.id);
+					lookList = mHelper.getDao().queryForAll();
+					Collections.sort(lookList,
+							new CustomComparator());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
-								if (lookList.size() == 0) {
-									mSelecting = -1;
-									onEditClick(null);
-								} else {
-									mSelecting = Math.min(mSelecting,
-											lookList.size() - 1);
-									mFlipper.setInAnimation(MainActivity.this,
-											R.anim.slide_in_up);
-									mFlipper.setOutAnimation(MainActivity.this,
-											R.anim.slide_out_up);
-								}
+				if (lookList.size() == 0) {
+					mSelecting = -1;
+					onEditClick(null);
+				} else {
+					mSelecting = Math.min(mSelecting,
+							lookList.size() - 1);
+					mFlipper.setInAnimation(MainActivity.this,
+							R.anim.slide_in_up);
+					mFlipper.setOutAnimation(MainActivity.this,
+							R.anim.slide_out_up);
+				}
 
-								loadImage();
-								if (Settings.instance().autoBackup)
-									BackupHelper.notifyDataChange();
-							}
-						}).setNegativeButton(R.string.text_no, null).create()
-				.show();
+				loadImage();
+				if (Settings.instance().autoBackup)
+					BackupHelper.notifyDataChange();
+			}
+		}).setNegativeButton(R.string.text_no, null).create()
+		.show();
 	}
 
 	@Click(id = R.id.imgAddTag)
 	private void onAddTagClick(View v) {
 		FlurryAgent.logEvent("PRESS_ADDTAG");
 		new AlertDialog.Builder(this)
-				.setItems(R.array.look_msg_add_tag,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								switch (which) {
-								case 0:
-									ContactListActivity.newInstance(
-											MainActivity.this,
-											new ContactListActivity.Listener() {
-												@Override
-												public void onComplete(
-														HashMap<String, Object> result) {
-													Looks item = lookList
-															.get(mSelecting);
-													try {
-														JSONArray jContacts = new JSONArray(
-																item.contacts);
-														ArrayList<String> newContactList = (ArrayList<String>) result
-																.get("contacts");
-														item.contacts = addStringNoDuplicate(
-																jContacts,
-																newContactList);
-														mHelper.getDao()
-																.update(item);
-														loadImage();
-														if (Settings.instance().autoBackup)
-															BackupHelper
-																	.notifyDataChange();
-													} catch (Exception e) {
-													}
-												}
-											}, true);
-
-									break;
-
-								case 1:
-									TagActivity.newInstance(MainActivity.this,
-											new TagActivity.Listener() {
-												@Override
-												public void onComplete(
-														HashMap<String, Object> result) {
-													Looks item = lookList
-															.get(mSelecting);
-													try {
-														JSONArray jContacts = new JSONArray(
-																item.tags);
-														ArrayList<String> newContactList = (ArrayList<String>) result
-																.get("tag");
-														item.tags = addStringNoDuplicate(
-																jContacts,
-																newContactList);
-														mHelper.getDao()
-																.update(item);
-														loadImage();
-														if (Settings.instance().autoBackup)
-															BackupHelper
-																	.notifyDataChange();
-													} catch (Exception e) {
-													}
-												}
-											});
-									break;
+		.setItems(R.array.look_msg_add_tag,
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog,
+					int which) {
+				switch (which) {
+				case 0:
+					ContactListActivity.newInstance(
+							MainActivity.this,
+							new ContactListActivity.Listener() {
+								@Override
+								public void onComplete(
+										HashMap<String, Object> result) {
+									Looks item = lookList
+											.get(mSelecting);
+									try {
+										JSONArray jContacts = new JSONArray(
+												item.contacts);
+										ArrayList<String> newContactList = (ArrayList<String>) result
+												.get("contacts");
+										item.contacts = addStringNoDuplicate(
+												jContacts,
+												newContactList);
+										mHelper.getDao()
+										.update(item);
+										loadImage();
+										if (Settings.instance().autoBackup)
+											BackupHelper
+											.notifyDataChange();
+									} catch (Exception e) {
+									}
 								}
+							}, true);
+
+					break;
+
+				case 1:
+					TagActivity.newInstance(MainActivity.this,
+							new TagActivity.Listener() {
+						@Override
+						public void onComplete(
+								HashMap<String, Object> result) {
+							Looks item = lookList
+									.get(mSelecting);
+							try {
+								JSONArray jContacts = new JSONArray(
+										item.tags);
+								ArrayList<String> newContactList = (ArrayList<String>) result
+										.get("tag");
+								item.tags = addStringNoDuplicate(
+										jContacts,
+										newContactList);
+								mHelper.getDao()
+								.update(item);
+								loadImage();
+								if (Settings.instance().autoBackup)
+									BackupHelper
+									.notifyDataChange();
+							} catch (Exception e) {
 							}
-						}).setNegativeButton(R.string.text_cancel, null)
-				.create().show();
+						}
+					});
+					break;
+				}
+			}
+		}).setNegativeButton(R.string.text_cancel, null)
+		.create().show();
 	}
 
 	private String addStringNoDuplicate(JSONArray jArr,
@@ -1323,41 +1323,41 @@ public class MainActivity extends FragmentActivity implements
 	private void onDeleteImageClick(View v) {
 
 		new AlertDialog.Builder(this)
-				.setMessage(R.string.look_msg_delete_image)
-				.setPositiveButton(R.string.text_ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Looks item = lookList.get(mSelecting);
-								try {
-									JSONArray jArr = new JSONArray(
-											item.fileName);
-									ViewGroup g = (ViewGroup) mFlipper
-											.getChildAt(mFlipper
-													.getDisplayedChild());
-									ViewPager pager = (ViewPager) g
-											.getChildAt(0);
-									int currentIndex = pager.getCurrentItem();
+		.setMessage(R.string.look_msg_delete_image)
+		.setPositiveButton(R.string.text_ok,
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog,
+					int which) {
+				Looks item = lookList.get(mSelecting);
+				try {
+					JSONArray jArr = new JSONArray(
+							item.fileName);
+					ViewGroup g = (ViewGroup) mFlipper
+							.getChildAt(mFlipper
+									.getDisplayedChild());
+					ViewPager pager = (ViewPager) g
+							.getChildAt(0);
+					int currentIndex = pager.getCurrentItem();
 
-									JSONArray jNewArr = new JSONArray();
-									for (int i = 0; i < jArr.length(); i++) {
-										if (i != currentIndex)
-											jNewArr.put(jArr.getString(i));
-									}
+					JSONArray jNewArr = new JSONArray();
+					for (int i = 0; i < jArr.length(); i++) {
+						if (i != currentIndex)
+							jNewArr.put(jArr.getString(i));
+					}
 
-									item.fileName = jNewArr.toString();
-									mHelper.getDao().update(item);
-									refreshCurrentPage();
-									if (Settings.instance().autoBackup)
-										BackupHelper.notifyDataChange();
-								} catch (Exception e) {
-									e.printStackTrace();
-									return;
-								}
-							}
-						}).setNegativeButton(R.string.text_no, null).create()
-				.show();
+					item.fileName = jNewArr.toString();
+					mHelper.getDao().update(item);
+					refreshCurrentPage();
+					if (Settings.instance().autoBackup)
+						BackupHelper.notifyDataChange();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+			}
+		}).setNegativeButton(R.string.text_no, null).create()
+		.show();
 	}
 
 	@Click(id = R.id.imgAddImage)
@@ -1378,63 +1378,63 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		new AlertDialog.Builder(this)
-				.setItems(R.array.look_msg_add_image,
-						new DialogInterface.OnClickListener() {
+		.setItems(R.array.look_msg_add_image,
+				new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog,
+					int which) {
+				CameraActivity.newInstance(
+						MainActivity.this,
+						new CameraActivity.Listener() {
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								CameraActivity.newInstance(
-										MainActivity.this,
-										new CameraActivity.Listener() {
-											@Override
-											public void onComplete(
-													HashMap<String, Object> result) {
-												Looks item = lookList
-														.get(mSelecting);
-												try {
-													JSONArray jArr = new JSONArray(
-															item.fileName);
-													ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) result
-															.get("images");
-													JSONArray jNewArr = new JSONArray();
+							public void onComplete(
+									HashMap<String, Object> result) {
+								Looks item = lookList
+										.get(mSelecting);
+								try {
+									JSONArray jArr = new JSONArray(
+											item.fileName);
+									ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) result
+											.get("images");
+									JSONArray jNewArr = new JSONArray();
 
-													for (ImageItem imageItem : imageList) {
-														File srcFile = new File(
-																imageItem.path);
-														String randomPath = generateRandomImageFileName(MainActivity.this);
-														File dstFile = getFileStreamPath(randomPath);
-														try {
-															copy(srcFile,
-																	dstFile);
-														} catch (IOException e) {
-															e.printStackTrace();
-															return;
-														}
-														jNewArr.put(randomPath);
-													}
+									for (ImageItem imageItem : imageList) {
+										File srcFile = new File(
+												imageItem.path);
+										String randomPath = generateRandomImageFileName(MainActivity.this);
+										File dstFile = getFileStreamPath(randomPath);
+										try {
+											copy(srcFile,
+													dstFile);
+										} catch (IOException e) {
+											e.printStackTrace();
+											return;
+										}
+										jNewArr.put(randomPath);
+									}
 
-													for (int i = 0; i < jArr
-															.length(); i++)
-														jNewArr.put(jArr
-																.getString(i));
-													item.fileName = jNewArr
-															.toString();
-													mHelper.getDao().update(
-															item);
-													refreshCurrentPage();
-													if (Settings.instance().autoBackup)
-														BackupHelper
-																.notifyDataChange();
-												} catch (Exception e) {
-													e.printStackTrace();
-												}
-											}
-										},
-										which == 0 ? CameraActivity.MODE_PICK_CAMERA
-												: CameraActivity.MODE_PICK_FILE);
+									for (int i = 0; i < jArr
+											.length(); i++)
+										jNewArr.put(jArr
+												.getString(i));
+									item.fileName = jNewArr
+											.toString();
+									mHelper.getDao().update(
+											item);
+									refreshCurrentPage();
+									if (Settings.instance().autoBackup)
+										BackupHelper
+										.notifyDataChange();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
-						}).setNegativeButton(R.string.text_cancel, null)
-				.create().show();
+						},
+						which == 0 ? CameraActivity.MODE_PICK_CAMERA
+								: CameraActivity.MODE_PICK_FILE);
+			}
+		}).setNegativeButton(R.string.text_cancel, null)
+		.create().show();
 	}
 
 	@Click(id = R.id.layoutDate)
@@ -1556,28 +1556,28 @@ public class MainActivity extends FragmentActivity implements
 		loadImage();
 	}
 
-	
-	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-	    int width = bm.getWidth();
-	    int height = bm.getHeight();
-	    float scaleWidth = ((float) newWidth) / width;
-	    float scaleHeight = ((float) newHeight) / height;
-	    // CREATE A MATRIX FOR THE MANIPULATION
-	    Matrix matrix = new Matrix();
-	    // RESIZE THE BIT MAP
-	    matrix.postScale(scaleWidth, scaleHeight);
 
-	    // "RECREATE" THE NEW BITMAP
-	    Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-	    return resizedBitmap;
+	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+		int width = bm.getWidth();
+		int height = bm.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeight) / height;
+		// CREATE A MATRIX FOR THE MANIPULATION
+		Matrix matrix = new Matrix();
+		// RESIZE THE BIT MAP
+		matrix.postScale(scaleWidth, scaleHeight);
+
+		// "RECREATE" THE NEW BITMAP
+		Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+		return resizedBitmap;
 	}
-	
-	
-	
+
+
+
 	public Bitmap drawTextToBitmap(Bitmap bitmap) {
-		
+
 		bitmap = getResizedBitmap(bitmap, 800 * bitmap.getHeight() / bitmap.getWidth(), 800);
-		
+
 		android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
 		// set default bitmap config if none
 		if (bitmapConfig == null) {
@@ -1597,7 +1597,7 @@ public class MainActivity extends FragmentActivity implements
 		// text shadow
 		paint.setShadowLayer(3f, -2f,- 2f, Color.BLACK);
 
-		
+
 		Looks look =lookList.get(mSelecting);
 		try {
 			JSONArray jDate = new JSONArray(look.date);
@@ -1606,18 +1606,18 @@ public class MainActivity extends FragmentActivity implements
 			String day = "" + jDate.getInt(0);
 			String moth = new SimpleDateFormat("LLL").format(date);
 			String year = "" + jDate.getInt(2);
-			
+
 			paint.setTextSize((int) (100));
-			
+
 			canvas.drawText(day, 80, 140, paint);
 			canvas.drawText(moth, 50, 240, paint);
 			canvas.drawText(year, 20, 340, paint);
-			
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 
 		return bitmap;
 	}
@@ -1647,7 +1647,7 @@ public class MainActivity extends FragmentActivity implements
 	@Click(id = R.id.txtShare)
 	public void onShareClick(View v) {
 		FlurryAgent.logEvent("PRESS_SHARE");
-		
+
 		Looks look = lookList.get(mSelecting);
 		ArrayList<String> tagList = new ArrayList<String>();
 		try {
@@ -1657,7 +1657,7 @@ public class MainActivity extends FragmentActivity implements
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		TagPeopleActivity.newInstance(this, mHelper, tagList, new TagPeopleActivity.Listener() {
 			@Override
 			public void onComplete(ArrayList<String> result, boolean haveDate) {
@@ -1682,16 +1682,16 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 	}
-	
-	
-	
+
+
+
 	String getCurrentImagePath() {
-		
+
 		Looks look = lookList.get(mSelecting);
 		ViewGroup vg = (ViewGroup) mFlipper.getChildAt(mFlipper.getDisplayedChild());
 		ViewPager pager = (ViewPager) vg.getChildAt(0);
 		int index = pager.getCurrentItem();
-		
+
 		try {
 			JSONArray jArr = new JSONArray(look.fileName);
 			return getFileStreamPath(jArr.getString(index)).getAbsolutePath();
@@ -1699,21 +1699,21 @@ public class MainActivity extends FragmentActivity implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "";
 	}
-	
+
 	void onShareCallback(Bitmap bm, int socialType, boolean saveImage) {
-		
+
 		shareBitmap = bm;
-		
+
 		switch (socialType) {
 		case 0:	// Fb
 			FlurryAgent.logEvent("PRESS_FACEBOOK");
 			adapter.authorize(MainActivity.this, Provider.FACEBOOK);
 			break;
 		case 1:	// Twit
-//			shareTwitter(saveBitmapToPublic(shareBitmap));
+			//			shareTwitter(saveBitmapToPublic(shareBitmap));
 			share("twitter", "", "#ootd @clozapp", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			break;
 		case 2:	// Insta
@@ -1728,9 +1728,9 @@ public class MainActivity extends FragmentActivity implements
 			break;
 		}
 	}
-	
+
 	private File saveBitmapToPublic(Bitmap bm, boolean savePublic) {
-		
+
 		File mediaStorageDir = null;
 		if (savePublic)
 			mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
@@ -1738,57 +1738,57 @@ public class MainActivity extends FragmentActivity implements
 		else
 			mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 					Environment.DIRECTORY_PICTURES), "CLOZ");
-		
+
 		if (! mediaStorageDir.exists()){
-		    if (! mediaStorageDir.mkdirs()){
-		        Log.d("MyCameraApp", "failed to create directory");
-		        return null;
-		    }
+			if (! mediaStorageDir.mkdirs()){
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
 		}
-		
+
 		try {
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 			File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
 			FileOutputStream outFile = new FileOutputStream(mediaFile);
 
 			bm.compress(CompressFormat.JPEG, 90, outFile);
-			
+
 			return mediaFile;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
 	void share(String appName, String title, String text, String imagePath) {
-        try {
-            List<Intent> targetedShareIntents = new ArrayList<Intent>();
-            Intent share = new Intent(android.content.Intent.ACTION_SEND);
-            share.setType("image/*");
-            List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
-            if (!resInfo.isEmpty()) {
-                for (ResolveInfo info : resInfo) {
-                    Intent targetedShare = new Intent(android.content.Intent.ACTION_SEND);
-                    targetedShare.setType("image/*"); // put here your mime type
-                    if (info.activityInfo.packageName.toLowerCase().contains(appName) || info.activityInfo.name.toLowerCase().contains(appName)) {
-                        targetedShare.putExtra(Intent.EXTRA_SUBJECT, title);
-                        targetedShare.putExtra(Intent.EXTRA_TEXT, text);
-                        targetedShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(imagePath)));
-                        targetedShare.setPackage(info.activityInfo.packageName);
-                        targetedShareIntents.add(targetedShare);
-                    }
-                }
-                Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Select app to share");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
-                startActivity(chooserIntent);
-            }
-        } catch (Exception e) {
-            Log.v("VM", "Exception while sending image on" + "CLOZ" + " " + e.getMessage());
-        }
-    }
-	
+		try {
+			List<Intent> targetedShareIntents = new ArrayList<Intent>();
+			Intent share = new Intent(android.content.Intent.ACTION_SEND);
+			share.setType("image/*");
+			List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
+			if (!resInfo.isEmpty()) {
+				for (ResolveInfo info : resInfo) {
+					Intent targetedShare = new Intent(android.content.Intent.ACTION_SEND);
+					targetedShare.setType("image/*"); // put here your mime type
+					if (info.activityInfo.packageName.toLowerCase().contains(appName) || info.activityInfo.name.toLowerCase().contains(appName)) {
+						targetedShare.putExtra(Intent.EXTRA_SUBJECT, title);
+						targetedShare.putExtra(Intent.EXTRA_TEXT, text);
+						targetedShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(imagePath)));
+						targetedShare.setPackage(info.activityInfo.packageName);
+						targetedShareIntents.add(targetedShare);
+					}
+				}
+				Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Select app to share");
+				chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
+				startActivity(chooserIntent);
+			}
+		} catch (Exception e) {
+			Log.v("VM", "Exception while sending image on" + "CLOZ" + " " + e.getMessage());
+		}
+	}
+
 	private void shareTwitter(File file) {
 
 		try {
@@ -1796,7 +1796,7 @@ public class MainActivity extends FragmentActivity implements
 				Log.i("FILE", "YES");
 			else
 				Log.i("FILE", "NO");
-			             
+
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("/*");
 			intent.setClassName("com.twitter.android", "com.twitter.android.PostActivity");
@@ -1896,7 +1896,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onRateClick() {
 		removeHelp();
-		 this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.hienbibi.cloz")));
+		this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.hienbibi.cloz")));
 	}
 
 	@Override
