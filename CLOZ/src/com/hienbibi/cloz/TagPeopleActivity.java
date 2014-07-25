@@ -41,6 +41,7 @@ public class TagPeopleActivity extends Activity {
 	private boolean mCheckDate;
 	private ItemAdapter mAdapter;
 	
+	
 	@ViewById(id = R.id.lst)		private ListView mLst;
 	
 	public static class TItem {
