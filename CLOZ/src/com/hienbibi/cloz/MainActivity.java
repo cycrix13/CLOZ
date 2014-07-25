@@ -4,8 +4,10 @@ import it.sephiroth.android.library.widget.AbsHListView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -28,6 +30,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -39,6 +42,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.media.ExifInterface;
 import android.net.ParseException;
@@ -47,10 +51,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils.TruncateAt;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -1677,6 +1683,8 @@ public class MainActivity extends FragmentActivity implements
 		});
 	}
 	
+	
+	
 	String getCurrentImagePath() {
 		
 		Looks look = lookList.get(mSelecting);
@@ -1705,19 +1713,98 @@ public class MainActivity extends FragmentActivity implements
 			adapter.authorize(MainActivity.this, Provider.FACEBOOK);
 			break;
 		case 1:	// Twit
-			FlurryAgent.logEvent("PRESS_TWITTER");
-			adapter.authorize(MainActivity.this, Provider.TWITTER);
-			adapter.addCallBack(Provider.TWITTER, "http://www.croz.com");
+//			shareTwitter(saveBitmapToPublic(shareBitmap));
+			share("twitter", "", "#ootd @clozapp", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			break;
 		case 2:	// Insta
 			FlurryAgent.logEvent("PRESS_INSTAGRAM");
 			// share("Instagram", filePath.toString(), "CLOZ App");
+			share("instagram", "", "#lookoftheday #ootd", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			break;
 		case 3:	// Whatsapp
 			FlurryAgent.logEvent("PRESS_WHATSAPP");
-			File filePath = MainActivity.this.getFileStreamPath("add.png");
+			share("whatsapp", "", "", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			// share("Whatsapp", filePath.toString(), "CLOZ App");
 			break;
+		}
+	}
+	
+	private File saveBitmapToPublic(Bitmap bm, boolean savePublic) {
+		
+		File mediaStorageDir = null;
+		if (savePublic)
+			mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_PICTURES).getAbsolutePath());
+		else
+			mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_PICTURES), "CLOZ");
+		
+		if (! mediaStorageDir.exists()){
+		    if (! mediaStorageDir.mkdirs()){
+		        Log.d("MyCameraApp", "failed to create directory");
+		        return null;
+		    }
+		}
+		
+		try {
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
+			FileOutputStream outFile = new FileOutputStream(mediaFile);
+
+			bm.compress(CompressFormat.JPEG, 90, outFile);
+			
+			return mediaFile;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	void share(String appName, String title, String text, String imagePath) {
+        try {
+            List<Intent> targetedShareIntents = new ArrayList<Intent>();
+            Intent share = new Intent(android.content.Intent.ACTION_SEND);
+            share.setType("image/*");
+            List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(share, 0);
+            if (!resInfo.isEmpty()) {
+                for (ResolveInfo info : resInfo) {
+                    Intent targetedShare = new Intent(android.content.Intent.ACTION_SEND);
+                    targetedShare.setType("image/*"); // put here your mime type
+                    if (info.activityInfo.packageName.toLowerCase().contains(appName) || info.activityInfo.name.toLowerCase().contains(appName)) {
+                        targetedShare.putExtra(Intent.EXTRA_SUBJECT, title);
+                        targetedShare.putExtra(Intent.EXTRA_TEXT, text);
+                        targetedShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(imagePath)));
+                        targetedShare.setPackage(info.activityInfo.packageName);
+                        targetedShareIntents.add(targetedShare);
+                    }
+                }
+                Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Select app to share");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
+                startActivity(chooserIntent);
+            }
+        } catch (Exception e) {
+            Log.v("VM", "Exception while sending image on" + "CLOZ" + " " + e.getMessage());
+        }
+    }
+	
+	private void shareTwitter(File file) {
+
+		try {
+			if (file.exists())
+				Log.i("FILE", "YES");
+			else
+				Log.i("FILE", "NO");
+			             
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("/*");
+			intent.setClassName("com.twitter.android", "com.twitter.android.PostActivity");
+			intent.putExtra(Intent.EXTRA_TEXT, "Thiws is a share message");
+			intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+			startActivity(intent);
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(this, "You don't seem to have twitter installed on this device", Toast.LENGTH_SHORT).show();
 		}
 	}
 
