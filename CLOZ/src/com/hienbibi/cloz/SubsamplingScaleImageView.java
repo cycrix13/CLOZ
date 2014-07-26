@@ -34,6 +34,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+
 import com.hienbibi.cloz.R.styleable;
 
 import java.lang.ref.WeakReference;
@@ -54,7 +56,7 @@ import java.util.*;
  * s prefixes - coordinates, translations and distances measured in source image pixels (scaled)
  */
 @SuppressWarnings("unused")
-public class SubsamplingScaleImageView extends View {
+public class SubsamplingScaleImageView extends ImageView {
 
     private static final String TAG = SubsamplingScaleImageView.class.getSimpleName();
 
@@ -178,6 +180,9 @@ public class SubsamplingScaleImageView extends View {
     private Paint bitmapPaint;
     private Paint debugPaint;
 
+    public Bitmap refBitmap;
+    
+    
     public SubsamplingScaleImageView(Context context, AttributeSet attr) {
         super(context, attr);
         setMinimumDpi(160);

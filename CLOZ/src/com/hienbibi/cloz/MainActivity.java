@@ -69,6 +69,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -1028,13 +1029,14 @@ OnClickListener {
 			if (mPathList.size() > 0) {
 				String path = getFilesDir().getAbsolutePath() + "/"
 						+ mPathList.get(position);
-				img.setImageFile(path);
-				// img.setImageBitmap(loadImageOptimize(path));
+				//img.setImageFile(loadImageOptimize(path));
+				 img.setImageBitmap(loadImageOptimize(path));
 				// new LoadImageTask(path,
 				// img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
-				// img.setScaleType(ScaleType.FIT_XY);
-				// img.setImageResource(R.drawable.nolook);
+			
+				 img.setScaleType(ScaleType.FIT_XY);
+				 img.setImageResource(R.drawable.nolook);
 			}
 
 			container.addView(img);
@@ -1108,8 +1110,8 @@ OnClickListener {
 		int photoH = bmOpt.outHeight;
 
 		Display display = getWindowManager().getDefaultDisplay();
-		int targetW = display.getWidth();
-		int targetH = display.getHeight();
+		int targetW = 768;
+		int targetH = 1024;
 
 		int scale = 1;
 		if ((targetW > 0) || (targetH > 0))
