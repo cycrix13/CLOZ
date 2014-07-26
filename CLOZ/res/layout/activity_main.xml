@@ -5,7 +5,7 @@
     android:background="@drawable/help3"
     tools:context=".MainActivity" >
 
-    <com.hienbibi.cloz.ShitLayout
+    <ViewFlipper
         android:id="@+id/fliper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,7 +48,7 @@
             android:scaleType="fitCenter" />
              -->
             
-    </com.hienbibi.cloz.ShitLayout>
+    </ViewFlipper>
 
     <LinearLayout
         android:id="@+id/layoutDate"

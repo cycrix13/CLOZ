@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -29,21 +28,17 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Bitmap.Config;
 import android.media.ExifInterface;
 import android.net.ParseException;
 import android.net.Uri;
@@ -67,11 +62,11 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
@@ -93,7 +88,7 @@ OnClickListener {
 
 	// @ViewById(id = R.id.lstLook) private ListView mLstLook;
 	@ViewById(id = R.id.fliper)
-	private ShitLayout mFlipper;
+	private ViewFlipper mFlipper;
 
 	@ViewById(id = R.id.txtDate1)
 	private TextView mTxtData1;
@@ -273,48 +268,46 @@ OnClickListener {
 			loadImage();
 		}
 
-
-
-		mFlipper.setOnTouchListener(new OnTouchListener() {
-
-			// private float startY;
-			private float range = CyUtils.dpToPx(16, MainActivity.this);
-			private boolean complete = false;
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				ShitLayout s = (ShitLayout) v;
-
-				switch (event.getActionMasked()) {
-				case MotionEvent.ACTION_DOWN:
-					// startY = event.getY();
-					break;
-
-				case MotionEvent.ACTION_MOVE:
-					if (!complete && Math.abs(event.getY() - s.startY) > range) {
-						prepareForLoadImage(event.getY() - s.startY);
-						complete = true;
-					} else if (!complete
-							&& Math.abs(event.getX() - s.startX) > range * 2) {
-						complete = true;
-						showHelpScreen3();
-					} else if (event.getPointerCount() >= 2) {
-						complete = true;
-						showHelpScreen2();
-					}
-					break;
-
-				case MotionEvent.ACTION_UP:
-				case MotionEvent.ACTION_POINTER_UP:
-				case MotionEvent.ACTION_CANCEL:
-					complete = false;
-					break;
-				} 
-
-				return false;
-			}
-		});
+//		mFlipper.setOnTouchListener(new OnTouchListener() {
+//
+//			// private float startY;
+//			private float range = CyUtils.dpToPx(16, MainActivity.this);
+//			private boolean complete = false;
+//
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//
+//				ShitLayout s = (ShitLayout) v;
+//
+//				switch (event.getActionMasked()) {
+//				case MotionEvent.ACTION_DOWN:
+//					// startY = event.getY();
+//					break;
+//
+//				case MotionEvent.ACTION_MOVE:
+//					if (!complete && Math.abs(event.getY() - s.startY) > range) {
+//						prepareForLoadImage(event.getY() - s.startY);
+//						complete = true;
+//					} else if (!complete
+//							&& Math.abs(event.getX() - s.startX) > range * 2) {
+//						complete = true;
+//						showHelpScreen3();
+//					} else if (event.getPointerCount() >= 2) {
+//						complete = true;
+//						showHelpScreen2();
+//					}
+//					break;
+//
+//				case MotionEvent.ACTION_UP:
+//				case MotionEvent.ACTION_POINTER_UP:
+//				case MotionEvent.ACTION_CANCEL:
+//					complete = false;
+//					break;
+//				} 
+//
+//				return false;
+//			}
+//		});
 
 		if (Settings.instance().autoBackup) {
 			BackupHelper.init(this, mHelper);
@@ -378,7 +371,8 @@ OnClickListener {
 		if (mLayoutSecondLookHolder.getChildCount() >0)
 			return;
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
-				R.layout.help_screen2_fragment, mLayoutSecondLookHolder, true);
+				R.layout.help_screen2_fragment, mLayoutSecondLookHolder, false);
+		mLayoutSecondLookHolder.addView(view);
 		view.findViewById(R.id.btnClose).setOnClickListener(
 				new OnClickListener() {
 					@Override
@@ -401,7 +395,8 @@ OnClickListener {
 		if (mLayoutSecondLookHolder.getChildCount() >0)
 			return;
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
-				R.layout.help_screen3_fragment, mLayoutSecondLookHolder, true);
+				R.layout.help_screen3_fragment, mLayoutSecondLookHolder, false);
+		mLayoutSecondLookHolder.addView(view);
 		view.findViewById(R.id.btnClose).setOnClickListener(
 				new OnClickListener() {
 					@Override
@@ -420,13 +415,13 @@ OnClickListener {
 				});
 	}
 
-	private void prepareForLoadImage(float deltaY) {
+	private void prepareForLoadImage(boolean down) {
 
 		if (lookList.size() == 0)
 			return;
 
 		int nextIndex;
-		if (deltaY > 0) {
+		if (down) {
 			nextIndex = Math.max(mSelecting - 1, 0);
 		} else {
 			nextIndex = Math.min(mSelecting + 1, lookList.size() - 1);
@@ -435,7 +430,7 @@ OnClickListener {
 		if (nextIndex == mSelecting)
 			return;
 
-		if (deltaY > 0) {
+		if (down) {
 			mFlipper.setInAnimation(MainActivity.this, R.anim.slide_in_down);
 			mFlipper.setOutAnimation(MainActivity.this, R.anim.slide_out_down);
 		} else {
@@ -488,7 +483,7 @@ OnClickListener {
 		// Load page into that page
 		String fileNames = lookList.get(pageIndex).fileName;
 		idleOne.removeAllViews();
-		ViewPager pager = new ViewPager(this);
+		ZoomPager pager = new ZoomPager(this);
 		ViewGroup.LayoutParams param = new LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT);
@@ -1008,39 +1003,75 @@ OnClickListener {
 		public Object instantiateItem(ViewGroup container, final int position) {
 
 			// ImageView img = new ImageView(MainActivity.this);
+//			ViewGroup.LayoutParams params = new LayoutParams(
+//					ViewGroup.LayoutParams.MATCH_PARENT,
+//					ViewGroup.LayoutParams.MATCH_PARENT);
+//			// img.setLayoutParams(param);
+//
+//			// GestureImageView img = new GestureImageView(MainActivity.this);
+//			SubsamplingScaleImageView img = new SubsamplingScaleImageView(
+//					MainActivity.this);
+//			img.setZoomEnabled(mZoomEnable);
+//			img.setOnTouchListener(new OnTouchListener() {
+//				@Override
+//				public boolean onTouch(View view, MotionEvent motionEvent) {
+//					return scaleDetector.onTouchEvent(motionEvent);
+//				}
+//			});
+//			img.setLayoutParams(params);
+//			// img.
+//			// img.setImageResource(R.drawable.camera);
+//			if (mPathList.size() > 0) {
+//				String path = getFilesDir().getAbsolutePath() + "/"
+//						+ mPathList.get(position);
+//				//img.setImageFile(loadImageOptimize(path));
+//				 img.setImageBitmap(loadImageOptimize(path));
+//				// new LoadImageTask(path,
+//				// img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//			} else {
+//			
+//				 img.setScaleType(ScaleType.FIT_XY);
+//				 img.setImageResource(R.drawable.nolook);
+//			}
+//
+//			container.addView(img);
+//			return img;
+			
+			ZoomView zoomView = new ZoomView(MainActivity.this);
 			ViewGroup.LayoutParams params = new LayoutParams(
 					ViewGroup.LayoutParams.MATCH_PARENT,
 					ViewGroup.LayoutParams.MATCH_PARENT);
-			// img.setLayoutParams(param);
-
-			// GestureImageView img = new GestureImageView(MainActivity.this);
-			SubsamplingScaleImageView img = new SubsamplingScaleImageView(
-					MainActivity.this);
-			img.setZoomEnabled(mZoomEnable);
-			img.setOnTouchListener(new OnTouchListener() {
+			
+			zoomView.setLayoutParams(params);
+			zoomView.enableZoom(mZoomEnable);
+			zoomView.enableSwipe(mZoomEnable);
+			String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+			zoomView.setImage(path);
+			zoomView.setListener(new ZoomView.Listener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-					return scaleDetector.onTouchEvent(motionEvent);
+				public void onRequestDown() {
+					prepareForLoadImage(true);
+				}
+			
+				@Override
+				public void onRequestUp() {
+					prepareForLoadImage(false);
+				}
+				
+				@Override
+				public void onRequestZoom() {
+					showHelpScreen2();
+				}
+				
+				@Override
+				public void onRequestSwipeHorizontal() {
+					showHelpScreen3();
 				}
 			});
-			img.setLayoutParams(params);
-			// img.
-			// img.setImageResource(R.drawable.camera);
-			if (mPathList.size() > 0) {
-				String path = getFilesDir().getAbsolutePath() + "/"
-						+ mPathList.get(position);
-				//img.setImageFile(loadImageOptimize(path));
-				 img.setImageBitmap(loadImageOptimize(path));
-				// new LoadImageTask(path,
-				// img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
 			
-				 img.setScaleType(ScaleType.FIT_XY);
-				 img.setImageResource(R.drawable.nolook);
-			}
-
-			container.addView(img);
-			return img;
+			container.addView(zoomView);
+			
+			return zoomView;
 		}
 
 		@Override
@@ -1110,8 +1141,8 @@ OnClickListener {
 		int photoH = bmOpt.outHeight;
 
 		Display display = getWindowManager().getDefaultDisplay();
-		int targetW = display.getWidth();
-		int targetH = display.getHeight();
+		int targetW = 768;
+		int targetH = 1024;
 
 		int scale = 1;
 		if ((targetW > 0) || (targetH > 0))
@@ -1918,5 +1949,21 @@ OnClickListener {
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
+	}
+
+	public void unlookZoom() {
+		
+		mZoomEnable = Settings.instance().unlockZoom;
+		for (int i = 0; i < mFlipper.getChildCount(); i++) {
+			ViewGroup vg = (ViewGroup) mFlipper.getChildAt(i);
+			if (vg.getChildCount() > 0) {
+				ViewPager pager = (ViewPager) vg.getChildAt(0);
+				for (int j = 0; j < pager.getChildCount(); j++) {
+					ZoomView zv = (ZoomView) pager.getChildAt(j);
+					zv.enableZoom(mZoomEnable);
+					zv.enableSwipe(mZoomEnable);
+				}
+			}
+		}
 	}
 }

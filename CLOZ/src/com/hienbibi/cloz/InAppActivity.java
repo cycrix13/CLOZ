@@ -28,16 +28,20 @@ public class InAppActivity extends Activity {
 	
 	private static final String  TAG = "InAppActivity";
 	
-	public static final String SKU_4IMAGES 		= "zoom_4images";
-	public static final String SKU_DELETE_PUB 	= "delete_pub";
-//	public static final String SKU_4IMAGES 		= "android.test.purchased";
-//	public static final String SKU_DELETE_PUB 	= "android.test.purchased";
+	private static MainActivity sAct;
+	private MainActivity mAct;
+	
+//	public static final String SKU_4IMAGES 		= "zoom_4images";
+//	public static final String SKU_DELETE_PUB 	= "delete_pub";
+	public static final String SKU_4IMAGES 		= "android.test.purchased";
+	public static final String SKU_DELETE_PUB 	= "android.test.purchased";
 //	android.test.purchased
 	public static final int REQUEST_CODE_PURCHASE = 1001;
 	
 	public IabHelper mHelper;
 	
-	public static void newInstance(Activity act) {
+	public static void newInstance(MainActivity act) {
+		sAct = act;
 		Intent intent = new Intent(act, InAppActivity.class);
 		act.startActivity(intent);
 	}
@@ -46,6 +50,9 @@ public class InAppActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_in_app);
+		
+		mAct = sAct;
+		sAct = null;
 		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
@@ -99,6 +106,15 @@ public class InAppActivity extends Activity {
 	@Click(id = R.id.btnClose)
 	private void onCloseClick(View v) {
 		finish();
+	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+		
+		if (Settings.instance().unlockZoom) {
+			mAct.unlookZoom();
+		}
 	}
 	
 	@Click(id = R.id.btn4Image)

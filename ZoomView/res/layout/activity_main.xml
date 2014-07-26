@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.zoomview.MainActivity" >
+    
+    <com.example.zoomview.ZoomPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent" >
+    
+    <com.example.zoomview.ZoomView
+        android:id="@+id/zoomView"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:visibility="invisible" />
+
+        
+    </com.example.zoomview.ZoomPager>
+    
+</RelativeLayout>
