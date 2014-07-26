@@ -1110,8 +1110,8 @@ OnClickListener {
 		int photoH = bmOpt.outHeight;
 
 		Display display = getWindowManager().getDefaultDisplay();
-		int targetW = 768;
-		int targetH = 1024;
+		int targetW = display.getWidth();
+		int targetH = display.getHeight();
 
 		int scale = 1;
 		if ((targetW > 0) || (targetH > 0))
@@ -1788,6 +1788,7 @@ OnClickListener {
 			}
 		} catch (Exception e) {
 			Log.v("VM", "Exception while sending image on" + "CLOZ" + " " + e.getMessage());
+			showAlertBoxShare(appName.toUpperCase() + " is not installed in your device!");
 		}
 	}
 
