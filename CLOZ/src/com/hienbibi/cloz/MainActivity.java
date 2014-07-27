@@ -880,7 +880,7 @@ OnClickListener {
 
 			View v = getLayoutInflater().inflate(
 					R.layout.help_screen1_fragment, mLayoutSecondLookHolder,
-					true);
+					false);
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
