@@ -476,10 +476,13 @@ OnClickListener {
 			if (tag == null || Math.abs(((Integer) tag) - mSelecting) > 1)
 				idleOne = (ViewGroup) mFlipper.getChildAt(i);
 		}
-
+//
 		if (idleOne == null)
 			return; // This MUST NOT happen!
-
+		
+//		ViewGroup idleOne = null;
+//		idleOne = (ViewGroup) mFlipper.getChildAt(pageIndex % 3);
+		
 		// Load page into that page
 		String fileNames = lookList.get(pageIndex).fileName;
 		idleOne.removeAllViews();
@@ -1037,41 +1040,55 @@ OnClickListener {
 //			container.addView(img);
 //			return img;
 			
-			ZoomView zoomView = new ZoomView(MainActivity.this);
-			ViewGroup.LayoutParams params = new LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT,
-					ViewGroup.LayoutParams.MATCH_PARENT);
-			
-			zoomView.setLayoutParams(params);
-			zoomView.enableZoom(mZoomEnable);
-			zoomView.enableSwipe(mZoomEnable);
-			String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
-			zoomView.setImage(path);
-			zoomView.setListener(new ZoomView.Listener() {
-				@Override
-				public void onRequestDown() {
-					prepareForLoadImage(true);
-				}
-			
-				@Override
-				public void onRequestUp() {
-					prepareForLoadImage(false);
-				}
+			if (mPathList.size() > 0) {
+				ZoomView zoomView = new ZoomView(MainActivity.this);
+				ViewGroup.LayoutParams params = new LayoutParams(
+						ViewGroup.LayoutParams.MATCH_PARENT,
+						ViewGroup.LayoutParams.MATCH_PARENT);
+
+				zoomView.setLayoutParams(params);
+				zoomView.enableZoom(mZoomEnable);
+				zoomView.enableSwipe(mZoomEnable);
+				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
+				zoomView.setImage(path);
+				zoomView.setListener(new ZoomView.Listener() {
+					@Override
+					public void onRequestDown() {
+						prepareForLoadImage(true);
+					}
+
+					@Override
+					public void onRequestUp() {
+						prepareForLoadImage(false);
+					}
+
+					@Override
+					public void onRequestZoom() {
+						showHelpScreen2();
+					}
+
+					@Override
+					public void onRequestSwipeHorizontal() {
+						showHelpScreen3();
+					}
+				});
+
+				container.addView(zoomView);
+				return zoomView;
+			} else {
+				ImageView img = new ImageView(MainActivity.this);
 				
-				@Override
-				public void onRequestZoom() {
-					showHelpScreen2();
-				}
+				ViewGroup.LayoutParams params = new LayoutParams(
+						ViewGroup.LayoutParams.MATCH_PARENT,
+						ViewGroup.LayoutParams.MATCH_PARENT);
 				
-				@Override
-				public void onRequestSwipeHorizontal() {
-					showHelpScreen3();
-				}
-			});
-			
-			container.addView(zoomView);
-			
-			return zoomView;
+				img.setLayoutParams(params);
+				img.setImageResource(R.drawable.nolook);
+				img.setScaleType(ScaleType.FIT_XY);
+				container.addView(img);
+				
+				return img;
+			}
 		}
 
 		@Override

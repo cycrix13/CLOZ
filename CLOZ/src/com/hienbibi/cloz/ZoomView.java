@@ -44,6 +44,7 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	
 	private int mTouchSlop;
 	private float mStartX, mStartY;
+	private float mScaleFactor;
 
 	public ZoomView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -64,7 +65,6 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		mImg = new ImageView(context);
 		LayoutParams param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mImg.setLayoutParams(param);
-//		mImg.setImageResource(R.drawable.help2);
 		mImg.setScaleType(ScaleType.CENTER_INSIDE);
 		addView(mImg);
 		
@@ -81,7 +81,6 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	
 	public void setImage(String filePath) {
 		mPath = filePath;
-				
 	}
 	
 	public void enableZoom(boolean enable) {
@@ -199,40 +198,34 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	
 	private boolean onTopEdge(PointF imageSize) {
 		
-		if (imageSize.y <= getHeight())
-			return true;
-		else {
-			float ty = mImg.getTranslationY();
-			float ta = getHeight();
+//		if (imageSize.y <= getHeight())
+//			return true;
+//		else
 			return -imageSize.y / 2 + mImg.getTranslationY() > -getHeight() / 2 - 10;
-		}
 	}
 	
 	private boolean onLeftEdge(PointF imageSize) {
 		
-		if (imageSize.x <= getWidth())
-			return true;
-		else {
+//		if (imageSize.x <= getWidth())
+//			return true;
+//		else
 			return -imageSize.x / 2 + mImg.getTranslationX() > -getWidth() / 2 - 10;
-		}
 	}
 	
 	private boolean onRightEdge(PointF imageSize) {
 		
-		if (imageSize.x <= getWidth())
-			return true;
-		else {
+//		if (imageSize.x <= getWidth())
+//			return true;
+//		else
 			return imageSize.x / 2 + mImg.getTranslationX() < getWidth() / 2 + 10;
-		}
 	}
 	
 	private boolean onBottomEdge(PointF imageSize) {
 		
-		if (imageSize.y <= getHeight())
-			return true;
-		else {
+//		if (imageSize.y <= getHeight())
+//			return true;
+//		else
 			return imageSize.y / 2 + mImg.getTranslationY() < getHeight() / 2 + 10;
-		}
 	}
 	
 	private Bitmap loadImageOptimize(String fileName, int targetW, int targetH) {
@@ -260,14 +253,12 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 			photoW = bmOpt.outWidth;
 			photoH = bmOpt.outHeight;
 		}
-
-//		Display display = getWindowManager().getDefaultDisplay();
-//		int targetW = 768;
-//		int targetH = 1024;
-
+		
+		int limit = 768*1280;
 		int scale = 1;
-		if ((targetW > 0) || (targetH > 0))
-			scale = (int) Math.max(Math.min(photoW / targetW, photoH / targetH), 1);
+		if ((targetW > 0) || (targetH > 0)) {
+			scale = (int) Math.max(Math.min(photoW / targetW, photoH / targetH), Math.sqrt((photoW*photoH) / limit));
+		}
 
 		bmOpt = new BitmapFactory.Options();
 		bmOpt.inJustDecodeBounds = false;
@@ -280,9 +271,10 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		overviewW = bitmap.getWidth();
 		overviewH = bitmap.getHeight();
 		
-//		mScale = mMinScale = Math.min(1, Math.min((float)targetW / overviewW, (float)targetH / overviewH));
-		mScale = mMinScale = 1;
-		mMaxScale = scale;
+		mScale = mMinScale = Math.min(1, Math.min((float)targetW / overviewW, (float)targetH / overviewH));
+		mScaleFactor = mScale;
+//		mScale = mMinScale = 1;
+		mMaxScale = mMinScale * 4;
 		
 		return bitmap;
 	}
@@ -324,10 +316,10 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	private PointF getImageSizeWithScaleInPx() {
 		
 		PointF p = new PointF();
-		float scale = Math.min(1, Math.min((float)getWidth() / overviewW, (float)getHeight() / overviewH));
-		scale *= mScale;
-		p.x = overviewW * scale;
-		p.y = overviewH * scale;
+//		float scale = Math.min(1, Math.min((float)getWidth() / overviewW, (float)getHeight() / overviewH));
+//		scale *= mScale;
+		p.x = overviewW * mScaleFactor * mScale;
+		p.y = overviewH * mScaleFactor * mScale;
 		
 		return p;
 	}
@@ -420,9 +412,9 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		int timepass = mZoomScroller.timePassed();
 		if (!mZoomScroller.isFinished()) {
 			mZoomScroller.computeScrollOffset();
-			mScale = Math.max(1, Math.min(mMaxScale, (float) mZoomScroller.getCurrX() / 1000));
-			mImg.setScaleX(mScale);
-			mImg.setScaleY(mScale);
+			mScale = Math.max(mMinScale, Math.min(mMaxScale, (float) mZoomScroller.getCurrX() / 1000));
+			mImg.setScaleX(mScale / mScaleFactor);
+			mImg.setScaleY(mScale / mScaleFactor);
 			
 			PointF p = new PointF(mImg.getTranslationX(), mImg.getTranslationY());
 			p = clamp(p.x, p.y);
@@ -475,9 +467,9 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	public boolean onScale(ScaleGestureDetector detector) {
 		
 		if (mEnableZoom) {
-			mScale = Math.max(1, Math.min(mMaxScale, mPreScale * detector.getScaleFactor()));
-			mImg.setScaleX(mScale);
-			mImg.setScaleY(mScale);
+			mScale = Math.max(mMinScale, Math.min(mMaxScale, mPreScale * detector.getScaleFactor()));
+			mImg.setScaleX(mScale / mScaleFactor);
+			mImg.setScaleY(mScale / mScaleFactor);
 		} else {
 			if (!mDetectedRequestZoom && detector.getScaleFactor() > 1.1) {
 				mDetectedRequestZoom = true;

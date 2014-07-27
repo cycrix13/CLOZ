@@ -133,8 +133,10 @@ public class InAppActivity extends Activity {
 				
 				@Override
 				public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-					Purchase p = inv.getPurchase(SKU_4IMAGES);
-					if (p != null) {
+					
+//					Purchase p = inv.getPurchase(SKU_4IMAGES);
+					Purchase p;
+					if (inv != null && (p = inv.getPurchase(SKU_4IMAGES)) != null) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(InAppActivity.this);
 						builder.setMessage("You have already owned this feature. " +
 								"Would you like to restore purchase?");
@@ -211,8 +213,9 @@ public class InAppActivity extends Activity {
 				
 				@Override
 				public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-					Purchase p = inv.getPurchase(SKU_DELETE_PUB);
-					if (p != null) {
+//					Purchase p = inv.getPurchase(SKU_DELETE_PUB);
+					Purchase p;
+					if (inv != null && (p = inv.getPurchase(SKU_DELETE_PUB)) != null) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(InAppActivity.this);
 						builder.setMessage("You have already owned this feature. " +
 								"Would you like to restore purchase?");
