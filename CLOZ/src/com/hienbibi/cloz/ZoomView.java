@@ -65,7 +65,7 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		mImg = new ImageView(context);
 		LayoutParams param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mImg.setLayoutParams(param);
-		mImg.setScaleType(ScaleType.CENTER_INSIDE);
+		mImg.setScaleType(ScaleType.FIT_CENTER);
 		addView(mImg);
 		
 		mDetector = new GestureDetector(context, this);
@@ -271,8 +271,8 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		overviewW = bitmap.getWidth();
 		overviewH = bitmap.getHeight();
 		
-		mScale = mMinScale = Math.min(1, Math.min((float)targetW / overviewW, (float)targetH / overviewH));
-		mScaleFactor = mScale;
+		mScale = mMinScale = 1;
+		mScaleFactor = Math.min((float)targetW / overviewW, (float)targetH / overviewH);
 //		mScale = mMinScale = 1;
 		mMaxScale = mMinScale * 4;
 		
@@ -413,8 +413,8 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		if (!mZoomScroller.isFinished()) {
 			mZoomScroller.computeScrollOffset();
 			mScale = Math.max(mMinScale, Math.min(mMaxScale, (float) mZoomScroller.getCurrX() / 1000));
-			mImg.setScaleX(mScale / mScaleFactor);
-			mImg.setScaleY(mScale / mScaleFactor);
+			mImg.setScaleX(mScale);
+			mImg.setScaleY(mScale);
 			
 			PointF p = new PointF(mImg.getTranslationX(), mImg.getTranslationY());
 			p = clamp(p.x, p.y);
@@ -468,8 +468,8 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		
 		if (mEnableZoom) {
 			mScale = Math.max(mMinScale, Math.min(mMaxScale, mPreScale * detector.getScaleFactor()));
-			mImg.setScaleX(mScale / mScaleFactor);
-			mImg.setScaleY(mScale / mScaleFactor);
+			mImg.setScaleX(mScale);
+			mImg.setScaleY(mScale);
 		} else {
 			if (!mDetectedRequestZoom && detector.getScaleFactor() > 1.1) {
 				mDetectedRequestZoom = true;
