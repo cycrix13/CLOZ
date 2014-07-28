@@ -654,7 +654,8 @@ OnClickListener {
 					txt.setBackgroundResource(R.drawable.tag_border);
 					txt.setText(jTag.getString(i));
 					txt.setTextColor(0xFFFFFFFF);
-					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setTextSize(16);
+					txt.setMaxWidth(CyUtils.dpToPx(150, this));
 					txt.setSingleLine();
 					txt.setEllipsize(TruncateAt.END);
 					txt.setOnClickListener(this);
@@ -686,7 +687,8 @@ OnClickListener {
 					txt.setBackgroundResource(R.drawable.contact_border);
 					txt.setText(jContacts.getString(i));
 					txt.setTextColor(0xFFFFFFFF);
-					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setTextSize(16);
+					txt.setMaxWidth(CyUtils.dpToPx(150, this));
 					txt.setSingleLine();
 					txt.setEllipsize(TruncateAt.END);
 					txt.setOnClickListener(this);
@@ -794,6 +796,10 @@ OnClickListener {
 
 	@Override
 	public void onComplete(HashMap<String, Object> result) {
+		
+		mResultMode = false;
+		mEditing = false;
+		updateLayout();
 
 		String imageJson;
 		{
@@ -897,8 +903,8 @@ OnClickListener {
 			Settings.instance().save();
 
 			View v = getLayoutInflater().inflate(
-					R.layout.help_screen1_fragment, mLayoutSecondLookHolder,
-					false);
+					R.layout.help_screen1_fragment, mLayoutSecondLookHolder, false);
+			mLayoutSecondLookHolder.addView(v);
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
@@ -1216,16 +1222,8 @@ OnClickListener {
 	private void onEditClick(View v) {
 		FlurryAgent.logEvent("PRESS_EDIT");
 		mEditing = !mEditing;
-
-		int visibleEdit = mEditing ? View.VISIBLE : View.INVISIBLE;
-		int visibleNoEdit = mEditing ? View.INVISIBLE : View.VISIBLE;
-
+		
 		updateLayout();
-		mTxtEdit.setText(mEditing ? R.string.look_save : R.string.look_edit);
-		mBtnShare.setVisibility(visibleNoEdit);
-		mImgAddImage.setVisibility(visibleEdit);
-		mImgAddTag.setVisibility(mEditing ? View.VISIBLE : View.GONE);
-		mImgDeleteImage.setVisibility(visibleEdit);
 
 		mLayoutDate.setBackgroundColor(mEditing ? 0x80000000 : 0x00000000);
 
@@ -1719,36 +1717,29 @@ OnClickListener {
 			JSONArray jArr = new JSONArray(look.contacts);
 			for (int i = 0; i < jArr.length(); i++)
 				tagList.add(jArr.getString(i));
+			jArr = new JSONArray(look.tags);
+			for (int i = 0; i < jArr.length(); i++)
+				tagList.add(jArr.getString(i));
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-
-		TagPeopleActivity.newInstance(this, mHelper, tagList, new TagPeopleActivity.Listener() {
+		
+		int[] date = null;
+		try {
+			JSONArray jDate = new JSONArray(look.date);
+			date = new int[] {jDate.getInt(0), jDate.getInt(1), jDate.getInt(2)};
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		TagPeopleActivity.newInstance(this, mHelper, tagList, date, getCurrentImagePath(), new MoveTagActivity.Listener() {
 			@Override
-			public void onComplete(ArrayList<String> result, boolean haveDate) {
-				try {
-					int[] date = null;
-					if (haveDate) {
-						Looks look = lookList.get(mSelecting);
-						JSONArray jDate;
-						jDate = new JSONArray(look.date);
-						date = new int[] {jDate.getInt(0), jDate.getInt(1), jDate.getInt(2)};
-					}
-					MoveTagActivity.newInstance(MainActivity.this, getCurrentImagePath(), 
-							result, date, new MoveTagActivity.Listener() {
-						@Override
-						public void onComplete(Bitmap bm, int socialType, boolean saveImage) {
-							onShareCallback(bm, socialType, saveImage);
-						}
-					});
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+			public void onComplete(Bitmap bm, int socialType, boolean saveImage) {
+				onShareCallback(bm, socialType, saveImage);
 			}
 		});
 	}
-
-
 
 	String getCurrentImagePath() {
 
@@ -1945,6 +1936,15 @@ OnClickListener {
 			mTxtBackAll.setVisibility(View.INVISIBLE);
 			mTxtAll.setText(R.string.look_all);
 		}
+		
+		int visibleEdit = mEditing ? View.VISIBLE : View.INVISIBLE;
+		int visibleNoEdit = mEditing ? View.INVISIBLE : View.VISIBLE;
+		
+		mTxtEdit.setText(mEditing ? R.string.look_save : R.string.look_edit);
+		mBtnShare.setVisibility(visibleNoEdit);
+		mImgAddImage.setVisibility(visibleEdit);
+		mImgAddTag.setVisibility(mEditing ? View.VISIBLE : View.GONE);
+		mImgDeleteImage.setVisibility(visibleEdit);
 	}
 
 	@Override

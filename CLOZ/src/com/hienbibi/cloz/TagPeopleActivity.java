@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -25,12 +26,15 @@ import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
 import com.flurry.android.FlurryAgent;
+import com.hienbibi.cloz.MoveTagActivity.Listener;
 
 public class TagPeopleActivity extends Activity {
 
 	private static DatabaseHelper sHelper;
 	private static Listener sListener;
 	private static ArrayList<String> sTagList;
+	private static int[] sDate;
+	private static String sPath;
 	
 	private DatabaseHelper mHelper; 
 	private Listener mListener;
@@ -50,14 +54,13 @@ public class TagPeopleActivity extends Activity {
 		public String toString() { return text; }
 	}
 	
-	public static class Listener {
-		public void onComplete(ArrayList<String> result, boolean haveDate) {}
-	}
-	
-	public static void newInstance(Activity act, DatabaseHelper helper, ArrayList<String> tagList, Listener listener) {
+	public static void newInstance(Activity act, DatabaseHelper helper, 
+			ArrayList<String> tagList, int[] date, String path, Listener listener) {
 		sHelper = helper;
 		sListener = listener;
 		sTagList = tagList;
+		sDate = date;
+		sPath = path;
 		Intent intent = new Intent(act, TagPeopleActivity.class);
 		act.startActivity(intent);
 	}
@@ -139,8 +142,16 @@ public class TagPeopleActivity extends Activity {
 		for (TItem item : mItemList)
 			if (item.check)
 				result.add(item.text);
-		mListener.onComplete(result, mCheckDate);
-		finish();
+		
+		int[] date = null;
+		if (mCheckDate) {
+			date = sDate;
+		}
+		MoveTagActivity.newInstance(this, sPath, result, date, mListener);
+
+		
+//		mListener.onComplete(result, mCheckDate);
+//		finish();
 	}
 	
 	private class ItemAdapter extends BaseAdapter implements OnItemClickListener {
