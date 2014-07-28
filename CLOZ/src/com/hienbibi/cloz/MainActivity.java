@@ -864,10 +864,25 @@ OnClickListener {
 			finish();
 		}
 
-		if (lookList.size() > 0) {
-			mSelecting = lookList.size() - 1;
-		} else {
-			mSelecting = -1;
+		//if (lookList.size() > 0) {
+			//mSelecting = lookList.size() - 1;
+		//} else {
+			//mSelecting = -1;
+		//}
+		
+		mSelecting = -1;
+		for  (int i = 0; i <lookList.size(); i++) {
+			Looks lookCheck = lookList.get(i);
+			if (look.fileName.equals(lookCheck.fileName)) {
+				mSelecting = i;
+				break;
+			}
+		}
+		
+		for (int i = 0; i < mFlipper.getChildCount(); i++) {
+			ViewGroup group = (ViewGroup) mFlipper.getChildAt(i);
+			group.setTag(null);
+			
 		}
 		loadImage();
 
