@@ -33,6 +33,9 @@ public class PagerIndicator extends RelativeLayout implements OnPageChangeListen
 	@ViewById(id = R.id.imgRight)		private View mImgRight;
 	@ViewById(id = R.id.imgPointer)		private View mImgPointer;
 	
+	public int countOffset = 0;
+	public int pageOffset = 0;
+	
 	private OnPageChangeListener mPageChangeListener = new OnPageChangeListener() {
 		public void onPageSelected(int arg0) {}
 		public void onPageScrolled(int arg0, float arg1, int arg2) {}
@@ -58,7 +61,8 @@ public class PagerIndicator extends RelativeLayout implements OnPageChangeListen
 		try {
 			AndroidAnnotationParser.parse(this, this);
 		} catch (Exception e) {}
-		update(pager.getAdapter().getCount(), pager.getCurrentItem(), 0);
+		update(Math.max(0, mPager.getAdapter().getCount() + countOffset), 
+				Math.max(0, pager.getCurrentItem() + pageOffset), 0);
 	}
 	
 	private void update(int numItem, int currentItem, float offset) {
@@ -158,7 +162,8 @@ public class PagerIndicator extends RelativeLayout implements OnPageChangeListen
 	@Override
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 		
-		update(mPager.getAdapter().getCount(), position, positionOffset);
+		update(Math.max(0, mPager.getAdapter().getCount() + countOffset), 
+				Math.max(0, position + pageOffset), positionOffset);
 		
 		mPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
 	}

@@ -26,6 +26,8 @@ import org.brickred.socialauth.android.SocialAuthListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -50,6 +52,7 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.Display;
@@ -60,6 +63,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
@@ -74,6 +78,7 @@ import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
 import com.cycrix.util.FontsCollection;
 import com.cycrix.util.InlineLayout;
+import com.cycrix.util.PagerIndicator;
 import com.flurry.android.FlurryAgent;
 import com.hienbibi.cloz.CameraActivity.ImageItem;
 import com.hienbibi.cloz.SearchActivity.TItem;
@@ -126,6 +131,11 @@ OnClickListener {
 	private ViewGroup mLayoutSecondLookHolder;
 	@ViewById(id = R.id.layoutHolder)
 	private ViewGroup mLayoutHolder;
+	
+	@ViewById(id = R.id.pagerIndicator)
+	private PagerIndicator mIndicator;
+	@ViewById(id = R.id.layoutControl)
+	private View mLayoutControl;
 
 	// @ViewById(id = R.id.imageView1) private ImageView mImg1;
 	// @ViewById(id = R.id.imageView2) private ImageView mImg2;
@@ -314,6 +324,9 @@ OnClickListener {
 		}
 
 		mZoomEnable = Settings.instance().unlockZoom;
+		
+		mIndicator.countOffset = - 2;
+		mIndicator.pageOffset = - 1;
 
 		adapter = new SocialAuthAdapter(new ResponseListener());
 	}
@@ -414,6 +427,16 @@ OnClickListener {
 					}
 				});
 	}
+	
+	private void showHideControl() {
+		
+		
+		if (mLayoutControl.getVisibility() == View.VISIBLE) {
+			mLayoutControl.setVisibility(View.INVISIBLE);
+		} else {
+			mLayoutControl.setVisibility(View.VISIBLE);
+		}
+	}
 
 	private void prepareForLoadImage(boolean down) {
 
@@ -444,20 +467,25 @@ OnClickListener {
 
 	private void loadFlipper() {
 
-		loadFlipperPage(mSelecting - 1);
-		loadFlipperPage(mSelecting);
-		loadFlipperPage(mSelecting + 1);
+		loadFlipperPage(mSelecting - 1, false);
+		loadFlipperPage(mSelecting, true);
+		loadFlipperPage(mSelecting + 1, false);
 
 		for (int i = 0; i < mFlipper.getChildCount(); i++) {
 			Object tag = mFlipper.getChildAt(i).getTag();
 			if (tag != null && ((Integer) tag) == mSelecting) {
 				mFlipper.setDisplayedChild(i);
+				ViewGroup vg = (ViewGroup) mFlipper.getChildAt(i);
+				ViewPager pager = (ViewPager) vg.getChildAt(0);
+				PagerAdapter adapter = pager.getAdapter();
+				mIndicator.setPager(pager);
+				mIndicator.setOnPageChangeListener((LookAdapter) adapter);
 				return;
 			}
 		}
 	}
 
-	private void loadFlipperPage(int pageIndex) {
+	private void loadFlipperPage(int pageIndex, boolean displayed) {
 
 		if (pageIndex < 0 || pageIndex > lookList.size() - 1)
 			return;
@@ -491,7 +519,14 @@ OnClickListener {
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT);
 		pager.setLayoutParams(param);
-		pager.setAdapter(new LookAdapter(pager, fileNames));
+		
+		LookAdapter adapter;
+		pager.setAdapter(adapter = new LookAdapter(pager, fileNames, pager));
+//		if (displayed) {
+//			mIndicator.setPager(pager);
+//			mIndicator.setOnPageChangeListener(adapter);
+//		} else
+			pager.setOnPageChangeListener(adapter);
 		idleOne.addView(pager);
 		idleOne.setTag(pageIndex);
 	}
@@ -510,7 +545,9 @@ OnClickListener {
 
 		String fileNames = lookList.get(mSelecting).fileName;
 		ViewPager pager = (ViewPager) currentOne.getChildAt(0);
-		pager.setAdapter(new LookAdapter(pager, fileNames));
+		LookAdapter adapter;
+		pager.setAdapter(adapter = new LookAdapter(pager, fileNames, pager));
+		pager.setOnPageChangeListener(adapter);
 	}
 
 	public void refreshDb() {
@@ -1006,13 +1043,16 @@ OnClickListener {
 		preScrollState = scrollState;
 	}
 
-	private class LookAdapter extends PagerAdapter {
+	private class LookAdapter extends PagerAdapter implements OnPageChangeListener {
 
 		// private ArrayList<ViewGroup> mViewList = new ArrayList<ViewGroup>();
 		private ArrayList<String> mPathList = new ArrayList<String>();
+		private ViewPager mPager;
 
-		public LookAdapter(ViewGroup container, String jsonArrPath) {
+		public LookAdapter(ViewGroup container, String jsonArrPath, ViewPager pager) {
 
+			mPager = pager;
+			
 			try {
 				JSONArray jArr = new JSONArray(jsonArrPath);
 				for (int i = 0; i < jArr.length(); i++) {
@@ -1023,46 +1063,10 @@ OnClickListener {
 			}
 		}
 
-		@Override
-		public Object instantiateItem(ViewGroup container, final int position) {
+		public View fakeInstantiateItem(ViewGroup container, final int position) {
 
-			// ImageView img = new ImageView(MainActivity.this);
-//			ViewGroup.LayoutParams params = new LayoutParams(
-//					ViewGroup.LayoutParams.MATCH_PARENT,
-//					ViewGroup.LayoutParams.MATCH_PARENT);
-//			// img.setLayoutParams(param);
-//
-//			// GestureImageView img = new GestureImageView(MainActivity.this);
-//			SubsamplingScaleImageView img = new SubsamplingScaleImageView(
-//					MainActivity.this);
-//			img.setZoomEnabled(mZoomEnable);
-//			img.setOnTouchListener(new OnTouchListener() {
-//				@Override
-//				public boolean onTouch(View view, MotionEvent motionEvent) {
-//					return scaleDetector.onTouchEvent(motionEvent);
-//				}
-//			});
-//			img.setLayoutParams(params);
-//			// img.
-//			// img.setImageResource(R.drawable.camera);
-//			if (mPathList.size() > 0) {
-//				String path = getFilesDir().getAbsolutePath() + "/"
-//						+ mPathList.get(position);
-//				//img.setImageFile(loadImageOptimize(path));
-//				 img.setImageBitmap(loadImageOptimize(path));
-//				// new LoadImageTask(path,
-//				// img).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//			} else {
-//			
-//				 img.setScaleType(ScaleType.FIT_XY);
-//				 img.setImageResource(R.drawable.nolook);
-//			}
-//
-//			container.addView(img);
-//			return img;
-			
 			if (mPathList.size() > 0) {
-				ZoomView zoomView = new ZoomView(MainActivity.this);
+				ZoomView zoomView = new ZoomView(MainActivity.this, mPathList.size() > 1);
 				ViewGroup.LayoutParams params = new LayoutParams(
 						ViewGroup.LayoutParams.MATCH_PARENT,
 						ViewGroup.LayoutParams.MATCH_PARENT);
@@ -1092,6 +1096,12 @@ OnClickListener {
 					public void onRequestSwipeHorizontal() {
 						showHelpScreen3();
 					}
+					
+					@Override
+					public void onSingleTap() {
+						showHideControl();
+					}
+					
 				});
 
 				container.addView(zoomView);
@@ -1111,10 +1121,30 @@ OnClickListener {
 				return img;
 			}
 		}
+		
+		@Override
+		public Object instantiateItem(ViewGroup container, final int position) {
+			View v = null;
+			
+			int fakePos = position;
+			if (mPathList.size() > 1) {
+				if (position == 0)
+					fakePos = mPathList.size() - 1;
+				else if (position == mPathList.size() + 1)
+					fakePos = 0;
+				else
+					fakePos = position - 1;
+			}
+				
+			v = fakeInstantiateItem(container, fakePos);
+			
+			return v;
+		}
 
 		@Override
 		public int getCount() {
-			return Math.max(mPathList.size(), 1);
+			int i = Math.max(mPathList.size(), 1);
+			return i > 1 ? i + 2 : i;
 		}
 
 		@Override
@@ -1131,6 +1161,30 @@ OnClickListener {
 		public int getItemPosition(Object object) {
 
 			return PagerAdapter.POSITION_UNCHANGED;
+		}
+		
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+			
+		}
+
+		@Override
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			Log.d("cycrix", "onPageScrolled " + position + positionOffset);
+			
+			if (mPathList.size() < 2)
+				return;
+			
+			if (position + positionOffset == mPathList.size() + 1) {
+				mPager.setCurrentItem(1, false);
+			} else if (position + positionOffset == 0) {
+				mPager.setCurrentItem(mPathList.size(), false);
+			}
+		}
+
+		@Override
+		public void onPageSelected(int position) {
+			Log.d("cycrix", "onPageSelected " + position);
 		}
 	}
 
@@ -1402,6 +1456,8 @@ OnClickListener {
 					ViewPager pager = (ViewPager) g
 							.getChildAt(0);
 					int currentIndex = pager.getCurrentItem();
+					if (pager.getAdapter().getCount() > 1)
+						currentIndex--;
 
 					JSONArray jNewArr = new JSONArray();
 					for (int i = 0; i < jArr.length(); i++) {
@@ -1747,6 +1803,8 @@ OnClickListener {
 		ViewGroup vg = (ViewGroup) mFlipper.getChildAt(mFlipper.getDisplayedChild());
 		ViewPager pager = (ViewPager) vg.getChildAt(0);
 		int index = pager.getCurrentItem();
+		if (pager.getAdapter().getCount() > 1)
+			index--;
 
 		try {
 			JSONArray jArr = new JSONArray(look.fileName);

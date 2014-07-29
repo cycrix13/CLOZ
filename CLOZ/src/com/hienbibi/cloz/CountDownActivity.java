@@ -48,7 +48,7 @@ public class CountDownActivity extends Activity {
 			public void run() {
 				mCount--;
 				if (mCount < 0) {
-//					finish();
+					finish();
 				} else {
 					mTxtCount.setText("" + mCount);
 					count();

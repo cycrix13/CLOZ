@@ -202,7 +202,7 @@ public class MoveTagActivity extends Activity {
 	private void onContinueClick(View v) {
 		final Dialog dialog = new Dialog(this);
 		dialog.setContentView(R.layout.share_dialog2);
-		dialog.setTitle("Select where you want to share");
+		dialog.setTitle(R.string.movetag_text2);
 		dialog.setCancelable(true);
 		
 		new OnClickListener() {

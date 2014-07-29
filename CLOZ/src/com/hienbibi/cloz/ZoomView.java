@@ -45,6 +45,8 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	private int mTouchSlop;
 	private float mStartX, mStartY;
 	private float mScaleFactor;
+	
+	private boolean mZoomOutEdge;
 
 	public ZoomView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -56,8 +58,9 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		init(context);
 	}
 	
-	public ZoomView(Context context) {
+	public ZoomView(Context context, boolean zoomOutEdge) {
 		super(context);
+		mZoomOutEdge = zoomOutEdge;
 		init(context);
 	}
 	
@@ -171,6 +174,11 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 			} else if (dx > Math.abs(dy)) {	// right
 				if (onLeftEdge(p) && mEnableSwipeHorizontal) {
 					requestDisallowInterceptTouchEvent(false);
+					if (mZoomOutEdge) {
+						mZoomScroller.startScroll((int)(mScale * 1000), 0, 
+								(int)((mMinScale - mScale) * 1000), 0);
+						invalidate();
+					}
 				} else if (!mEnableSwipeHorizontal) {
 					mListener.onRequestSwipeHorizontal();
 				}
@@ -178,6 +186,11 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 			} else if (dx < -Math.abs(dy)) {// left
 				if (onRightEdge(p) && mEnableSwipeHorizontal) {
 					requestDisallowInterceptTouchEvent(false);
+					if (mZoomOutEdge) {
+						mZoomScroller.startScroll((int)(mScale * 1000), 0, 
+								(int)((mMinScale - mScale) * 1000), 0);
+						invalidate();
+					}
 				} else if (!mEnableSwipeHorizontal) {
 					mListener.onRequestSwipeHorizontal();
 				}
@@ -527,7 +540,8 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent arg0) {
-		return false;
+		mListener.onSingleTap();
+		return true;
 	}
 	
 	public static class Listener {
@@ -535,5 +549,6 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		public void onRequestUp() { Log.d("cycrix", "onRequestUp");}
 		public void onRequestDown() { Log.d("cycrix", "onRequestDown");}
 		public void onRequestSwipeHorizontal() { Log.d("cycrix", "onRequestSwipeHorizontal");}
+		public void onSingleTap() {}
 	}
 }

@@ -258,5 +258,7 @@
     <!-- Move Tag -->
     
     <string name="movetag_text1">Move tags</string>
+    <string name="movetag_text2">Select where you want to</string>
+    <string name="movetag_text3">Save image to camera roll</string>
 
 </resources>

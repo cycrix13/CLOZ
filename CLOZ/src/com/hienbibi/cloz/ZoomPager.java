@@ -13,6 +13,7 @@ public class ZoomPager extends ViewPager {
 
 	public ZoomPager(Context context) {
 		super(context);
+		setOffscreenPageLimit(10);
 	}
 	
 	@Override

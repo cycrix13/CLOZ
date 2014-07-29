@@ -234,5 +234,7 @@
     <!-- Move Tag -->
     
     <string name="movetag_text1">Mueve las etiquetas\n si quieres</string>
+    <string name="movetag_text2">¿Dónde quieres</string>
+    <string name="movetag_text3">Guarda la imagen en rollo de la cámara</string>
     
 </resources>

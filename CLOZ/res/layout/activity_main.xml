@@ -17,24 +17,21 @@
             android:id="@+id/layoutPage1"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/layoutPage2"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
         </FrameLayout>
-        
+
         <FrameLayout
             android:id="@+id/layoutPage3"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
         </FrameLayout>
 
-        <!-- 
+        <!--
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="match_parent"
@@ -46,215 +43,270 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter" />
-             -->
-            
+        -->
+
     </ViewFlipper>
 
-    <LinearLayout
-        android:id="@+id/layoutDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="70dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/txtDate1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:shadowColor="#000000"
-            android:shadowDx="-3"
-            android:shadowDy="-3"
-            android:shadowRadius="1"
-            android:text="14"
-            android:textColor="#FFFFFF"
-            android:textSize="48sp" />
-
-        <TextView
-            android:id="@+id/txtDate2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-8dp"
-            android:shadowColor="#000000"
-            android:shadowDx="-3"
-            android:shadowDy="-3"
-            android:shadowRadius="1"
-            android:text="Jan"
-            android:textColor="#FFFFFF"
-            android:textSize="36sp" />
-
-        <TextView
-            android:id="@+id/txtDate3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-12dp"
-            android:shadowColor="#000000"
-            android:shadowDx="-3"
-            android:shadowDy="-3"
-            android:shadowRadius="1"
-            android:text="2014"
-            android:textColor="#FFFFFF"
-            android:textSize="36sp" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtShare"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_below="@+id/layoutDate"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/share_border"
-        android:gravity="center"
-        android:minWidth="96dp"
-        android:shadowColor="#000000"
-        android:shadowDx="3"
-        android:shadowDy="3"
-        android:shadowRadius="1"
-        android:text="@string/look_share"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp" />
-
-    <com.cycrix.util.InlineLayout
-        android:id="@+id/layoutTag"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_alignParentBottom="true" >
-    </com.cycrix.util.InlineLayout>
-
-    <ImageView
-        android:id="@+id/imgAddTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutTag"
-        android:layout_marginLeft="16dp"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:src="@drawable/add"
-        android:visibility="gone" />
-
-    <FrameLayout
-        android:id="@+id/layoutSeperate"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_above="@+id/imgAddTag"
-        android:background="#808080" >
-
-    </FrameLayout>
-
-    <ImageView
-        android:id="@+id/imgAddImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtShare"
-        android:layout_marginLeft="16dp"
-        android:src="@drawable/add"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/imgDeleteImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtShare"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/delete_image"
-        android:visibility="invisible" />
-
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp" >
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-        	android:background="#70FFFFFF" >
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/txtAll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:paddingBottom="16dp"
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="8"
-            android:text="@string/look_all"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txtEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:minWidth="72dp"
-            android:singleLine="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:paddingBottom="16dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/look_edit"
-            android:textColor="#000000"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txtDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:minWidth="72dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:singleLine="true"
-            android:text="@string/look_delete"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:visibility="invisible" />
-        
-        <TextView
-            android:id="@+id/txtBackAll"
-            android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:paddingBottom="16dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/look_back_all"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:visibility="invisible" />
-
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/layoutHolder"
+        android:id="@+id/layoutControl"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-    </FrameLayout>
+        <LinearLayout
+            android:id="@+id/layoutDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="70dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/layoutSecondLookHolder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/layoutSeperate" >
+            <TextView
+                android:id="@+id/txtDate1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="#000000"
+                android:shadowDx="-3"
+                android:shadowDy="-3"
+                android:shadowRadius="1"
+                android:text="14"
+                android:textColor="#FFFFFF"
+                android:textSize="48sp" />
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/txtDate2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:shadowColor="#000000"
+                android:shadowDx="-3"
+                android:shadowDy="-3"
+                android:shadowRadius="1"
+                android:text="Jan"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp" />
 
+            <TextView
+                android:id="@+id/txtDate3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-12dp"
+                android:shadowColor="#000000"
+                android:shadowDx="-3"
+                android:shadowDy="-3"
+                android:shadowRadius="1"
+                android:text="2014"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp" />
+        </LinearLayout>
 
-    <fragment
-        android:id="@+id/fragMenu"
-        android:name="com.hienbibi.cloz.MenuFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/txtShare"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_below="@+id/layoutDate"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/share_border"
+            android:gravity="center"
+            android:minWidth="96dp"
+            android:shadowColor="#000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:text="@string/look_share"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+        
+        <ScrollView
+            android:id="@+id/layoutTagScroll"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="48dp" >
 
+            <com.cycrix.util.InlineLayout
+                android:id="@+id/layoutTag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.cycrix.util.InlineLayout>
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/imgAddTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layoutTagScroll"
+            android:layout_marginLeft="16dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:src="@drawable/add"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/layoutSeperate"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_above="@+id/imgAddTag"
+            android:background="#808080" >
+        </FrameLayout>
+
+        <com.cycrix.util.PagerIndicator
+            android:id="@+id/pagerIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layoutSeperate"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_vertical" >
+
+            <LinearLayout
+                android:id="@+id/layoutDot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgLeft"
+                android:layout_width="14dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/layoutDot"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="14dp"
+                android:src="@drawable/button_arrow_left" />
+
+            <ImageView
+                android:id="@+id/imgRight"
+                android:layout_width="14dp"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/layoutDot"
+                android:layout_marginRight="14dp"
+                android:src="@drawable/button_arrow_right" />
+
+            <ImageView
+                android:id="@+id/imgPointer"
+                android:layout_width="14dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/layoutDot"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:src="@drawable/icon_dot" />
+        </com.cycrix.util.PagerIndicator>
+
+        <ImageView
+            android:id="@+id/imgAddImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtShare"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/add"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/imgDeleteImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/txtShare"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/delete_image"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="#70FFFFFF" >
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtAll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:shadowColor="#000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="8"
+                android:text="@string/look_all"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:minWidth="72dp"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:singleLine="true"
+                android:text="@string/look_edit"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:minWidth="72dp"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:singleLine="true"
+                android:text="@string/look_delete"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/txtBackAll"
+                android:layout_width="72dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/look_back_all"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/layoutHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/layoutSecondLookHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layoutSeperate" >
+        </FrameLayout>
+
+        
+        <fragment
+            android:id="@+id/fragMenu"
+            android:name="com.hienbibi.cloz.MenuFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        
+    </RelativeLayout>
 
 </RelativeLayout>
