@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 public class CountDownActivity extends Activity {
 	
 	private static boolean sIsSearch;
@@ -21,10 +24,19 @@ public class CountDownActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		if (sIsSearch)
 			setContentView(R.layout.activity_count_down_search);
 		else
 			setContentView(R.layout.activity_count_down_create);
+		
+		AdRequest adRequest = new AdRequest.Builder()
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//        .addTestDevice("INSERT_YOUR_HASHED_DEVICE_ID_HERE")
+        .build();
+		
+		AdView ads = (AdView) findViewById(R.id.ads);
+		ads.loadAd(adRequest);
 		
 		mTxtCount = (TextView) findViewById(R.id.txtCount);
 		count();
@@ -36,7 +48,7 @@ public class CountDownActivity extends Activity {
 			public void run() {
 				mCount--;
 				if (mCount < 0) {
-					finish();
+//					finish();
 				} else {
 					mTxtCount.setText("" + mCount);
 					count();
