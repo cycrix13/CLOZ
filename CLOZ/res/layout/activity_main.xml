@@ -113,7 +113,7 @@
         android:shadowRadius="1"
         android:text="@string/look_share"
         android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:textSize="22sp" />
 
     <com.cycrix.util.InlineLayout
         android:id="@+id/layoutTag"
@@ -188,8 +188,10 @@
 
         <TextView
             android:id="@+id/txtEdit"
-            android:layout_width="72dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:minWidth="72dp"
+            android:singleLine="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center"
@@ -202,13 +204,15 @@
 
         <TextView
             android:id="@+id/txtDelete"
-            android:layout_width="72dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:gravity="center"
+            android:minWidth="72dp"
             android:paddingBottom="16dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:singleLine="true"
             android:text="@string/look_delete"
             android:textColor="#000000"
             android:textSize="18sp"
@@ -245,7 +249,7 @@
 
     </FrameLayout>
 
- 
+
     <fragment
         android:id="@+id/fragMenu"
         android:name="com.hienbibi.cloz.MenuFragment"

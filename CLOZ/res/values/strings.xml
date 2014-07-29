@@ -14,6 +14,8 @@
     <string name="title_activity_suggest">SuggestActivity</string>
     <string name="title_activity_in_app">InAppActivity</string>
     <string name="title_activity_tag_people">TagPeopleActivity</string>
+    <string name="title_activity_move_tag">MoveTagActivity</string>
+    
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_yes">Yes</string>
@@ -60,7 +62,7 @@
     <string name="mainmenu_camera">Camera</string>
     <string name="mainmenu_gallery">Gallery</string>
     <string name="mainmenu_icloud">iCloud</string>
-    <string name="mainmenu_inapp">inApp</string>
+    <string name="mainmenu_inapp">Extras</string>
     <string name="mainmenu_rate">Rate</string>
     <string name="mainmenu_suggest">Suggest</string>
     <string name="mainmenu_useinfo">Use info</string>
@@ -251,6 +253,10 @@
     <string name="tagpeople_text1">Which tags do you want toappear in the picture?</string>
     <string name="tagpeople_text2">Continue</string>
     <string name="tagpeople_text3">Date</string>
-    <string name="title_activity_move_tag">MoveTagActivity</string>
+    
+    <!-- ************************************************** -->
+    <!-- Move Tag -->
+    
+    <string name="movetag_text1">Move tags</string>
 
 </resources>

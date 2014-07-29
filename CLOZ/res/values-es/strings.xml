@@ -37,7 +37,7 @@
     <string name="mainmenu_camera">Cámera</string>
     <string name="mainmenu_gallery">Galería</string>
     <string name="mainmenu_icloud">iCloud</string>
-    <string name="mainmenu_inapp">inApp</string>
+    <string name="mainmenu_inapp">Extras</string>
     <string name="mainmenu_rate">Valorar</string>
     <string name="mainmenu_suggest">Sugerir</string>
     <string name="mainmenu_useinfo">Use info</string>
@@ -229,5 +229,10 @@
     <string name="tagpeople_text1">¿Qué etiquetas quieres que aparezcan en la foto?</string>
     <string name="tagpeople_text2">Continuar</string>
     <string name="tagpeople_text3">Fecha</string>
+    
+    <!-- ************************************************** -->
+    <!-- Move Tag -->
+    
+    <string name="movetag_text1">Mueve las etiquetas\n si quieres</string>
     
 </resources>
