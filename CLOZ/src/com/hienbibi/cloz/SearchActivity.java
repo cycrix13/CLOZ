@@ -148,6 +148,8 @@ public class SearchActivity extends Activity {
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
 		
+		FlurryAgent.logEvent("PRESS_SEARCH_FIND_A_LOOK");
+		
 		ArrayList<TItem> result = new ArrayList<SearchActivity.TItem>();
 		for (TItem item : mItemList)
 			if (item.check)

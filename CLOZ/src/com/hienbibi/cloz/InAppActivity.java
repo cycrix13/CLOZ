@@ -119,6 +119,9 @@ public class InAppActivity extends Activity {
 	
 	@Click(id = R.id.btn4Image)
 	private void on4ImageClick(View v) {
+		
+		FlurryAgent.logEvent("PRESS_ZOOM_4_IMAGES");
+		
 		try {
     		if (Settings.instance().unlockZoom) {
     			AlertDialog.Builder builder = new AlertDialog.Builder(InAppActivity.this);
@@ -199,6 +202,9 @@ public class InAppActivity extends Activity {
 	
 	@Click(id = R.id.btnDeletePub)
 	private void onDeletePubClick(View v) {
+		
+		FlurryAgent.logEvent("PRESS_ZOOM_4_IMAGES");
+		
 		try {
     		if (Settings.instance().unlockPub) {
     			AlertDialog.Builder builder = new AlertDialog.Builder(InAppActivity.this);

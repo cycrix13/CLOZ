@@ -2,6 +2,8 @@ package com.hienbibi.cloz;
 
 import java.io.IOException;
 
+import com.flurry.android.FlurryAgent;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -501,6 +503,7 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 
 	@Override
 	public void onScaleEnd(ScaleGestureDetector detector) {
+		FlurryAgent.logEvent("ZOOM_IMAGE");
 		mDetectedRequestZoom = false;
 		requestDisallowInterceptTouchEvent(false);
 	}
@@ -514,6 +517,8 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		float threshold = mMaxScale;
 		
 		if (mEnableZoom) {
+			
+			FlurryAgent.logEvent("ZOOM_IMAGE");
 			if (mScale < (threshold / 2) ) {
 				mZoomScroller.startScroll((int)(mScale * 1000), 0, (int)((threshold - mScale) * 1000), 0);
 			} else {

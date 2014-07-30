@@ -59,7 +59,7 @@ public class DateActivity extends Activity {
 	
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
-		FlurryAgent.logEvent("PRESS_CONTINUE");
+		FlurryAgent.logEvent("PRESS_DATE_CONTINUE");
 		if (mSingleMode) {
 			HashMap<String, Object> result = new HashMap<String, Object>();
 			int[] date = new int[] {mDatePicker.getDayOfMonth(), mDatePicker.getMonth() + 1, mDatePicker.getYear()};

@@ -108,7 +108,7 @@ public class ContactListActivity extends Activity {
 	
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
-		FlurryAgent.logEvent("PRESS_CONTINUE");
+		FlurryAgent.logEvent("PRESS_CONTACTS_CONTINUE");
 		if (getCheckContacts().size() == 0) {
 			new AlertDialog.Builder(this).setMessage(R.string.contact_noselect)
 					.setPositiveButton(R.string.text_ok, null).create().show();

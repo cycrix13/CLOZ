@@ -218,6 +218,7 @@ public class MenuFragment extends Fragment {
 	
 	@Click(id = R.id.layoutInApp)
 	void onInappClick(View v) {
+		FlurryAgent.logEvent("PRESS_EXTRAS");
 		if (mListener != null) mListener.onInAppClick();
 		closeAnim();
 	}

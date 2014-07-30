@@ -33,6 +33,7 @@ import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.Click;
 import com.cycrix.androidannotation.ViewById;
 import com.cycrix.util.CyUtils;
+import com.flurry.android.FlurryAgent;
 
 public class MoveTagActivity extends Activity {
 	
@@ -237,6 +238,20 @@ public class MoveTagActivity extends Activity {
 						return;
 					}
 					
+					switch (selecting) {
+					case 0:
+						FlurryAgent.logEvent("PRESS_SHARE_FACEBOOK");
+						break;
+					case 1:
+						FlurryAgent.logEvent("PRESS_SHARE_TWITER");
+						break;
+					case 2:
+						FlurryAgent.logEvent("PRESS_SHARE_INSTAGRAM");
+						break;
+					case 3:
+						FlurryAgent.logEvent("PRESS_SHARE_WHATSAPP");
+						break;
+					}
 					mListener.onComplete(drawViewToBitmap(), selecting, check);
 					
 					finish();

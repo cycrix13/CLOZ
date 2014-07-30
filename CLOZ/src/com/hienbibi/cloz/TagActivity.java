@@ -95,6 +95,8 @@ public class TagActivity extends Activity {
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
 		
+		FlurryAgent.logEvent("PRESS_TAG_CONTINUE");
+		
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		ArrayList<String> tagList = new ArrayList<String>();
 		for (int i = 0; i < mAdapter.getCount(); i++) {

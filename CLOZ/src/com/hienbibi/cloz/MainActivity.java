@@ -439,6 +439,8 @@ OnClickListener {
 	}
 
 	private void prepareForLoadImage(boolean down) {
+		
+		FlurryAgent.logEvent("SLIDE_VERTICAL");
 
 		if (lookList.size() == 0)
 			return;
@@ -750,6 +752,7 @@ OnClickListener {
 		if (mEditing) {
 			deleteTag(txt.getText().toString(), type.equals("tag"));
 		} else {
+			FlurryAgent.logEvent("PRESS_TAG");
 			new AlertDialog.Builder(this).setMessage(txt.getText().toString())
 			.setPositiveButton(R.string.text_ok, null).create().show();
 		}
@@ -843,6 +846,9 @@ OnClickListener {
 		{
 			ArrayList<ImageItem> images = (ArrayList<ImageItem>) result
 					.get("images");
+			
+			FlurryAgent.logEvent("IMAGE_PER_LOOK_" + images.size());
+			
 			JSONArray jArr = new JSONArray();
 			for (ImageItem item : images) {
 				File srcFile = new File(item.path);
@@ -1186,6 +1192,7 @@ OnClickListener {
 		@Override
 		public void onPageSelected(int position) {
 			Log.d("cycrix", "onPageSelected " + position);
+			FlurryAgent.logEvent("SLIDE_HORIZONTAL");
 		}
 	}
 
@@ -1466,6 +1473,7 @@ OnClickListener {
 						if (i != currentIndex)
 							jNewArr.put(jArr.getString(i));
 					}
+					FlurryAgent.logEvent("IMAGE_PER_LOOK_" + jNewArr.length());
 
 					item.fileName = jNewArr.toString();
 					mHelper.getDao().update(item);
@@ -1534,14 +1542,11 @@ OnClickListener {
 										jNewArr.put(randomPath);
 									}
 
-									for (int i = 0; i < jArr
-											.length(); i++)
-										jNewArr.put(jArr
-												.getString(i));
-									item.fileName = jNewArr
-											.toString();
-									mHelper.getDao().update(
-											item);
+									for (int i = 0; i < jArr.length(); i++)
+										jNewArr.put(jArr.getString(i));
+									FlurryAgent.logEvent("IMAGE_PER_LOOK_" + jNewArr.length());
+									item.fileName = jNewArr.toString();
+									mHelper.getDao().update(item);
 									refreshCurrentPage();
 									if (Settings.instance().autoBackup)
 										BackupHelper

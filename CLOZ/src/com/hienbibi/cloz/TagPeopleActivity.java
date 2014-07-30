@@ -138,6 +138,8 @@ public class TagPeopleActivity extends Activity {
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
 		
+		FlurryAgent.logEvent("PRESS_SHARE_CONTINUE");
+		
 		ArrayList<String> result = new ArrayList<String>();
 		for (TItem item : mItemList)
 			if (item.check)
