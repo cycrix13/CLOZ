@@ -545,9 +545,10 @@ OnClickListener {
 
 		String fileNames = lookList.get(mSelecting).fileName;
 		ViewPager pager = (ViewPager) currentOne.getChildAt(0);
-		LookAdapter adapter;
-		pager.setAdapter(adapter = new LookAdapter(pager, fileNames, pager));
-		pager.setOnPageChangeListener(adapter);
+		LookAdapter adapter = new LookAdapter(pager, fileNames, pager);
+		pager.setAdapter(adapter);
+		mIndicator.setPager(pager);
+		mIndicator.setOnPageChangeListener(adapter);
 	}
 
 	public void refreshDb() {
@@ -1347,6 +1348,7 @@ OnClickListener {
 	private void onAddTagClick(View v) {
 		FlurryAgent.logEvent("PRESS_ADDTAG");
 		new AlertDialog.Builder(this)
+		.setTitle(R.string.look_msg_add_tag)
 		.setItems(R.array.look_msg_add_tag,
 				new DialogInterface.OnClickListener() {
 			@Override
@@ -1577,6 +1579,30 @@ OnClickListener {
 					e.printStackTrace();
 					return;
 				}
+				
+				mSelecting = -1;
+				try {
+					lookList = mHelper.getDao().queryForAll();
+					Collections.sort(lookList, new CustomComparator());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
+				for  (int i = 0; i <lookList.size(); i++) {
+					Looks lookCheck = lookList.get(i);
+					if (item.fileName.equals(lookCheck.fileName)) {
+						mSelecting = i;
+						break;
+					}
+				}
+				
+				for (int i = 0; i < mFlipper.getChildCount(); i++) {
+					ViewGroup group = (ViewGroup) mFlipper.getChildAt(i);
+					group.setTag(null);
+					
+				}
+				
 				loadImage();
 				if (Settings.instance().autoBackup)
 					BackupHelper.notifyDataChange();
@@ -1824,6 +1850,8 @@ OnClickListener {
 		switch (socialType) {
 		case 0:	// Fb
 			FlurryAgent.logEvent("PRESS_FACEBOOK");
+			if (saveImage)
+				saveBitmapToPublic(shareBitmap, true);
 			adapter.authorize(MainActivity.this, Provider.FACEBOOK);
 			break;
 		case 1:	// Twit
@@ -1851,7 +1879,7 @@ OnClickListener {
 					Environment.DIRECTORY_PICTURES).getAbsolutePath());
 		else
 			mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-					Environment.DIRECTORY_PICTURES), "CLOZ");
+					Environment.DIRECTORY_PICTURES), ".CLOZ");
 
 		if (! mediaStorageDir.exists()){
 			if (! mediaStorageDir.mkdirs()){

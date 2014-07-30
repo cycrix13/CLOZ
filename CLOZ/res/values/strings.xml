@@ -46,6 +46,7 @@
     </string-array>
 
     <string name="look_msg_delete_tag">Do you want to delete this tag?</string>
+    <string name="look_msg_add_tag">What do you want to add?</string>
 
     <string-array name="look_msg_add_image">
         <item>Camera</item>
@@ -61,7 +62,7 @@
     <string name="mainmenu_more">More</string>
     <string name="mainmenu_camera">Camera</string>
     <string name="mainmenu_gallery">Gallery</string>
-    <string name="mainmenu_icloud">iCloud</string>
+    <string name="mainmenu_icloud">BackUp</string>
     <string name="mainmenu_inapp">Extras</string>
     <string name="mainmenu_rate">Rate</string>
     <string name="mainmenu_suggest">Suggest</string>

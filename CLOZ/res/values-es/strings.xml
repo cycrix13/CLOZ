@@ -17,13 +17,14 @@
     <string name="look_delete">Eliminar</string>
     <string name="look_msg_delete_image">¿Quieres borrar esta imagen?</string>
     <string name="look_msg_delete_look">¿Quieres eliminar todo este Look?</string>
+    <string name="look_msg_add_tag">¿Qué quieres añadir?</string>
     <string-array name="look_msg_add_tag">
         <item >Contactos</item>
         <item >Etiquetas</item>
     </string-array>
     <string name="look_msg_delete_tag">¿Quieres eliminar esta etiqueta?</string>
     <string-array name="look_msg_add_image">
-        <item >Cámera</item>
+        <item >Cámara</item>
         <item >Galería</item>
     </string-array>
     
@@ -36,7 +37,7 @@
     <string name="mainmenu_more">Más</string>
     <string name="mainmenu_camera">Cámera</string>
     <string name="mainmenu_gallery">Galería</string>
-    <string name="mainmenu_icloud">iCloud</string>
+    <string name="mainmenu_icloud">BackUp</string>
     <string name="mainmenu_inapp">Extras</string>
     <string name="mainmenu_rate">Valorar</string>
     <string name="mainmenu_suggest">Sugerir</string>
@@ -234,7 +235,7 @@
     <!-- Move Tag -->
     
     <string name="movetag_text1">Mueve las etiquetas\n si quieres</string>
-    <string name="movetag_text2">¿Dónde quieres</string>
+    <string name="movetag_text2">¿Dónde quieres?</string>
     <string name="movetag_text3">Guarda la imagen en rollo de la cámara</string>
     
 </resources>

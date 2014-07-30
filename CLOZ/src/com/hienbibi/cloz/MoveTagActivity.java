@@ -4,23 +4,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
-
-import com.cycrix.androidannotation.AndroidAnnotationParser;
-import com.cycrix.androidannotation.Click;
-import com.cycrix.androidannotation.ViewById;
-import com.cycrix.util.CyUtils;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Bitmap.Config;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.view.Display;
@@ -34,6 +28,11 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.cycrix.androidannotation.AndroidAnnotationParser;
+import com.cycrix.androidannotation.Click;
+import com.cycrix.androidannotation.ViewById;
+import com.cycrix.util.CyUtils;
 
 public class MoveTagActivity extends Activity {
 	
