@@ -431,7 +431,7 @@ OnClickListener {
 	private void showHideControl() {
 		
 		
-		if (mLayoutControl.getVisibility() == View.VISIBLE) {
+		if (mLayoutControl.getVisibility() == View.VISIBLE && !mEditing) {
 			mLayoutControl.setVisibility(View.INVISIBLE);
 		} else {
 			mLayoutControl.setVisibility(View.VISIBLE);
@@ -1899,12 +1899,22 @@ OnClickListener {
 			FileOutputStream outFile = new FileOutputStream(mediaFile);
 
 			bm.compress(CompressFormat.JPEG, 90, outFile);
+			
+			outFile.close();
+			
+			Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+			Uri contentUri = Uri.fromFile(mediaFile);
+			mediaScanIntent.setData(contentUri);
+			this.sendBroadcast(mediaScanIntent);
 
 			return mediaFile;
 
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+
+		
 
 		return null;
 	}

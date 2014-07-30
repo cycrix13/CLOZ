@@ -183,6 +183,7 @@ public class InAppActivity extends Activity {
 				throw new Exception();
 
 			unlock4Image();
+			FlurryAgent.logEvent("PRESS_ZOOM_4_IMAGES_END");
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Zoom + up to 4 images/Look unlocked!");
@@ -203,7 +204,7 @@ public class InAppActivity extends Activity {
 	@Click(id = R.id.btnDeletePub)
 	private void onDeletePubClick(View v) {
 		
-		FlurryAgent.logEvent("PRESS_ZOOM_4_IMAGES");
+		FlurryAgent.logEvent("PRESS_DELETE_PUB");
 		
 		try {
     		if (Settings.instance().unlockPub) {
@@ -265,6 +266,7 @@ public class InAppActivity extends Activity {
 				throw new Exception();
 
 			unlockDeletePub();
+			FlurryAgent.logEvent("PRESS_DELETE_PUB_END");
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Delete pub unlocked!");

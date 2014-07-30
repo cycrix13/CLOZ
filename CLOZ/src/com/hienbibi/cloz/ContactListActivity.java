@@ -109,11 +109,11 @@ public class ContactListActivity extends Activity {
 	@Click(id = R.id.btnContinue)
 	private void onContinueClick(View v) {
 		FlurryAgent.logEvent("PRESS_CONTACTS_CONTINUE");
-		if (getCheckContacts().size() == 0) {
-			new AlertDialog.Builder(this).setMessage(R.string.contact_noselect)
-					.setPositiveButton(R.string.text_ok, null).create().show();
-			return;
-		}
+//		if (getCheckContacts().size() == 0) {
+//			new AlertDialog.Builder(this).setMessage(R.string.contact_noselect)
+//					.setPositiveButton(R.string.text_ok, null).create().show();
+//			return;
+//		}
 		
 		if (mSingleMode) {
 			HashMap<String, Object> result = new HashMap<String, Object>();
