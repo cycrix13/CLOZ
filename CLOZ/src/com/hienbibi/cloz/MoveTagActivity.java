@@ -1,13 +1,18 @@
 package com.hienbibi.cloz;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -16,6 +21,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -238,20 +244,35 @@ public class MoveTagActivity extends Activity {
 						return;
 					}
 					
+					String appname = null;
 					switch (selecting) {
 					case 0:
 						FlurryAgent.logEvent("PRESS_SHARE_FACEBOOK");
 						break;
 					case 1:
 						FlurryAgent.logEvent("PRESS_SHARE_TWITER");
+						appname = "Twitter";
 						break;
 					case 2:
 						FlurryAgent.logEvent("PRESS_SHARE_INSTAGRAM");
+						appname = "Instagram";
 						break;
 					case 3:
 						FlurryAgent.logEvent("PRESS_SHARE_WHATSAPP");
+						appname = "Whatsapp";
 						break;
 					}
+					
+					switch (selecting) {
+					case 1:
+					case 2:
+					case 3:
+						if (!canShare(appname)) {
+							showAlertBoxShare(appname);
+							return;
+						}
+					}
+					
 					mListener.onComplete(drawViewToBitmap(), selecting, check);
 					
 					finish();
@@ -274,6 +295,45 @@ public class MoveTagActivity extends Activity {
 		}.init();
 		
 		dialog.show();
+	}
+	
+	boolean canShare(String nameApp) {
+		List<Intent> targetedShareIntents = new ArrayList<Intent>();
+		Intent share = new Intent(android.content.Intent.ACTION_SEND);
+		share.setType("image/jpeg");
+		List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(
+				share, 0);
+		if (!resInfo.isEmpty()) {
+			for (ResolveInfo info : resInfo) {
+
+				if (info.activityInfo.packageName.toLowerCase().contains(
+						nameApp.toLowerCase())
+						|| info.activityInfo.name.toLowerCase().contains(
+								nameApp.toLowerCase())) {
+					Intent targetedShare = new Intent(android.content.Intent.ACTION_SEND);
+					targetedShareIntents.add(targetedShare);
+				}
+			}
+
+			if (targetedShareIntents.size() > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else
+			return false;
+	}
+
+	public void showAlertBoxShare(String message) {
+		AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+		dlgAlert.setMessage(message + " is not installed in your device!");
+		dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.dismiss();
+			}
+		});
+		dlgAlert.setCancelable(true);
+		dlgAlert.create().show();
 	}
 	
 	private Bitmap drawViewToBitmap() {

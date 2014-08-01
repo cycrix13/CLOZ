@@ -4,7 +4,6 @@ import it.sephiroth.android.library.widget.AbsHListView;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -26,8 +25,6 @@ import org.brickred.socialauth.android.SocialAuthListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -56,14 +53,11 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
@@ -1071,6 +1065,33 @@ OnClickListener {
 		}
 
 		public View fakeInstantiateItem(ViewGroup container, final int position) {
+			
+			ZoomView.Listener listener = new ZoomView.Listener() {
+				@Override
+				public void onRequestDown() {
+					prepareForLoadImage(true);
+				}
+
+				@Override
+				public void onRequestUp() {
+					prepareForLoadImage(false);
+				}
+
+				@Override
+				public void onRequestZoom() {
+					showHelpScreen2();
+				}
+
+				@Override
+				public void onRequestSwipeHorizontal() {
+					showHelpScreen3();
+				}
+				
+				@Override
+				public void onSingleTap() {
+					showHideControl();
+				}
+			};
 
 			if (mPathList.size() > 0) {
 				ZoomView zoomView = new ZoomView(MainActivity.this, mPathList.size() > 1);
@@ -1083,38 +1104,12 @@ OnClickListener {
 				zoomView.enableSwipe(mZoomEnable);
 				String path = getFilesDir().getAbsolutePath() + "/" + mPathList.get(position);
 				zoomView.setImage(path);
-				zoomView.setListener(new ZoomView.Listener() {
-					@Override
-					public void onRequestDown() {
-						prepareForLoadImage(true);
-					}
-
-					@Override
-					public void onRequestUp() {
-						prepareForLoadImage(false);
-					}
-
-					@Override
-					public void onRequestZoom() {
-						showHelpScreen2();
-					}
-
-					@Override
-					public void onRequestSwipeHorizontal() {
-						showHelpScreen3();
-					}
-					
-					@Override
-					public void onSingleTap() {
-						showHideControl();
-					}
-					
-				});
+				zoomView.setListener(listener);
 
 				container.addView(zoomView);
 				return zoomView;
 			} else {
-				ImageView img = new ImageView(MainActivity.this);
+				ImageView img = new NoImageView(MainActivity.this, listener);
 				
 				ViewGroup.LayoutParams params = new LayoutParams(
 						ViewGroup.LayoutParams.MATCH_PARENT,
@@ -1363,6 +1358,20 @@ OnClickListener {
 					int which) {
 				switch (which) {
 				case 0:
+				{
+					Looks look = lookList.get(mSelecting);
+					ArrayList<String> contactList = new ArrayList<String>();
+					JSONArray jContact;
+					try {
+						jContact = new JSONArray(look.contacts);
+						for (int i = 0; i < jContact.length(); i++) {
+							contactList.add(jContact.getString(i));
+						}
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+						return;
+					}
+					
 					ContactListActivity.newInstance(
 							MainActivity.this,
 							new ContactListActivity.Listener() {
@@ -1388,10 +1397,10 @@ OnClickListener {
 									} catch (Exception e) {
 									}
 								}
-							}, true);
+							}, true, contactList);
 
 					break;
-
+				}
 				case 1:
 					TagActivity.newInstance(MainActivity.this,
 							new TagActivity.Listener() {

@@ -254,7 +254,7 @@ public class CameraActivity extends Activity {
 				mListener.onComplete(result);
 				finish();
 			}
-		}, false);
+		}, false, new ArrayList<String>());
 	}
 	
 	private static Bitmap RotateBitmap(Bitmap source, int orientation) {

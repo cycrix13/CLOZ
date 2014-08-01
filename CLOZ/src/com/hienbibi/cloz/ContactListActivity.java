@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -46,6 +45,7 @@ public class ContactListActivity extends Activity {
 	
 	private static boolean sSingleMode;
 	private static Listener sListener;
+	private static ArrayList<String> sSelectedContactList;
 	
 	private boolean mSingleMode;
 	private Listener mListener;
@@ -53,13 +53,15 @@ public class ContactListActivity extends Activity {
 	private ArrayList<ContactItem> mContactList;
 	private ArrayList<ContactItem> mFilterContactList;
 	private ContactListAdapter mAdapter;
+	private ArrayList<String> mSelectedContactList;
 	
-	
-	public static void newInstance(Activity act, Listener listener, boolean singleMode) {
+	public static void newInstance(Activity act, Listener listener, boolean singleMode
+			, ArrayList<String> selectedContactList) {
 		Intent intent = new Intent(act, ContactListActivity.class);
 		act.startActivity(intent);
 		sListener = listener;
 		sSingleMode = singleMode;
+		sSelectedContactList = selectedContactList;
 	}
 
 	@Override
@@ -70,6 +72,8 @@ public class ContactListActivity extends Activity {
 		mSingleMode = sSingleMode;
 		mListener = sListener;
 		sListener = null;
+		mSelectedContactList = sSelectedContactList;
+		sSelectedContactList = null;
 		
 		try {
 			AndroidAnnotationParser.parse(this, findViewById(android.R.id.content));
@@ -154,7 +158,7 @@ public class ContactListActivity extends Activity {
                   String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                   ContactItem item = new ContactItem();
                   item.name = name;
-                  item.check = false;
+                  item.check = mSelectedContactList.contains(item.name);
                   result.add(item);
             }
         }
