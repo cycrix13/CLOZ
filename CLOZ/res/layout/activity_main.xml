@@ -293,13 +293,6 @@
             android:layout_height="match_parent" >
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/layoutSecondLookHolder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layoutSeperate" >
-        </FrameLayout>
-
         
         <fragment
             android:id="@+id/fragMenu"
@@ -308,5 +301,10 @@
             android:layout_height="match_parent" />
         
     </RelativeLayout>
-
+	<FrameLayout
+            android:id="@+id/layoutSecondLookHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="160dp" >
+    </FrameLayout>
 </RelativeLayout>

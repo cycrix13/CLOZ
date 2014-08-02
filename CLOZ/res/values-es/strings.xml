@@ -28,6 +28,8 @@
         <item >Galería</item>
     </string-array>
     
+    <string name="look_image_saved">Imagen guardada</string>
+    
     <!-- ************************************************** -->
     <!-- Main menu -->
 

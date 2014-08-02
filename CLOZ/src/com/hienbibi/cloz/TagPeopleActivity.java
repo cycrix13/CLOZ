@@ -149,8 +149,13 @@ public class TagPeopleActivity extends Activity {
 		if (mCheckDate) {
 			date = sDate;
 		}
-		MoveTagActivity.newInstance(this, sPath, result, date, mListener);
-
+		MoveTagActivity.newInstance(this, sPath, result, date, new Listener() {
+			@Override
+			public void onComplete(Bitmap bm, int socialType, boolean saveImage) {
+				finish();
+				mListener.onComplete(bm, socialType, saveImage);
+			}
+		});
 		
 //		mListener.onComplete(result, mCheckDate);
 //		finish();

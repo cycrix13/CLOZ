@@ -52,6 +52,8 @@
         <item>Camera</item>
         <item>Gallery</item>
     </string-array>
+    
+    <string name="look_image_saved">Image saved</string>
 
     <!-- ************************************************** -->
     <!-- Main menu -->

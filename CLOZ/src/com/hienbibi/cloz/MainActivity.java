@@ -375,8 +375,9 @@ OnClickListener {
 	}
 
 	protected void showHelpScreen2() {
-		if (mLayoutSecondLookHolder.getChildCount() >0)
+		if (mLayoutSecondLookHolder.getChildCount() > 0 || mEditing)
 			return;
+		
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
 				R.layout.help_screen2_fragment, mLayoutSecondLookHolder, false);
 		mLayoutSecondLookHolder.addView(view);
@@ -399,8 +400,9 @@ OnClickListener {
 	}
 
 	protected void showHelpScreen3() {
-		if (mLayoutSecondLookHolder.getChildCount() >0)
+		if (mLayoutSecondLookHolder.getChildCount() > 0 || mEditing)
 			return;
+		
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
 				R.layout.help_screen3_fragment, mLayoutSecondLookHolder, false);
 		mLayoutSecondLookHolder.addView(view);
@@ -1883,6 +1885,9 @@ OnClickListener {
 			// share("Whatsapp", filePath.toString(), "CLOZ App");
 			break;
 		}
+		
+		if (saveImage)
+			Toast.makeText(this, R.string.look_image_saved, Toast.LENGTH_SHORT);
 	}
 
 	private File saveBitmapToPublic(Bitmap bm, boolean savePublic) {
