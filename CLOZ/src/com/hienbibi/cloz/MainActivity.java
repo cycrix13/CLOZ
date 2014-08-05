@@ -10,6 +10,7 @@ import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -86,7 +87,7 @@ OnClickListener {
 	public DatabaseHelper mHelper;
 
 	// @ViewById(id = R.id.lstLook) private ListView mLstLook;
-	@ViewById(id = R.id.fliper)
+	@ViewById(id = R.id.fliper)	
 	private ViewFlipper mFlipper;
 
 	@ViewById(id = R.id.txtDate1)
@@ -742,15 +743,27 @@ OnClickListener {
 	@Override
 	public void onClick(View v) {
 
-		String type = (String) v.getTag();
-		TextView txt = (TextView) v;
+		final String type = (String) v.getTag();
+		final TextView txt = (TextView) v;
 
 		if (mEditing) {
 			deleteTag(txt.getText().toString(), type.equals("tag"));
 		} else {
 			FlurryAgent.logEvent("PRESS_TAG");
-			new AlertDialog.Builder(this).setMessage(txt.getText().toString())
-			.setPositiveButton(R.string.text_ok, null).create().show();
+			new AlertDialog.Builder(this)
+			.setMessage(txt.getText().toString()) 
+			.setPositiveButton(R.string.look_search_look, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					TItem item = new TItem();
+					item.isContact = type.equalsIgnoreCase("contact");
+					item.text = txt.getText().toString();
+					item.check = true;
+					changeToResultMode(Arrays.asList(item));
+				}
+			})
+			.setNegativeButton(R.string.text_cancel, null)
+			.create().show();
 		}
 	}
 
@@ -1637,7 +1650,7 @@ OnClickListener {
 		});
 	}
 
-	private void changeToResultMode(ArrayList<TItem> condition) {
+	private void changeToResultMode(List<TItem> condition) {
 
 		// Change GUI
 		mResultMode = true;
@@ -1872,12 +1885,12 @@ OnClickListener {
 			break;
 		case 1:	// Twit
 			//			shareTwitter(saveBitmapToPublic(shareBitmap));
-			share("twitter", "", "#ootd @clozapp", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
+			share("twitter", "", "#ootd #lookoftheday", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			break;
 		case 2:	// Insta
 			FlurryAgent.logEvent("PRESS_INSTAGRAM");
 			// share("Instagram", filePath.toString(), "CLOZ App");
-			share("instagram", "", "#lookoftheday #ootd", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
+			share("instagram", "", "#ootd #lookoftheday", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			break;
 		case 3:	// Whatsapp
 			FlurryAgent.logEvent("PRESS_WHATSAPP");
