@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 			txt.setLayoutParams(param);
 			txt.setText("" + position);
 			txt.setTextColor(-1);
+			txt.setBackgroundColor(0xFF000000 | (0xFF << position));
 			container.addView(txt);
 			
 			return txt;

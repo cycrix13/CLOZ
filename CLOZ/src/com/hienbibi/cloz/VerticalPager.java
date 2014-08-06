@@ -1,8 +1,7 @@
-package com.example.zoomview;
+package com.hienbibi.cloz;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,10 +12,8 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
-import android.widget.Scroller;
 
 public class VerticalPager extends FrameLayout implements OnGestureListener {
 	
@@ -63,6 +60,14 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 		iterateAdapter();
 	}
 	
+	public int getCurrentPageIndex() {
+		return mPageIndex;
+	}
+	
+	public View getCurrentPage() {
+		return mPageCache.get(mPageIndex);
+	}
+	
 	private void iterateAdapter() {
 		
 		for (Object entry : mPageCache.keySet().toArray()) {
@@ -80,7 +85,7 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 	
 	private void loadPage(int pageIndex) {
 		
-		if (pageIndex < 0 || pageIndex > mAdapter.getCount() - 1)
+		if (mAdapter == null || pageIndex < 0 || pageIndex > mAdapter.getCount() - 1)
 			return;
 		
 		View viewPage = findPageByIndex(pageIndex);
@@ -101,7 +106,7 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 	
 	private void purgePage(int pageIndex) {
 		
-		if (pageIndex < 0 || pageIndex > mAdapter.getCount() - 1)
+		if (mAdapter == null || pageIndex < 0 || pageIndex > mAdapter.getCount() - 1)
 			return;
 		
 		View viewPage = findPageByIndex(pageIndex);
@@ -134,9 +139,12 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 	private float mLastDistance = 0;
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		if (mAdapter == null)
+			return false;
 		
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
+			
 			int newIndex = Math.round(mPageIndex + mPageTransOffset / getHeight());
 			newIndex = Math.max(0, Math.min(mAdapter.getCount() - 1, newIndex));
 			mPageTransOffset = mPageIndex + mPageTransOffset / getHeight() - newIndex;
@@ -160,6 +168,8 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 
 	@Override
 	public boolean onFling (MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+		if (mAdapter == null)
+			return false;
 		
 		if (velocityY > 0) {
 			if (mPageIndex <= 0)
@@ -190,7 +200,7 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 
 	@Override
 	public void onLongPress(MotionEvent arg0) {
-		
+
 	}
 
 	@Override
