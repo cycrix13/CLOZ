@@ -1897,10 +1897,13 @@ OnClickListener {
 			share("whatsapp", "", "", saveBitmapToPublic(shareBitmap, saveImage).getAbsolutePath());
 			// share("Whatsapp", filePath.toString(), "CLOZ App");
 			break;
+		case -1:
+			saveBitmapToPublic(shareBitmap, saveImage);
+			break;
 		}
 		
 		if (saveImage)
-			Toast.makeText(this, R.string.look_image_saved, Toast.LENGTH_SHORT);
+			Toast.makeText(this, R.string.look_image_saved, Toast.LENGTH_LONG).show();
 	}
 
 	private File saveBitmapToPublic(Bitmap bm, boolean savePublic) {
@@ -1940,9 +1943,6 @@ OnClickListener {
 			e.printStackTrace();
 		}
 		
-
-		
-
 		return null;
 	}
 
