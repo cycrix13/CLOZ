@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
 
@@ -24,6 +26,11 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 	private float mPageTransOffset = 0;
 	private GestureDetector mGestureDetector;
 	private OverScroller mScroller;
+	private Listener mListener = new Listener();
+	
+	public static class Listener {
+		public void onPageChange(VerticalPager pager) {}
+	}
 
 	public VerticalPager(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -54,10 +61,19 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 		removeAllViews();
 		mPageCache.clear();
 		
+		if (adapter == null || adapter.getCount() == 0)
+			setVisibility(View.INVISIBLE);
+		else
+			setVisibility(View.VISIBLE);
+		
 		mPageIndex = pageIndex;
 		mAdapter = adapter;
 		
 		iterateAdapter();
+	}
+	
+	public void setListener(Listener listener) {
+		mListener = listener;
 	}
 	
 	public int getCurrentPageIndex() {
@@ -65,10 +81,19 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 	}
 	
 	public View getCurrentPage() {
-		return mPageCache.get(mPageIndex);
+		
+		if (mPageIndex < 0)
+			return null;
+		else
+			return mPageCache.get(mPageIndex);
 	}
 	
 	private void iterateAdapter() {
+		
+		if (mPageIndex < 0) {
+			mListener.onPageChange(this);
+			return;
+		}
 		
 		for (Object entry : mPageCache.keySet().toArray()) {
 			int key = (Integer) entry;
@@ -81,6 +106,8 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 			loadPage(mPageIndex + i);
 			loadPage(mPageIndex - i);
 		}
+		
+		mListener.onPageChange(this);
 	}
 	
 	private void loadPage(int pageIndex) {
@@ -125,6 +152,10 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 	}
 	
 	private void updatePageTranslation() {
+		
+		if (mPageIndex < 0)
+			return;
+		
 		int h = getMeasuredHeight();
 		if (h == 0)
 			return;
@@ -135,11 +166,56 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 		}
 	}
 	
+	private PointF mBegin = new PointF();
+	private boolean mComplete = false;
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent event) {
+		
+		ViewConfiguration config = new ViewConfiguration();
+		
+		float touchSlop = config.getScaledTouchSlop();
+		
+		try {
+			switch (event.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN:
+				mBegin.x = event.getX();
+				mBegin.y = event.getY();
+				break;
+			case MotionEvent.ACTION_MOVE: {
+				
+				if (mComplete)
+					return false;
+				
+				float dx = event.getX() - mBegin.x;
+				float dy = event.getY() - mBegin.y;
+				float r = (float) Math.sqrt(dx*dx + dy*dy);
+				if (r > touchSlop) {
+					if (Math.abs(dy) > Math.abs(dx))
+						return true;
+					mComplete = true;
+				}
+			}
+				break;
+			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_CANCEL:
+				mComplete = false;
+				break;
+			}
+		} catch (Exception e) {
+		}
+
+		return false;
+	}
+	
 	private int mPrePageIndex = 0;
 	private float mLastDistance = 0;
+	private boolean mTouchComplete = false;
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (mAdapter == null)
+			return false;
+		
+		if (mPageIndex < 0)
 			return false;
 		
 		switch (event.getActionMasked()) {
@@ -151,11 +227,25 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 			mPageTransOffset *= getHeight();
 			mPrePageIndex = mPageIndex;
 			mPageIndex = newIndex;
+			if (mPageIndex != mPrePageIndex)
+				iterateAdapter();
 			mScroller.springBack(0, (int) mPageTransOffset, 0, 0, 0, 0);
 			invalidate();
+			mTouchComplete = true;
+			break;
+			
+		case MotionEvent.ACTION_MOVE:
+			if (mTouchComplete) {
+				mTouchComplete = false;
+				MotionEvent newEvent = MotionEvent.obtain(event);
+				newEvent.setAction(event.getActionIndex() | MotionEvent.ACTION_DOWN);
+				newEvent.setLocation(mBegin.x, mBegin.y);
+				mGestureDetector.onTouchEvent(newEvent);
+			}
 			break;
 		}
 		
+		MotionEvent newEvent = MotionEvent.obtain(event);
 		boolean result = mGestureDetector.onTouchEvent(event);
 		
 		return result;
@@ -171,12 +261,16 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 		if (mAdapter == null)
 			return false;
 		
+		if (mPageIndex < 0)
+			return false;
+		
 		if (velocityY > 0) {
 			if (mPageIndex <= 0)
 				return true;
 			
 			if (mPrePageIndex <= mPageIndex) {
 				mPageIndex--;
+				iterateAdapter();
 				mPageTransOffset += getHeight();
 				mScroller.abortAnimation();
 				mScroller.springBack(0, (int) mPageTransOffset, 0, 0, 0, 0);
@@ -188,6 +282,7 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 			
 			if (mPrePageIndex >= mPageIndex) {
 				mPageIndex++;
+				iterateAdapter();
 				mPageTransOffset -= getHeight();
 				mScroller.abortAnimation();
 				mScroller.springBack(0, (int) mPageTransOffset, 0, 0, 0, 0);
@@ -221,7 +316,7 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 			updatePageTranslation();
 			invalidate();
 		} else {
-			iterateAdapter();
+			
 			updatePageTranslation();
 		}
 		

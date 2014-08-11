@@ -75,6 +75,7 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 		
 		mDetector = new GestureDetector(context, this);
 		mDetector.setOnDoubleTapListener(this);
+		mDetector.setIsLongpressEnabled(false);
 		mZoom = new ScaleGestureDetector(context, this);
 		mScroller = new Scroller(context);
 		mZoomScroller = new Scroller(context);
@@ -127,7 +128,7 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		return super.onInterceptTouchEvent(ev);
+		return false;
 	}
 	
 	private boolean mTouchComplete = false;
@@ -207,6 +208,9 @@ public class ZoomView extends FrameLayout implements OnGestureListener, OnScaleG
 			mTouchComplete = false;
 			break;
 		}
+		
+		if (result == true)
+			return true;
 		
 		return result;
 	}

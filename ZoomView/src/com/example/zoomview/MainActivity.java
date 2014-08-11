@@ -1,19 +1,12 @@
 package com.example.zoomview;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -51,7 +44,7 @@ public class MainActivity extends Activity {
 			txt.setLayoutParams(param);
 			txt.setText("" + position);
 			txt.setTextColor(-1);
-			txt.setBackgroundColor(0xFF000000 | (0xFF << position));
+			txt.setBackgroundColor(0xFF000000 | (0xFF << (position * 8)));
 			container.addView(txt);
 			
 			return txt;

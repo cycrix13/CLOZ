@@ -192,7 +192,7 @@ OnClickListener {
 	}
 
 
-	ScaleGestureDetector scaleDetector;
+//	ScaleGestureDetector scaleDetector;
 
 
 	@Override
@@ -206,28 +206,28 @@ OnClickListener {
 		// getBaseContext().getResources().updateConfiguration(config,
 		// getBaseContext().getResources().getDisplayMetrics());
 
-		scaleDetector = new ScaleGestureDetector(MainActivity.this, new ScaleGestureDetector.OnScaleGestureListener() {
-
-			@Override
-			public void onScaleEnd(ScaleGestureDetector detector) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public boolean onScaleBegin(ScaleGestureDetector detector) {
-				// TODO Auto-generated method stub
-				//showHelpScreen3();
-				return true;
-			}
-
-			@Override
-			public boolean onScale(ScaleGestureDetector detector) {
-				// TODO Auto-generated method stub
-				showHelpScreen3();
-				return true;
-			}
-		});
+//		scaleDetector = new ScaleGestureDetector(MainActivity.this, new ScaleGestureDetector.OnScaleGestureListener() {
+//
+//			@Override
+//			public void onScaleEnd(ScaleGestureDetector detector) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public boolean onScaleBegin(ScaleGestureDetector detector) {
+//				// TODO Auto-generated method stub
+//				//showHelpScreen3();
+//				return true;
+//			}
+//
+//			@Override
+//			public boolean onScale(ScaleGestureDetector detector) {
+//				// TODO Auto-generated method stub
+//				showHelpScreen3();
+//				return true;
+//			}
+//		});
 
 
 		Settings.init(this);
@@ -399,7 +399,7 @@ OnClickListener {
 					@Override
 					public void onClick(View v) {
 						mLayoutSecondLookHolder.removeAllViews();
-						InAppActivity.newInstance(MainActivity.this);
+//						InAppActivity.newInstance(MainActivity.this);
 					}
 				});
 	}
@@ -424,7 +424,7 @@ OnClickListener {
 					@Override
 					public void onClick(View v) {
 						mLayoutSecondLookHolder.removeAllViews();
-						InAppActivity.newInstance(MainActivity.this);
+//						InAppActivity.newInstance(MainActivity.this);
 					}
 				});
 	}
@@ -2047,7 +2047,7 @@ OnClickListener {
 	@Override
 	public void onSyncClick() {
 		removeHelp();
-		BackupActivity.newInstance(this);
+//		BackupActivity.newInstance(this);
 	}
 
 	private void updateLayout() {
@@ -2096,7 +2096,7 @@ OnClickListener {
 	@Override
 	public void onInAppClick() {
 		removeHelp();
-		InAppActivity.newInstance(this);
+//		InAppActivity.newInstance(this);
 	}
 
 	@Override

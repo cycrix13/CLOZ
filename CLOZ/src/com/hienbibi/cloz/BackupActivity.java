@@ -26,10 +26,10 @@ public class BackupActivity extends Activity {
 	static private DatabaseHelper sDb;
 	private DatabaseHelper mDb;
 	
-	static private MainActivity sAct;
-	private MainActivity mAct;
+	static private MainActivity2 sAct;
+	private MainActivity2 mAct;
 	
-	public static void newInstance(MainActivity act) {
+	public static void newInstance(MainActivity2 act) {
 		sDb = act.mHelper;
 		sAct = act;
 		Intent intent = new Intent(act, BackupActivity.class);

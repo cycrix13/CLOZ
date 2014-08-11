@@ -2,7 +2,6 @@ package com.example.zoomview;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,10 +12,8 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
-import android.widget.Scroller;
 
 public class VerticalPager extends FrameLayout implements OnGestureListener {
 	
@@ -126,8 +123,20 @@ public class VerticalPager extends FrameLayout implements OnGestureListener {
 		
 		for (Entry<Integer, View> entry : mPageCache.entrySet()) {
 			int key = entry.getKey();
-			entry.getValue().setTranslationY((key - mPageIndex) * h - mPageTransOffset); 
+			float y = (key - mPageIndex) * h - mPageTransOffset;
+			entry.getValue().setTranslationY((y)); 
 		}
+	}
+	
+	private float transformY(float in) {
+		
+		if (in < 0) {
+			return 0.5f - (float) Math.sqrt(0.25 -  in);
+		} else if (in > (mAdapter.getCount() - 1) * getHeight()) {
+			return in;
+		}
+		
+		return in;
 	}
 	
 	private int mPrePageIndex = 0;
