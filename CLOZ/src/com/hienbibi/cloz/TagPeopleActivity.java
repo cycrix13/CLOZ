@@ -42,7 +42,7 @@ public class TagPeopleActivity extends Activity {
 	
 	private ArrayList<TItem> mItemList = new ArrayList<TItem>();
 	private ArrayList<TItem> mFilterItemList;
-	private boolean mCheckDate;
+	private boolean mCheckDate = true;
 	private ItemAdapter mAdapter;
 	
 	
