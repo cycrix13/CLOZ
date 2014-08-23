@@ -14,8 +14,8 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.OverScroller;
 
 public class VerticalPager extends FrameLayout implements OnGestureListener {
 	

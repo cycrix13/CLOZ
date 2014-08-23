@@ -703,7 +703,8 @@ OnClickListener {
 					txt.setBackgroundResource(R.drawable.search_result_border);
 					txt.setText(jTag.getString(i));
 					txt.setTextColor(0xFFFFFFFF);
-					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setTextSize(16);
+					txt.setMaxWidth(CyUtils.dpToPx(150, this));
 					txt.setSingleLine();
 					txt.setEllipsize(TruncateAt.END);
 					txt.setOnClickListener(this);
@@ -733,7 +734,8 @@ OnClickListener {
 					txt.setBackgroundResource(R.drawable.search_result_border);
 					txt.setText(jContacts.getString(i));
 					txt.setTextColor(0xFFFFFFFF);
-					txt.setMaxWidth(CyUtils.dpToPx(100, this));
+					txt.setTextSize(16);
+					txt.setMaxWidth(CyUtils.dpToPx(150, this));
 					txt.setSingleLine();
 					txt.setEllipsize(TruncateAt.END);
 					txt.setOnClickListener(this);
