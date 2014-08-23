@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#F3EC34"
     android:contentDescription="@string/font1"
-    tools:context="com.hienbibi.cloz.CountDownActivity" >
+    tools:context="com.jorgebs.cloz.CountDownActivity" >
 
     <TextView
         android:id="@+id/txtCount"

@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.cycrix.androidannotation.AndroidAnnotationParser;
 import com.cycrix.androidannotation.ViewById;
-import com.hienbibi.cloz.R;
+import com.jorgebs.cloz.R;
 
 public class PagerIndicator extends RelativeLayout implements OnPageChangeListener {
 	

@@ -15,12 +15,12 @@
 
     </FrameLayout>
     
-    <com.hienbibi.cloz.VerticalPager
+    <com.jorgebs.cloz.VerticalPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
         
-    </com.hienbibi.cloz.VerticalPager>
+    </com.jorgebs.cloz.VerticalPager>
 
     <!-- 
     <ViewFlipper
@@ -301,7 +301,7 @@
         
         <fragment
             android:id="@+id/fragMenu"
-            android:name="com.hienbibi.cloz.MenuFragment"
+            android:name="com.jorgebs.cloz.MenuFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
         
