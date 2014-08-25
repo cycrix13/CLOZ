@@ -159,7 +159,9 @@ public class ContactListActivity extends Activity {
                   ContactItem item = new ContactItem();
                   item.name = name;
                   item.check = mSelectedContactList.contains(item.name);
-                  result.add(item);
+                  
+                  if (name != null)
+                	  result.add(item);
             }
         }
         
