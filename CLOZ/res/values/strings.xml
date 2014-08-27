@@ -15,7 +15,6 @@
     <string name="title_activity_in_app">InAppActivity</string>
     <string name="title_activity_tag_people">TagPeopleActivity</string>
     <string name="title_activity_move_tag">MoveTagActivity</string>
-    
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_yes">Yes</string>
@@ -52,7 +51,7 @@
         <item>Camera</item>
         <item>Gallery</item>
     </string-array>
-    
+
     <string name="look_image_saved">Image saved</string>
     <string name="look_search_look">Finds looks</string>
 
@@ -96,6 +95,7 @@
     <string name="help_text4_4">Here to delete this image</string>
     <string name="help_text4_5">Here to add a tag</string>
     <string name="help_text4_6">Press a tag to delete it</string>
+    <string name="help_text5_1">You can active the option to be able to add up to 4 images per Look.\nUseful to better remember details as shoes, extra clothings and bags.</string>
 
     <!-- ************************************************** -->
     <!-- Camera -->
@@ -257,12 +257,20 @@
     <string name="tagpeople_text1">Which tags do you want toappear in the picture?</string>
     <string name="tagpeople_text2">Continue</string>
     <string name="tagpeople_text3">Date</string>
-    
+
     <!-- ************************************************** -->
     <!-- Move Tag -->
-    
+
     <string name="movetag_text1">Move tags</string>
     <string name="movetag_text2">Select where you want to</string>
     <string name="movetag_text3">Save image to camera roll</string>
+    <string name="title_activity_help">HelpActivity</string>
+    
+    <!-- ************************************************** -->
+    <!-- Help -->
+    
+    <string name="helpsetting_text1">HELP</string>
+    <string name="helpsetting_text2">Show help screens:</string>
+    <string name="helpsetting_text3">See welcome slide</string>
 
 </resources>

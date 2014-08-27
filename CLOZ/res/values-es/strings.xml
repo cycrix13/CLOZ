@@ -44,7 +44,7 @@
     <string name="mainmenu_inapp">Extras</string>
     <string name="mainmenu_rate">Valorar</string>
     <string name="mainmenu_suggest">Sugerir</string>
-    <string name="mainmenu_useinfo">Use info</string>
+    <string name="mainmenu_useinfo">Uso info</string>
     <string name="mainmenu_help">Ayuda</string>
 
     <!-- ************************************************** -->
@@ -72,6 +72,7 @@
     <string name="help_text4_4">Aquí para borrar esta imagen</string>
     <string name="help_text4_5">Aquí para añadir una etiqueta</string>
     <string name="help_text4_6">Pulsa una etiqueta para borrarla</string>
+    <string name="help_text5_1">You can active the option to be able to add up to 4 images per Look.\nUseful to better remember details as shoes, extra clothings and bags.</string>
     
     <!-- ************************************************** -->
     <!-- Camera -->
@@ -116,7 +117,7 @@
     
      <!-- Suggest -->
     <string name="suggest_text">Sugerencias</string>
-    <string name="content_text"> Valoramos mucho tus sugerencias.Te escuchamos y trabajaremos para mejorarla a tu gusto.</string>
+    <string name="content_text"> Valoramos mucho tus sugerencias.Te escuchamos y trabajaremos para mejorar.</string>
     <string name="send_text">Enviar sugerencia.!</string>
     
     <!-- ************************************************** -->
@@ -128,7 +129,7 @@
     <!-- ************************************************** -->
     <!-- In app -->
     <string name="inapp_text1">EXTRAS</string>
-    <string name="inapp_text2">Nos esforzamos por ofrecer una app genial y gratis para todos. Aún así necesitamos ofrecer alguna opción premium para tratar al menos de cubrir los costes y poder seguir mejorando.</string>
+    <string name="inapp_text2">Nos esforzamos por ofrecer una app genial y gratis para todos. Aún así necesitamos mantener alguna opción premium para tratar al menos de cubrir los costes y poder seguir mejorando.</string>
     <string name="inapp_text3">Zoom + hasta 4 imágenes/Look.</string>
     <string name="inapp_text4">Eliminar publi</string>
     <string name="inapp_text5">Restaurar</string>
@@ -240,5 +241,12 @@
     <string name="movetag_text1">Mueve las etiquetas\n si quieres</string>
     <string name="movetag_text2">¿Dónde quieres?</string>
     <string name="movetag_text3">Guarda la imagen en rollo de la cámara</string>
+    
+    <!-- ************************************************** -->
+    <!-- Help -->
+    
+    <string name="helpsetting_text1">Ayuda</string>
+    <string name="helpsetting_text2">Mostrar pantallas de ayuda</string>
+    <string name="helpsetting_text3">Ver imágenes de bienvenida</string>
     
 </resources>

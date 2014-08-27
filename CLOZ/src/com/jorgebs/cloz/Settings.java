@@ -18,6 +18,7 @@ public class Settings {
 	
 	public boolean hasSecondLook;
 	public boolean firstEdit;
+	public boolean showHelp;
 
 	public static void init(Context context) {
 		if (sInstance == null) {
@@ -47,6 +48,7 @@ public class Settings {
 		editor.putBoolean("unlockPub", unlockPub);
 		editor.putBoolean("hasSecondLook", hasSecondLook);
 		editor.putBoolean("firstEdit", firstEdit);
+		editor.putBoolean("showHelp", showHelp);
 
 		editor.commit();
 	}
@@ -62,5 +64,6 @@ public class Settings {
 		unlockPub		= preference.getBoolean("unlockPub", false);
 		hasSecondLook	= preference.getBoolean("hasSecondLook", false);
 		firstEdit		= preference.getBoolean("firstEdit", true);
+		showHelp		= preference.getBoolean("showHelp", true);
 	}
 }

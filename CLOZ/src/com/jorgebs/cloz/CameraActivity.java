@@ -147,6 +147,8 @@ public class CameraActivity extends Activity {
     		if (resultCode == RESULT_OK) {
     			String path = fileUri.getPath();
     			setImage(path);
+    			if (mFirst && !Settings.instance().unlockZoom)
+    				onSaveClick(null);
     			mFirst = false;
             } else if (mFirst) {
             	finish();
@@ -158,6 +160,8 @@ public class CameraActivity extends Activity {
 	    		Uri selectedImageUri = data.getData();
 	            String strPath = getPath(selectedImageUri);
 	            setImage(strPath);
+	            if (mFirst && !Settings.instance().unlockZoom)
+    				onSaveClick(null);
 	            mFirst = false;
     		} else if (mFirst) {
             	finish();

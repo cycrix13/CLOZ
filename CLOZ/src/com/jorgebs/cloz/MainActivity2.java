@@ -33,6 +33,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
@@ -90,6 +91,7 @@ OnClickListener {
 	@ViewById(id = R.id.layoutHolder)	private ViewGroup mLayoutHolder;
 	@ViewById(id = R.id.pagerIndicator)	private PagerIndicator mIndicator;
 	@ViewById(id = R.id.layoutControl)	private View mLayoutControl;
+	@ViewById(id = R.id.layoutHeaderBar)private View mLayoutHeaderBar;
 
 	private boolean mEditing = false;
 
@@ -128,7 +130,7 @@ OnClickListener {
 		mMenuFragment.setListerner(this);
 
 		if (Settings.instance().firstTime) {
-			onHelpClick();
+			showHelpSlide();
 
 			Settings.instance().firstTime = false;
 			Settings.instance().save();
@@ -422,25 +424,36 @@ OnClickListener {
 
 	@Override
 	public void onHelpClick() {
+		HelpActivity.newInstance(this, new HelpActivity.Listener() {
+			@Override
+			public void onSeeSlideClick() {
+				new Handler().postDelayed(new Runnable() {					
+					@Override
+					public void run() {
+						showHelpSlide();
+					}
+				}, 500);
+			}
+		});
+	}
+	
+	private void showHelpSlide() {
 		if (mHelpFragment != null) {
 			return;
 		}
 
 		mMenuFragment.close();
 		mHelpFragment = new HelpFragment();
-		getSupportFragmentManager().beginTransaction()
-		.add(R.id.layoutHolder, mHelpFragment).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.layoutHolder, mHelpFragment).commit();
 		mHelpFragment.setListener(new HelpFragment.Listener() {
 			@Override
 			void onDrag(float offset) {
-				mMenuFragment.getView().setVisibility(
-						offset > 1.5 ? View.VISIBLE : View.INVISIBLE);
+				mMenuFragment.getView().setVisibility(offset > 1.5 ? View.VISIBLE : View.INVISIBLE);
 			}
 
 			@Override
 			void onCloseClick() {
-				getSupportFragmentManager().beginTransaction()
-				.remove(mHelpFragment).commit();
+				getSupportFragmentManager().beginTransaction().remove(mHelpFragment).commit();
 				mMenuFragment.getView().setVisibility(View.VISIBLE);
 				mHelpFragment = null;
 			}
@@ -515,8 +528,7 @@ OnClickListener {
 
 		String imageJson;
 		{
-			ArrayList<ImageItem> images = (ArrayList<ImageItem>) result
-					.get("images");
+			ArrayList<ImageItem> images = (ArrayList<ImageItem>) result.get("images");
 			
 			FlurryAgent.logEvent("IMAGE_PER_LOOK_" + images.size());
 			
@@ -613,7 +625,8 @@ OnClickListener {
 		if (Settings.instance().autoBackup)
 			BackupHelper.notifyDataChange();
 
-		if (!Settings.instance().hasSecondLook && lookList.size() == 2) {
+		if (!Settings.instance().hasSecondLook && lookList.size() == 2 &&
+				Settings.instance().showHelp) {
 			Settings.instance().hasSecondLook = true;
 			Settings.instance().save();
 
@@ -965,7 +978,7 @@ OnClickListener {
 
 		mLayoutDate.setBackgroundColor(mEditing ? 0x80000000 : 0x00000000);
 
-		if (Settings.instance().firstEdit) {
+		if (mEditing && Settings.instance().showHelp) {
 			Settings.instance().firstEdit = false;
 			Settings.instance().save();
 
@@ -1038,7 +1051,7 @@ OnClickListener {
 			int maxItem = Settings.instance().unlockZoom ? 4 : 1;
 			if (jArr.length() >= maxItem) {
 				if (maxItem == 1)
-					showHelpScreen3();
+					showHelpScreen5();
 				return;
 			}
 		} catch (JSONException e1) {
@@ -1094,8 +1107,10 @@ OnClickListener {
 		.create().show();
 	}
 	
+	// Zoom
 	protected void showHelpScreen2() {
-		if (mLayoutSecondLookHolder.getChildCount() > 0 || mEditing)
+		if (mLayoutSecondLookHolder.getChildCount() > 0 || mEditing || 
+				!Settings.instance().showHelp)
 			return;
 		
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
@@ -1118,12 +1133,40 @@ OnClickListener {
 				});
 	}
 	
+	// Swipe
 	protected void showHelpScreen3() {
-		if (mLayoutSecondLookHolder.getChildCount() > 0 || mEditing)
+		if (mLayoutSecondLookHolder.getChildCount() > 0 || mEditing || 
+				!Settings.instance().showHelp)
 			return;
 		
 		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
 				R.layout.help_screen3_fragment, mLayoutSecondLookHolder, false);
+		mLayoutSecondLookHolder.addView(view);
+		view.findViewById(R.id.btnClose).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						mLayoutSecondLookHolder.removeAllViews();
+					}
+				});
+
+		view.findViewById(R.id.btnActive).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mLayoutSecondLookHolder.removeAllViews();
+						InAppActivity.newInstance(MainActivity2.this);
+					}
+				});
+	}
+	
+	protected void showHelpScreen5() {
+		if (mLayoutSecondLookHolder.getChildCount() > 0 || !Settings.instance().showHelp)
+			return;
+		
+		ViewGroup view = (ViewGroup) getLayoutInflater().inflate(
+				R.layout.help_screen5_fragment, mLayoutSecondLookHolder, false);
+		FontsCollection.setFont(view);
 		mLayoutSecondLookHolder.addView(view);
 		view.findViewById(R.id.btnClose).setOnClickListener(
 				new OnClickListener() {
@@ -1569,14 +1612,17 @@ OnClickListener {
 			mTxtDelete.setVisibility(View.VISIBLE);
 			mTxtBackAll.setVisibility(View.INVISIBLE);
 			mTxtAll.setText(R.string.look_all);
+			mLayoutHeaderBar.setBackgroundColor(0x70F2E300);
 		} else if (mResultMode) {
 			mTxtDelete.setVisibility(View.INVISIBLE);
 			mTxtBackAll.setVisibility(View.VISIBLE);
 			mTxtAll.setText(R.string.look_result);
+			mLayoutHeaderBar.setBackgroundColor(0x70F15051);
 		} else {
 			mTxtDelete.setVisibility(View.INVISIBLE);
 			mTxtBackAll.setVisibility(View.INVISIBLE);
 			mTxtAll.setText(R.string.look_all);
+			mLayoutHeaderBar.setBackgroundColor(0x70FFFFFF);
 		}
 		
 		int visibleEdit = mEditing ? View.VISIBLE : View.INVISIBLE;
